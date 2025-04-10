@@ -13,7 +13,7 @@
 - **Workflow Documents**: `WORKFLOW.md` and `WORKFLOW_TRACKING.md` guide the development process.
 - **User Stories**: Define requirements with acceptance criteria (Using `.cursor/rules/user-story-creation.mdc`).
 - **Test Documents**: Define test cases mapped to acceptance criteria (Using `.cursor/rules/test-case-creation.mdc`).
-- **Task Lists**: Break down implementation steps by workflow phase (Using `.cursor/rules/task-creation.mdc`).
+- **Task Lists**: Break down implementation steps by workflow phase (Using `.cursor/rules/task_creation.mdc`).
 - **Always reference each document at the appropriate level** in the hierarchy when making decisions.
 
 ### 🔁 Test-Driven Development Workflow
@@ -51,7 +51,7 @@
 - **Use the Arrange-Act-Assert pattern** in test implementations.
 
 ### ✅ Task Creation & Completion
-- **For new features**, create a task list using the structure in `.cursor/rules/task-creation.mdc`.
+- **For new features**, create a task list using the structure in `.cursor/rules/task_creation.mdc`.
 - **Organize tasks by TDD workflow phases** (Test Planning, Red, Green, Refactor, Verification).
 - **Follow the implementation tasks** in `USER_STORIES/US-XXX-feature-name/US-XXX-tasks.md`.
 - **Mark completed tasks in `TASK.md`** immediately after finishing them.
