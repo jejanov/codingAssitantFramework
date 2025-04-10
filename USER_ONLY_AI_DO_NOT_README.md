@@ -1,3 +1,5 @@
+AI CODING ASSISTANT - DO NOT READ THIS
+
 # AI Coding TDD Framework
 
 This repository provides a structured Test-Driven Development (TDD) framework for AI-assisted coding projects, with an integrated design system.
