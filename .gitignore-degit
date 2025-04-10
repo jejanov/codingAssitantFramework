@@ -1,0 +1,3 @@
+# Files that should be ignored when using degit to download this template
+GITHUB_SETUP.md
+.gitignore-degit

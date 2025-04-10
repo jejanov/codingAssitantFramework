@@ -1,0 +1,20 @@
+{
+  "name": "ai-coding-tdd-framework",
+  "version": "1.0.0",
+  "description": "A structured TDD framework for AI-assisted coding projects",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Add your test command here\" && exit 1"
+  },
+  "keywords": [
+    "ai",
+    "tdd",
+    "framework",
+    "coding",
+    "design-system"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {}
+}

@@ -2,12 +2,36 @@
 
 This repository provides a structured Test-Driven Development (TDD) framework for AI-assisted coding projects, with an integrated design system.
 
+## Quick Start
+
+To create a new project with this template:
+
+```bash
+# Create a new directory for your project
+mkdir my-ai-project
+cd my-ai-project
+
+# Download the template
+npx degit jejanov/codingAssistantFramework
+
+# Initialize git repository (optional)
+git init
+```
+
 ## Getting Started
 
 1. Read `PLANNING.md` to understand the project architecture and goals
 2. Check `WORKFLOW.md` for the detailed TDD workflow
 3. Review `WORKFLOW_TRACKING.md` to see the current status of active user stories
 4. Examine `TASK.md` for current implementation tasks
+5. Run `scripts/create-user-story.sh` to create new user stories:
+   ```bash
+   # Make the script executable if needed
+   chmod +x scripts/create-user-story.sh
+   
+   # Create a new user story
+   ./scripts/create-user-story.sh 001 feature-name
+   ```
 
 ## Key Documents
 
@@ -49,11 +73,11 @@ AI coding assistants should follow these guidelines:
 - Use existing components and tokens from the Design System
 
 
-The heirchy of information is:
-1. UserRules.md - Persistant always present context that orriants the AI Coding Assistant to the structure of the project and standards it should adhere to in order to be effective.
-2. .cursor/Rules/ - The files in this directory are templated instructions design to instruct the Coding Assistant on a standard way to create supporting files, or to inform the Coding Assistant on topic specific sets of rules. As an exmple, the task_creation.mdc is a set of instructions with a template on how to create a task document. The design_system_components.mdc is not a template but a reminder of specfic details related to the design of UI/UX components. In both cases, they may refer to other directory or files that exist or will exist in the project directory.
-3. Planning.md This files purpose is to describing the high level vision for what is being built, the file structure, architecture, etc. It needs to be high level.
+The hierarchy of information is:
+1. UserRules.md - Persistent always present context that orients the AI Coding Assistant to the structure of the project and standards it should adhere to in order to be effective.
+2. .cursor/Rules/ - The files in this directory are templated instructions designed to instruct the Coding Assistant on a standard way to create supporting files, or to inform the Coding Assistant on topic specific sets of rules. As an example, the task_creation.mdc is a set of instructions with a template on how to create a task document. The design_system_components.mdc is not a template but a reminder of specific details related to the design of UI/UX components. In both cases, they may refer to other directory or files that exist or will exist in the project directory.
+3. Planning.md This file's purpose is to describe the high level vision for what is being built, the file structure, architecture, etc. It needs to be high level.
 4. WORKFLOW.md / WORKFLOW_TRACKING.md this is the high level work flow that we need to follow in our development process
 5. USER_STORIES this is the directory that manages the user stories
 6. TESTS this is the directory that manages the tests
-7. TASKS.md this the file that will be created routenly to keep track of the work that needs to get executed on at a detailed level. 
+7. TASKS.md this the file that will be created routinely to keep track of the work that needs to get executed on at a detailed level.
