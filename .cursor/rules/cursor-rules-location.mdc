@@ -1,0 +1,69 @@
+---
+description: Standards for placing and organizing Cursor rule files
+globs: ["**/*.mdc", "**/*.cursorrules", "**/cursor*rule*"]
+---
+
+# Cursor Rules Location
+
+Rules for placing and organizing Cursor rule files in the repository.
+
+## Directory Structure
+
+Cursor rule files must always be placed in the `.cursor/rules/` directory:
+
+```
+PROJECT_ROOT/
+├── .cursor/
+│   └── rules/
+│       ├── your-rule-name.mdc
+│       ├── another-rule.mdc
+│       └── ...
+└── ...
+```
+
+## Naming Conventions
+
+- Use kebab-case for filenames (e.g., `design-system-components.mdc`)
+- Always use the `.mdc` extension
+- Make names descriptive of the rule's purpose (e.g., `tdd-workflow.mdc`)
+
+## Rule File Format
+
+Each rule file should follow this format:
+
+```
+---
+description: Brief description of the rule's purpose
+globs: ["**/pattern/to/match/*.{ts,tsx}", "another/pattern/**/*"]
+---
+
+# Rule Title
+
+Detailed guidance for when this rule applies...
+
+## Section 1
+- Important point 1
+- Important point 2
+
+## Section 2
+- More detailed guidance...
+```
+
+## Implementation Guidelines
+
+- Never place rule files in the project root
+- Never place rule files in subdirectories outside `.cursor/rules/`
+- When asked to create a new rule, always create it in `.cursor/rules/`
+- Rules should be focused on a specific concern or file type
+- Reference related documentation in rule content when applicable
+
+## Creating New Rules
+
+When creating a new rule, use the command:
+
+```bash
+mkdir -p .cursor/rules/
+touch .cursor/rules/your-rule-name.mdc
+```
+
+Then edit the file with the appropriate content following the format above.

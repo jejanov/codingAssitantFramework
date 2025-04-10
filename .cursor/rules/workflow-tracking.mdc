@@ -1,0 +1,84 @@
+---
+description: Workflow Tracking Guide
+globs: ["**/TASK.md", "**/WORKFLOW*.md", "**/workflow*.md", "**/WORKFLOW_TRACKING.md"]
+alwaysApply: false
+---
+
+# Workflow Tracking
+
+This guide explains how to track progress through our Test-Driven Development workflow.
+
+## Workflow Phases 
+
+Our TDD workflow consists of these phases:
+
+1. **User Story Creation** - Defining requirements with acceptance criteria
+2. **Test Planning** - Creating test cases mapped to acceptance criteria
+3. **Task Planning** - Breaking down implementation into tasks
+4. **TDD Implementation** - Following the Red-Green-Refactor cycle
+   - Red: Implementing failing tests
+   - Green: Making tests pass with minimal code
+   - Refactor: Improving code while keeping tests passing
+5. **Verification** - Confirming all acceptance criteria are met
+
+## Tracking Progress in TASK.md
+
+The `TASK.md` file is the central place to track workflow progress:
+
+```markdown
+# Tasks
+
+This document tracks current and completed tasks in the project, organized by user story and TDD workflow phase.
+
+## Active User Stories
+
+### User Story: US-XXX - [Title]
+**Current Workflow Phase:** [User Story Creation | Test Planning | Task Planning | TDD Implementation | Verification]
+
+#### Test Planning Tasks
+- [ ] Create test cases for Criterion 1 (Due: YYYY-MM-DD)
+- [ ] Create test cases for Criterion 2 (Due: YYYY-MM-DD)
+- [ ] Create test cases for edge cases (Due: YYYY-MM-DD)
+
+#### Implementation Tasks (Red Phase)
+- [ ] Implement test file for Component A (Due: YYYY-MM-DD)
+- [ ] Implement test file for Component B (Due: YYYY-MM-DD)
+- [ ] Verify all tests are failing as expected (Red) (Due: YYYY-MM-DD)
+
+#### Implementation Tasks (Green Phase)
+- [ ] Implement Component A to pass tests (Due: YYYY-MM-DD)
+- [ ] Implement Component B to pass tests (Due: YYYY-MM-DD)
+- [ ] Verify all tests pass (Green) (Due: YYYY-MM-DD)
+
+#### Implementation Tasks (Refactor Phase)
+- [ ] Refactor Component A (Due: YYYY-MM-DD)
+- [ ] Refactor Component B (Due: YYYY-MM-DD)
+- [ ] Verify all tests still pass after refactoring (Due: YYYY-MM-DD)
+
+#### Verification Tasks
+- [ ] Verify Acceptance Criterion 1 is met (Due: YYYY-MM-DD)
+- [ ] Verify Acceptance Criterion 2 is met (Due: YYYY-MM-DD)
+- [ ] Update documentation (Due: YYYY-MM-DD)
+```
+
+## Updating Workflow Status
+
+As you progress through the workflow:
+
+1. Update the "Current Workflow Phase" indicator in `TASK.md`
+2. Check off completed tasks with completion dates
+3. Add any discovered tasks to the "Discovered During Work" section
+4. Move completed user stories to the "Completed User Stories" section
+5. Update the user story document to mark acceptance criteria as complete
+6. Add completed user stories to `USER_STORIES/COMPLETED.md`
+
+## Workflow Reference
+
+For a complete description of the workflow, refer to `/WORKFLOW.md`, which includes:
+- Detailed workflow steps
+- Visual workflow diagram
+- Document structure 
+- TDD cycle visualization
+
+Always keep the workflow tracking up to date to ensure everyone understands the current state of development.
+

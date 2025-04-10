@@ -1,0 +1,28 @@
+---
+description: Design System Component Development Guide
+globs: ["**/components/**/*.tsx", "**/components/**/*.ts", "**/*.component.tsx", "**/*.styles.ts"]
+---
+
+# Design System Component Development
+
+When developing UI/UX components, follow these guidelines and reference the existing design system:
+
+## Essential Resources
+- **Design System Overview**: See `/DESIGN_SYSTEM/documentation/01-Overview.md` for the system architecture
+- **Component Structure**: Each component should be in its own directory with a .tsx and .md documentation file
+- **Design Tokens**: Always use tokens from `/DESIGN_SYSTEM/tokens/` for styling (colors, spacing, typography, etc.)
+
+## Implementation Guidelines
+- Use Emotion styled components with TypeScript interfaces
+- Follow the glassmorphism hierarchy (container/interactive/emphasized/content)
+- Reference existing components in `/DESIGN_SYSTEM/components/` for implementation patterns
+- For glass effects specifically, see `/DESIGN_SYSTEM/documentation/06-Glassmorphism.md`
+
+## Component Props
+- Use optional props with clear type definitions (e.g., `variant?: "primary" | "secondary"`)
+- Provide sensible defaults for all optional props
+- Use styled-component pattern for variant handling: `${props => props.variant === "primary" ? ... : ...}`
+
+## Animation
+- Use animation tokens for consistent motion design
+- See `/DESIGN_SYSTEM/documentation/04-Animation_Guide.md` for animation principles

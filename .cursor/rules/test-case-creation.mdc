@@ -1,0 +1,104 @@
+---
+description: Test Case Creation Guide
+globs: ["**/tests/**/*.test.{ts,tsx}", "**/tests/**/*.spec.{ts,tsx}", "**/USER_STORIES/**/*-tests.md", "**/test*.md"]
+---
+
+# Test Case Creation
+
+When creating test cases for user stories, follow these guidelines:
+
+## Test Case Format
+
+Each test case document should follow this format:
+
+```markdown
+# Test Cases for US-[NUMBER]: [Title]
+
+## Unit Tests
+
+### Test Case 1: [Describe what's being tested]
+**Maps to Acceptance Criterion:** [Reference the criterion number]
+
+```typescript
+// Test code here will be implemented in /tests directory
+describe('[Component/Function being tested]', () => {
+  it('should [expected behavior]', () => {
+    // Arrange
+    // ...
+    
+    // Act
+    // ...
+    
+    // Assert
+    // ...
+  });
+  
+  it('should handle [edge case]', () => {
+    // Test edge case
+  });
+  
+  it('should handle [failure case]', () => {
+    // Test failure case
+  });
+});
+```
+
+### Test Case 2: [Describe what's being tested]
+**Maps to Acceptance Criterion:** [Reference the criterion number]
+
+```typescript
+// Additional test cases
+```
+
+## Integration Tests
+[If applicable]
+
+### Test Case 3: [Describe integration scenario]
+**Maps to Acceptance Criteria:** [Reference criteria numbers]
+
+```typescript
+// Integration test code
+```
+
+## UI Component Tests
+[If applicable]
+
+### Test Case 4: [Describe UI component test]
+**Maps to Acceptance Criterion:** [Reference the criterion number]
+
+```typescript
+// UI component test
+```
+
+## Manual Test Cases
+[If automated testing is not sufficient]
+
+### Manual Test 1: [Describe manual test]
+**Maps to Acceptance Criterion:** [Reference the criterion number]
+
+1. Step 1
+2. Step 2
+3. Expected result
+```
+
+## Workflow Integration
+
+Test cases are a critical part of our Test-Driven Development workflow:
+
+1. After creating a user story with acceptance criteria, create the test cases document
+2. Map each test case to specific acceptance criteria in the user story
+3. Implement the actual test files in the `/tests` directory based on these test cases
+4. Ensure all acceptance criteria have at least one test case
+5. Include tests for expected behavior, edge cases, and error handling
+6. Reference these test cases in implementation tasks
+
+## Guidelines for Good Test Cases
+
+- Write tests that clearly validate acceptance criteria
+- Follow the Arrange-Act-Assert pattern
+- Include edge cases and failure scenarios
+- Use descriptive test names that explain expected behavior
+- Group related tests using descriptive `describe` blocks
+- For UI components, include tests for design system compliance
+- Write tests that are specific, isolated, and deterministic
+- Use appropriate mocks and test doubles when necessary

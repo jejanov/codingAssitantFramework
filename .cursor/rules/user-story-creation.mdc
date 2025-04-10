@@ -1,0 +1,74 @@
+---
+description: User Story Creation Guide
+globs: ["**/USER_STORIES/**/*.md", "**/US-*/*.md", "**/US-*.md", "**/*user-stor*.md"]
+---
+
+# User Story Creation
+
+When creating or working with user stories, follow these guidelines:
+
+## User Story Format
+
+Each user story should follow this format:
+
+```markdown
+# US-[NUMBER]: [Title]
+
+## User Story
+**As a** [type of user]  
+**I want** [feature/capability]  
+**So that** [benefit/value]
+
+## Background
+[Provide any necessary context or background information]
+
+## Acceptance Criteria
+
+### Criterion 1: [Clear, testable statement]
+- [ ] Given [precondition]
+- [ ] When [action]
+- [ ] Then [expected result]
+
+### Criterion 2: [Clear, testable statement]
+- [ ] Given [precondition]
+- [ ] When [action]
+- [ ] Then [expected result]
+
+### Criterion 3: [Clear, testable statement]
+- [ ] Given [precondition]
+- [ ] When [action]
+- [ ] Then [expected result]
+
+## Design Notes
+[Optional: Include any design considerations, wireframes, or mockups]
+
+## Dependencies
+[List any dependencies on other features, services, or user stories]
+
+## Test Cases
+[This section will be completed in the US-XXX-tests.md file]
+
+## Implementation Tasks
+[This section will be completed in the US-XXX-tasks.md file and reflected in TASK.md]
+```
+
+## Workflow Integration
+
+User stories are the starting point for our Test-Driven Development workflow:
+
+1. Create a new directory for the user story: `USER_STORIES/US-XXX-feature-name/`
+2. Create the user story file: `US-XXX.md` using the format above
+3. Define clear acceptance criteria using the Given/When/Then format
+4. Create test cases in `US-XXX-tests.md` that map to these acceptance criteria
+5. Create implementation tasks in `US-XXX-tasks.md` that map to test cases
+6. Update `TASK.md` with these tasks organized by workflow phase
+
+## Guidelines for Good User Stories
+
+- Keep user stories focused on a single capability or feature
+- Write acceptance criteria that are clear, specific, and testable
+- Use the Given/When/Then format consistently
+- Include all necessary context in the Background section
+- For UI components, reference the design system in Design Notes
+- Ensure acceptance criteria are complete before moving to test planning
+- Use specific, measurable statements rather than vague requirements

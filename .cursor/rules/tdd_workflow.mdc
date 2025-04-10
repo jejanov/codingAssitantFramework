@@ -1,0 +1,37 @@
+---
+description: Test-Driven Development Workflow Guide
+globs: ["**/*.test.ts", "**/*.test.tsx", "**/*.spec.ts", "**/*.spec.tsx", "**/USER_STORIES/**/*.md", "tests/**/*"]
+---
+
+# Test-Driven Development Workflow
+
+When working with tests and user stories, follow our structured TDD workflow:
+
+## User Stories & Acceptance Criteria
+- User stories are in `/USER_STORIES/` with acceptance criteria in Given/When/Then format
+- Each user story has test cases (US-XXX-tests.md) and tasks (US-XXX-tasks.md)
+- Tasks from user stories are reflected in the main `TASK.md` file
+
+## Test Implementation Guidelines
+- Tests should be written first, following the "red-green-refactor" TDD cycle
+- All tests should map to specific acceptance criteria
+- Include test cases for:
+  - Expected behavior
+  - Edge cases
+  - Error handling
+- Follow the Arrange-Act-Assert pattern in test implementations
+
+## Test Organization
+- Tests mirror the application structure within the `/tests` directory
+- Name test files with `.test.ts` or `.test.tsx` extensions
+- Group related tests with descriptive `describe` blocks
+- Write clear, specific test cases with descriptive `it` statements
+
+## Test-Driven Workflow
+1. Read the user story and acceptance criteria
+2. Implement tests based on the US-XXX-tests.md file
+3. Verify tests fail initially (red phase)
+4. Implement code to make tests pass (green phase)
+5. Refactor while keeping tests passing
+6. Mark tasks as complete in TASK.md
+7. Verify all acceptance criteria are met

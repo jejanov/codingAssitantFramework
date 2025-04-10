@@ -1,0 +1,88 @@
+---
+description: Task Creation and Management Guide
+globs: ["**/TASK.md", "**/TASK*.md", "**/USER_STORIES/**/US-*-tasks.md"]
+---
+
+# Task Creation and Management
+
+When creating or updating task lists, follow these guidelines to maintain consistency with our TDD workflow:
+
+## Task Structure
+
+- Tasks should be organized by user story and TDD workflow phase
+- Each task should map to specific acceptance criteria and test cases
+- Break down large tasks into smaller, manageable sub-tasks
+- Include clear verification steps for each phase of the workflow
+
+## Creating a New Task List
+
+When creating a task list for a new feature:
+
+1. Use the structure below, based on `USER_STORIES/TASK_TEMPLATE.md`
+2. Organize tasks by TDD workflow phase (Test Planning, Red, Green, Refactor, Verification)
+3. Include due dates for each task
+4. Indicate the current workflow phase at the top of the user story section
+
+## Task List Template
+
+```markdown
+# Tasks
+
+This document tracks current and completed tasks in the project, organized by user story and TDD workflow phase.
+
+## Active User Stories
+
+### User Story: US-XXX - [Title]
+**Current Workflow Phase:** [User Story Creation | Test Planning | Task Planning | TDD Implementation | Verification]
+
+#### Test Planning Tasks
+- [ ] Create test cases for Criterion 1 (Due: YYYY-MM-DD)
+- [ ] Create test cases for Criterion 2 (Due: YYYY-MM-DD)
+- [ ] Create test cases for edge cases (Due: YYYY-MM-DD)
+
+#### Implementation Tasks (Red Phase)
+- [ ] Implement test file for Component A (Due: YYYY-MM-DD)
+- [ ] Implement test file for Component B (Due: YYYY-MM-DD)
+- [ ] Verify all tests are failing as expected (Red) (Due: YYYY-MM-DD)
+
+#### Implementation Tasks (Green Phase)
+- [ ] Implement Component A to pass tests (Due: YYYY-MM-DD)
+- [ ] Implement Component B to pass tests (Due: YYYY-MM-DD)
+- [ ] Verify all tests pass (Green) (Due: YYYY-MM-DD)
+
+#### Implementation Tasks (Refactor Phase)
+- [ ] Refactor Component A (Due: YYYY-MM-DD)
+- [ ] Refactor Component B (Due: YYYY-MM-DD)
+- [ ] Verify all tests still pass after refactoring (Due: YYYY-MM-DD)
+
+#### Verification Tasks
+- [ ] Verify Acceptance Criterion 1 is met (Due: YYYY-MM-DD)
+- [ ] Verify Acceptance Criterion 2 is met (Due: YYYY-MM-DD)
+- [ ] Update documentation (Due: YYYY-MM-DD)
+
+## General Tasks
+- [ ] Task 1: [Description] (Due: YYYY-MM-DD)
+- [ ] Task 2: [Description] (Due: YYYY-MM-DD)
+
+## Discovered During Work
+- [ ] Task 1: [Description] (Added: YYYY-MM-DD)
+- [ ] Task 2: [Description] (Added: YYYY-MM-DD)
+
+## Completed User Stories
+
+### User Story: US-XXX - [Title] (Completed: YYYY-MM-DD)
+- [x] Test Planning: Created test cases for all acceptance criteria (Completed: YYYY-MM-DD)
+- [x] TDD Implementation: Implemented all components with tests (Completed: YYYY-MM-DD)
+- [x] Verification: All acceptance criteria verified (Completed: YYYY-MM-DD)
+
+## Backlog
+- [ ] User Story: US-XXX - [Title]
+- [ ] General Task: [Description]
+```
+
+## Updating Task Status
+
+- Update the "Current Workflow Phase" indicator as you progress through the workflow
+- Check off tasks as they are completed, including the completion date
+- Add any new tasks discovered during development to the "Discovered During Work" section
+- Move completed user stories to the "Completed User Stories" section, with a summary of major phases completed

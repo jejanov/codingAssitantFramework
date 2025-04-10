@@ -1,0 +1,48 @@
+---
+description: Project Planning and Architecture Guide
+globs: ["**/PLANNING.md", "**/README.md", "**/architecture/**", "**/docs/architecture/**"]
+---
+
+# Project Planning and Architecture
+
+When working with project planning and architecture documents, follow these guidelines:
+
+## Project Vision & Architecture
+
+The `PLANNING.md` file contains the high-level vision, architecture, tech stack, and success criteria for the project. When developing new features:
+
+1. Verify that the feature aligns with the architectural principles in `PLANNING.md`
+2. Follow the established tech stack and development standards
+3. Ensure new components follow the file structure conventions
+4. Consider the constraints and success criteria when making design decisions
+
+## Integration with TDD Workflow
+
+New features should be developed following our Test-Driven Development workflow:
+
+1. Start by creating a user story in the `USER_STORIES` directory
+2. Define clear acceptance criteria that align with the project's success criteria
+3. Create test cases that validate the architectural principles 
+4. Implement the feature according to the architectural guidelines
+5. Document any architectural decisions or patterns used
+
+## Architecture Documentation
+
+When modifying or extending the project architecture:
+
+- Update `PLANNING.md` to reflect the changes
+- Ensure diagrams and visualizations are kept up-to-date
+- Document the rationale behind architectural decisions
+- Consider the impact on existing components and features
+- Verify that changes maintain alignment with the project's vision and constraints
+
+## Technology Constraints
+
+Adhere to the technology constraints defined in `PLANNING.md`, including:
+
+- Framework versions and dependencies
+- Performance requirements
+- Coding standards and patterns
+- File structure and organization
+
+This ensures consistency across the project and maintains the architectural integrity of the system.
