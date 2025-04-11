@@ -2,9 +2,9 @@
 
 ## High-Level Vision
 
-The AI Coding Workshop Presentation App is a web-based slide presentation that demonstrates the power of AI coding tools (Cursor.ai, Claude 3.7, and Claude Code) by being built with those very tools during a live workshop. This meta-recursive approach makes the medium the message - showcasing AI coding capabilities through a product created by those same capabilities.
+The AI Coding Workshop Presentation is a web-based slide presentation that demonstrates the power of AI coding tools (Cursor.ai, Claude 3.7, and Claude Code) by being built with those very tools during a live workshop. This meta-recursive approach makes the medium the message - showcasing AI coding capabilities through a product created by those same capabilities.
 
-The application will guide viewers through what these tools are, why they're transformative for software development, and how developers can integrate them into their workflows.
+The application will present the viewers with slides that reflect the slide criteria found in `slide_instructions/` directory.
 
 ## Architecture
 
@@ -33,7 +33,6 @@ The application will guide viewers through what these tools are, why they're tra
 
 ### Data Flow
 
-- Slides loaded dynamically from markdown instruction files
 - Navigation events trigger state updates and transitions
 - Interactive elements communicate through context providers
 - Audio effects triggered by slide events and user interactions
@@ -105,7 +104,6 @@ The `slide_instructions/` directory contains markdown files that define the cont
 
 ## Constraints
 
-- Presentation must be completable within a 30-minute live demo
 - All content must be responsive and work on standard presentation displays
 - Bundle size should remain lean for quick loading
 - UI should feel modern, polished, and professionally designed
