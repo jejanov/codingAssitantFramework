@@ -52,6 +52,7 @@ The application will present the viewers with slides that reflect the slide crit
 - **Styling**: Tailwind CSS 3.3.1
 - **Routing**: React Router 6.10.0
 - **State Management**: React Context API
+- **Testing**: Vitest 0.30.1 with React Testing Library 14.0.0 
 
 ### Visualization & Interaction
 - **Animation**: Framer Motion 10.12.4
@@ -108,6 +109,7 @@ The `slide_instructions/` directory contains markdown files that define the cont
 - Bundle size should remain lean for quick loading
 - UI should feel modern, polished, and professionally designed
 - Animations should enhance understanding, not distract from content
+- MUST USE VITEST for both front and backend testing. DO NOT USE JEST or JSDOM
 
 ## Success Criteria
 

@@ -1,7 +1,9 @@
 ---
 description: Test Case Creation Guide
 globs: ["**/tests/**/*.test.{ts,tsx}", "**/tests/**/*.spec.{ts,tsx}", "**/USER_STORIES/**/*-tests.md", "**/test*.md"]
+alwaysApply: false
 ---
+**USE VITEST**
 
 # Test Case Creation
 
