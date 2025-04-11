@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sound Test</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+        background-color: #f0f0f0;
+      }
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        background-color: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      button {
+        background-color: #4caf50;
+        border: none;
+        color: white;
+        padding: 10px 20px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 10px 2px;
+        cursor: pointer;
+        border-radius: 4px;
+      }
+      button:hover {
+        background-color: #45a049;
+      }
+      .log {
+        background-color: #f8f8f8;
+        border: 1px solid #ddd;
+        padding: 10px;
+        border-radius: 4px;
+        height: 200px;
+        overflow-y: auto;
+        margin-top: 20px;
+        font-family: monospace;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Sound Test</h1>
+
+      <div>
+        <button id="loadHowler">Load Howler.js</button>
+        <button id="playKeyboard" disabled>Play Keyboard Sound</button>
+        <button id="playKeyboardDirect" disabled>Play Direct Audio</button>
+      </div>
+
+      <div>
+        <h3>Volume:</h3>
+        <input
+          type="range"
+          id="volume"
+          min="0"
+          max="1"
+          step="0.1"
+          value="0.5"
+        />
+        <span id="volumeValue">0.5</span>
+      </div>
+
+      <div class="log" id="logOutput"></div>
+    </div>
+
+    <script>
+      const logOutput = document.getElementById('logOutput')
+      const loadHowlerBtn = document.getElementById('loadHowler')
+      const playKeyboardBtn = document.getElementById('playKeyboard')
+      const playKeyboardDirectBtn =
+        document.getElementById('playKeyboardDirect')
+      const volumeSlider = document.getElementById('volume')
+      const volumeValue = document.getElementById('volumeValue')
+
+      let sound = null
+
+      function log(message) {
+        const date = new Date()
+        const time = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}.${date.getMilliseconds()}`
+        logOutput.innerHTML += `<div>[${time}] ${message}</div>`
+        logOutput.scrollTop = logOutput.scrollHeight
+      }
+
+      loadHowlerBtn.addEventListener('click', () => {
+        log('Loading Howler.js...')
+
+        const script = document.createElement('script')
+        script.src =
+          'https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js'
+        script.onload = () => {
+          log('✅ Howler.js loaded successfully')
+          playKeyboardBtn.disabled = false
+          playKeyboardDirectBtn.disabled = false
+        }
+        script.onerror = (err) => {
+          log(`❌ Error loading Howler.js: ${err}`)
+        }
+
+        document.head.appendChild(script)
+      })
+
+      playKeyboardBtn.addEventListener('click', () => {
+        log('Creating Howl instance for keyboard sound...')
+
+        sound = new Howl({
+          src: ['/sounds/keyboard-typing.mp3'],
+          volume: parseFloat(volumeSlider.value),
+          html5: true,
+          onload: () => {
+            log('✅ Keyboard sound loaded successfully')
+            log('Playing keyboard sound...')
+            sound.play()
+          },
+          onplay: () => {
+            log('▶️ Keyboard sound is playing')
+          },
+          onend: () => {
+            log('✓ Keyboard sound finished playing')
+          },
+          onloaderror: (id, err) => {
+            log(`❌ Error loading keyboard sound: ${err}`)
+          },
+          onplayerror: (id, err) => {
+            log(`❌ Error playing keyboard sound: ${err}`)
+          },
+        })
+      })
+
+      playKeyboardDirectBtn.addEventListener('click', () => {
+        log('Creating Audio element for direct playback...')
+
+        const audio = new Audio('/sounds/keyboard-typing.mp3')
+        audio.volume = parseFloat(volumeSlider.value)
+
+        audio.oncanplaythrough = () => {
+          log('✅ Audio can play through')
+        }
+
+        audio.onplay = () => {
+          log('▶️ Audio is playing')
+        }
+
+        audio.onended = () => {
+          log('✓ Audio finished playing')
+        }
+
+        audio.onerror = (err) => {
+          log(
+            `❌ Error with audio: ${
+              err.target.error?.message || 'Unknown error'
+            }`
+          )
+        }
+
+        log('Attempting to play audio...')
+        audio.play().catch((err) => {
+          log(`❌ Error playing audio: ${err.message}`)
+        })
+      })
+
+      volumeSlider.addEventListener('input', () => {
+        const value = volumeSlider.value
+        volumeValue.textContent = value
+
+        if (sound) {
+          sound.volume(parseFloat(value))
+          log(`Volume changed to ${value}`)
+        }
+      })
+
+      log('Page loaded. Click "Load Howler.js" to start.')
+    </script>
+  </body>
+</html>

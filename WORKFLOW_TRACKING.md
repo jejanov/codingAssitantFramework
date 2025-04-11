@@ -30,3 +30,19 @@ For reference, our workflow follows these phases:
 
 1. Follow the workflow process as outlined in WORKFLOW.md
 2. Keep this tracking document updated as you progress
+
+## Current User Story
+
+**ID:** US-003
+**Title:** Display Productivity Visualization Slide
+**Current Phase:** TDD Implementation (Green Phase)
+
+## Completed User Stories
+
+**ID:** US-002
+**Title:** Create "Introduction Code" Slide
+**Completed Date:** 2023-05-30
+
+**ID:** US-001
+**Title:** Display First Slide Content
+**Completed Date:** 2023-05-23

@@ -9,7 +9,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Commands
 - **Build**: `npm run dev` for development, `npm run build` for production build
-- **Test**: `npm test` (all tests), `npm test -- -t "test name"` (single test), `npm run test:watch` (watch mode)
+- **Test**: `npm test` (all tests), `npm test -- -t "test name"` (single test), `npm test -- --coverage` (with coverage)
 - **Lint**: `npm run lint` for ESLint, `npm run format` for Prettier formatting
 - **Type Check**: `npm run typecheck` to verify TypeScript types
 
@@ -25,7 +25,6 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Components**: Follow design system, use tokens from `/DESIGN_SYSTEM/tokens/`
 - **Naming**: PascalCase for components/types, camelCase for functions/variables
 - **Imports**: Absolute imports, group by type (React, components, utils, types)
-- **Error Handling**: Use Error boundaries, consistent error patterns
 - **Testing**: AAA pattern (Arrange-Act-Assert), test edge cases and errors
 - **State**: Use React Context API for global state management
 - **Styling**: Tailwind CSS with consistent patterns

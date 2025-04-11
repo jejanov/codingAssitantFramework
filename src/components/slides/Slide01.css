@@ -1,0 +1,303 @@
+.particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  animation: float linear infinite;
+}
+
+.neural-node {
+  box-shadow: 0 0 10px 2px rgba(156, 39, 176, 0.5);
+  animation: pulse 2s infinite alternate, float linear infinite;
+}
+
+.neural-connection {
+  position: absolute;
+  transform-origin: left center;
+  animation: fade-pulse 3s infinite alternate;
+}
+
+/* Glassmorphism elements */
+.glass-panel-container {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(33, 150, 243, 0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+}
+
+.glass-panel-container:hover {
+  background: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 8px 32px rgba(33, 150, 243, 0.2),
+    0 0 10px rgba(33, 150, 243, 0.3);
+  transform: translateY(-3px);
+}
+
+.glass-panel-text {
+  background: rgba(21, 101, 192, 0.1);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(33, 150, 243, 0.2);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.glass-panel-interactive {
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(0, 188, 212, 0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+}
+
+.glass-panel-interactive:hover {
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 10px rgba(0, 188, 212, 0.4);
+}
+
+.glass-panel-content {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(156, 39, 176, 0.2);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* Direct Glassmorphism Text Effects */
+.glass-text {
+  color: rgba(255, 255, 255, 0.4) !important;
+  background-clip: text !important;
+  -webkit-background-clip: text !important;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.15);
+  position: relative;
+  z-index: 2;
+  transform-style: preserve-3d;
+  will-change: transform, text-shadow;
+  transition: text-shadow 0.5s ease;
+}
+
+.glass-text::after {
+  content: attr(data-text);
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: -1;
+  color: rgba(255, 255, 255, 0.05);
+  filter: blur(2px);
+  transform: translateZ(-5px);
+}
+
+/* Glass text variants */
+.glass-text-primary {
+  background-image: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.9) 0%,
+    rgba(210, 235, 255, 0.9) 100%
+  );
+  box-decoration-break: clone;
+}
+
+.glass-text-primary:hover {
+  text-shadow: 0 0 4px rgba(33, 150, 243, 0.4), 0 0 8px rgba(33, 150, 243, 0.2);
+}
+
+.glass-text-secondary {
+  background-image: linear-gradient(
+    to right,
+    rgba(156, 39, 176, 0.95) 0%,
+    rgba(103, 58, 183, 0.95) 40%,
+    rgba(33, 150, 243, 0.95) 100%
+  );
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  color: rgba(255, 255, 255, 0.05) !important;
+  text-shadow: 0 0 2px rgba(156, 39, 176, 0.5);
+}
+
+.glass-text-accent {
+  background-image: linear-gradient(
+    to right,
+    rgba(0, 188, 212, 0.95) 0%,
+    rgba(3, 218, 197, 0.95) 100%
+  );
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  color: rgba(255, 255, 255, 0.05) !important;
+  text-shadow: 0 0 2px rgba(0, 188, 212, 0.5);
+}
+
+/* Glass text with light refraction effect - made more subtle */
+.glass-text-refract {
+  position: relative;
+  overflow: hidden;
+}
+
+.glass-text-refract::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(
+    circle at center,
+    rgba(255, 255, 255, 0.05) 0%,
+    rgba(255, 255, 255, 0) 80%
+  );
+  opacity: 0;
+  transform: scale(0.8);
+  transform-origin: center;
+  transition: transform 1s ease, opacity 1s ease;
+  z-index: -1;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+}
+
+.glass-text-refract:hover::before {
+  opacity: 0.3;
+  transform: scale(1);
+  animation: refraction-move 2s infinite alternate;
+}
+
+@keyframes refraction-move {
+  0% {
+    transform: scale(0.9) translateX(-10%) translateY(-5%);
+  }
+  100% {
+    transform: scale(1.1) translateX(10%) translateY(5%);
+  }
+}
+
+/* Text depth layers */
+.text-depth-1 {
+  transform: translateZ(20px);
+}
+
+.text-depth-2 {
+  transform: translateZ(10px);
+}
+
+.text-depth-3 {
+  transform: translateZ(5px);
+}
+
+/* Paper texture background */
+.bg-paper-texture {
+  background-image: url('/images/paper-texture.png');
+  background-repeat: repeat;
+  mix-blend-mode: overlay;
+}
+
+/* Animation keyframes */
+@keyframes float {
+  0% {
+    transform: translateY(0) translateX(0);
+  }
+  25% {
+    transform: translateY(-20px) translateX(10px);
+  }
+  50% {
+    transform: translateY(-40px) translateX(0);
+  }
+  75% {
+    transform: translateY(-20px) translateX(-10px);
+  }
+  100% {
+    transform: translateY(0) translateX(0);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  100% {
+    transform: scale(1.3);
+    opacity: 1;
+  }
+}
+
+@keyframes fade-pulse {
+  0% {
+    opacity: 0.1;
+  }
+  100% {
+    opacity: 0.4;
+  }
+}
+
+/* Title pulse animation after code execution */
+.title-headline.pulse-animation {
+  animation: title-glow 2s infinite alternate;
+}
+
+@keyframes title-glow {
+  0% {
+    text-shadow: 0 0 5px rgba(33, 150, 243, 0.5);
+  }
+  100% {
+    text-shadow: 0 0 20px rgba(33, 150, 243, 0.8),
+      0 0 30px rgba(0, 188, 212, 0.6);
+  }
+}
+
+/* Code container styling */
+.code-container,
+.code-typing {
+  position: relative;
+  overflow: hidden;
+  color: #e0e0e0;
+  z-index: 20;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.code-container code,
+.code-typing code {
+  color: #8bc34a;
+  display: block;
+  width: 100%;
+  font-family: monospace;
+}
+
+.code-container .cursor,
+.code-typing .cursor {
+  color: white;
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+/* Syntax highlighting customizations */
+.code-container .token.comment,
+.code-typing .token.comment {
+  color: #8a8c90;
+}
+
+.code-container .token.keyword,
+.code-typing .token.keyword {
+  color: #bb86fc;
+}
+
+.code-container .token.function,
+.code-container .token.method,
+.code-typing .token.function,
+.code-typing .token.method {
+  color: #03dac6;
+}
+
+.code-container .token.string,
+.code-typing .token.string {
+  color: #ff8a65;
+}
+
+.code-container .token.punctuation,
+.code-typing .token.punctuation {
+  color: #89ddff;
+}

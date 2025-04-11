@@ -1,0 +1,178 @@
+.slide-02-container {
+  /* Full slide styles */
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  background-color: #1e1e1e;
+}
+
+/* IDE styling */
+.dark-theme {
+  background-color: rgba(30, 30, 30, 0.5);
+  color: #d4d4d4;
+}
+
+/* Glass Panel Hierarchy Styles */
+.glass-panel-container {
+  background: rgba(30, 30, 30, 0.7);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(33, 150, 243, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+}
+
+.glass-panel-interactive {
+  background: rgba(33, 150, 243, 0.1);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(0, 188, 212, 0.2);
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.glass-panel-interactive:hover,
+.hover-elevate:hover {
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 10px rgba(0, 188, 212, 0.2);
+  transform: translateY(-2px);
+}
+
+.glass-panel-emphasized {
+  background: rgba(156, 39, 176, 0.1);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(156, 39, 176, 0.2);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+}
+
+.glass-panel-content {
+  background: rgba(40, 40, 40, 0.4);
+  backdrop-filter: blur(4px);
+  transition: all 0.3s ease;
+}
+
+/* Code container background with paper texture */
+.code-container-background {
+  position: relative;
+}
+
+.code-container-background::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('/images/paper-texture.png');
+  background-repeat: repeat;
+  opacity: 0.03;
+  pointer-events: none;
+  mix-blend-mode: overlay;
+}
+
+/* Code typing component styling */
+.code-typing {
+  margin: 0;
+  padding: 0 1rem;
+  background: transparent;
+  position: relative;
+  z-index: 1;
+}
+
+/* Blinking cursor animation */
+.cursor {
+  animation: blink 1s step-end infinite;
+  font-weight: bold;
+  color: #fff;
+}
+
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+/* Translation panel animations */
+.translation-panel.visible {
+  opacity: 1;
+  right: 5%;
+}
+
+.translation-panel.hidden {
+  opacity: 0;
+  right: -50%;
+}
+
+/* Line number styling */
+.line-numbers {
+  user-select: none;
+}
+
+/* Particle effects */
+.particle-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.code-particle {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+/* Paper texture background */
+.bg-paper-texture {
+  background-image: url('/images/paper-texture.png');
+  background-repeat: repeat;
+  mix-blend-mode: overlay;
+}
+
+/* Animation keyframes */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideInUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Bounce animation for bullet points */
+@keyframes bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}

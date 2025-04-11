@@ -1,0 +1,138 @@
+import React, { useState, useEffect, useRef, useContext } from 'react';
+import { motion } from 'framer-motion';
+import { Glass } from '../../../DESIGN_SYSTEM/components/Glass/Glass';
+import useAudioEffects from '../../hooks/useAudioEffects';
+import ProductivityMetrics from './ProductivityMetrics';
+import TimelineComparison from './TimelineComparison';
+import './Slide03.css';
+import { AudioContext } from '../../App'; // Adjust path as needed
+
+/**
+ * Slide03: Productivity Visualization slide as specified in slide_instructions/slide_03.md
+ * Visualizes the productivity gains that AI-assisted development enables through a dynamic racing video
+ * and overlaid metrics visualization with glassmorphism effects
+ */
+const Slide03: React.FC = () => {
+    // State for progress animation (0 to 1)
+    const [animationProgress, setAnimationProgress] = useState(0);
+    const videoRef = useRef<HTMLVideoElement>(null);
+
+    // Get audio effects from context
+    const audioEffects = useContext(AudioContext);
+
+    // Animate metrics appearance
+    useEffect(() => {
+        // Start with a delay
+        const startDelay = setTimeout(() => {
+            // Play ambient sound
+            if (audioEffects) {
+                audioEffects.playBackgroundAmbience();
+            }
+
+            // Animation start time reference
+            let startTime: number | null = null;
+            let animationFrameId: number;
+
+            // Animation function for smooth progress
+            const animate = (timestamp: number) => {
+                if (!startTime) startTime = timestamp;
+                const elapsed = timestamp - startTime;
+
+                // Total duration: 15 seconds (slightly longer to match video)
+                const progress = Math.min(elapsed / 15000, 1);
+                setAnimationProgress(progress);
+
+                // Continue animation if not complete
+                if (progress < 1) {
+                    animationFrameId = requestAnimationFrame(animate);
+                }
+            };
+
+            // Start animation
+            animationFrameId = requestAnimationFrame(animate);
+
+            // Play the video when animation starts
+            if (videoRef.current) {
+                videoRef.current.play();
+            }
+
+            // Cleanup
+            return () => {
+                cancelAnimationFrame(animationFrameId);
+            };
+        }, 1000);
+
+        // Cleanup on unmount
+        return () => {
+            clearTimeout(startDelay);
+            if (audioEffects) {
+                audioEffects.stopBackgroundAmbience();
+            }
+        };
+    }, [audioEffects]);
+
+    return (
+        <div className="slide03-container">
+            {/* Background Video - 16:9 aspect ratio */}
+            <div className="video-background">
+                <video
+                    ref={videoRef}
+                    className="background-video"
+                    src="/images/DevRace.mp4"
+                    muted
+                    loop
+                    playsInline
+                />
+                <div className="video-overlay"></div>
+            </div>
+
+            {/* Dust particles effect */}
+            <div className="dust-particles">
+                <div className="dust-particle"></div>
+                <div className="dust-particle"></div>
+                <div className="dust-particle"></div>
+                <div className="dust-particle"></div>
+                <div className="dust-particle"></div>
+                <div className="dust-particle"></div>
+                <div className="dust-particle"></div>
+                <div className="dust-particle"></div>
+                <div className="dust-particle"></div>
+                <div className="dust-particle"></div>
+            </div>
+
+            {/* Speed lines effect */}
+            <div className="speed-lines">
+                <div className="speed-line"></div>
+                <div className="speed-line"></div>
+                <div className="speed-line"></div>
+                <div className="speed-line"></div>
+                <div className="speed-line"></div>
+                <div className="speed-line"></div>
+            </div>
+
+            {/* Content container - completely transparent */}
+            <div className="content-container">
+                <h1 className="slide-title">
+                    Breaking the Speed Limit: The Multiplier Effect
+                </h1>
+
+                <div className="metrics-container">
+                    <ProductivityMetrics raceProgress={animationProgress} />
+                    <TimelineComparison raceProgress={animationProgress} />
+                </div>
+
+                <motion.div
+                    className="research-citation"
+                    data-testid="research-citation"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: animationProgress > 0.9 ? 1 : 0 }}
+                    transition={{ duration: 0.5 }}
+                >
+                    Sources: Microsoft/MIT (Peng et al., 2023), Microsoft/MIT/Wharton field research (Zhao et al., 2024), McKinsey Digital (2023)
+                </motion.div>
+            </div>
+        </div>
+    );
+};
+
+export default Slide03; 
