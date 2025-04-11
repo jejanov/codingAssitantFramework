@@ -52,3 +52,4 @@ build
 # Misc
 .vercel
 .netlify
+.DS_Store
