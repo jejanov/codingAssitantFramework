@@ -3,7 +3,16 @@
 This document outlines our test-driven development workflow based on user stories and acceptance criteria.
 
 ## Complete Workflow
-
+0. **INITIALIZATION** **NOT TO BE REPEATED**
+   - This runs once at the first start of the development
+   - Check INITIALIZATION.md to see if initialization is already completed
+   - If not completed:
+     - Read PLANNING.md to understand project architecture and requirements
+     - Setup project structure, npm packages, testing environment based on PLANNING.md
+     - Create required configuration files (.eslintrc, tsconfig.json, etc.)
+     - Update INITIALIZATION.md to mark initialization as complete
+   - If already completed:
+     - Skip to step 1
 1. **Create User Story**
    - Use the `.cursor/rules/user-story-creation.mdc` format to create a new user story
    - Define clear, testable acceptance criteria using the Given/When/Then format
@@ -100,66 +109,4 @@ graph TD
         N --> O[Add to USER_STORIES/COMPLETED.md]
         O --> P[Update TASK.md]
     end
-```
-
-## Document Structure
-
-```
-Project/
-├── PLANNING.md                    # Project vision, architecture, standards
-├── WORKFLOW.md                    # This TDD workflow guide
-├── WORKFLOW_TRACKING.md           # High-level tracking of active story phases
-├── TASK.md                        # Current tasks organized by user story & phase
-├── USER_STORIES/                  # User story documentation
-│   ├── README.md                  # Overview
-│   ├── COMPLETED.md               # Tracking completed stories
-│   └── US-XXX-feature-name/       # Specific user story folder
-│       ├── US-XXX.md              # User story with acceptance criteria
-│       ├── US-XXX-tests.md        # Test cases for this story
-│       └── US-XXX-tasks.md        # Implementation tasks
-│
-├── .cursor/rules/                 # Cursor MDC rules
-│   ├── user-story-creation.mdc    # Template for user stories
-│   ├── test-case-creation.mdc     # Template for test cases
-│   ├── task_creation.mdc          # Template for implementation tasks
-│
-├── TESTS/                         # Actual test implementations
-│   ├── README.md                  # Testing guidelines (Optional)
-│   ├── components/                # Tests mirror application structure
-│   │   └── ...
-│   ├── services/
-│   │   └── ...
-│   └── utils/
-│       └── ...
-│
-├── DESIGN_SYSTEM/                 # Design system for UI components (if applicable)
-│   ├── components/
-│   ├── documentation/
-│   └── tokens/
-│
-└── .cursor/rules/                 # Cursor MDC rules
-    ├── design_system_components.mdc
-    ├── tdd_workflow.mdc
-    └── ... other rules
-```
-
-## TDD Cycle Visualization
-
-```
-┌─────────────────────────────────────────────────┐
-│                                                 │
-│  ┌─────────┐         ┌─────────┐         ┌─────────┐
-│  │         │         │         │         │         │
-│  │   RED   │ ──────► │  GREEN  │ ──────► │ REFACTOR│
-│  │         │         │         │         │         │
-│  └─────────┘         └─────────┘         └─────────┘
-│      ▲                                        │
-│      │                                        │
-│      └────────────────────────────────────────┘
-│                                                 │
-└─────────────────────────────────────────────────┘
-
-  RED      - Write failing tests that validate acceptance criteria
-  GREEN    - Implement minimum code to make tests pass
-  REFACTOR - Improve code while keeping tests passing
 ```

@@ -2,30 +2,36 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Initialization Check (IMPORTANT!)
+- **First Step**: Always check INITIALIZATION.md to see if one-time project setup is required
+- **If Required**: Follow the steps in .cursor/rules/initialization-check.mdc
+- **Only Once**: Initialization should only be performed once per project
+
 ## Commands
-- **Test Commands**: `npm test` for running all tests, `npm test -- -t "test name"` for specific tests
-- No build/lint commands identified (add if found in package.json)
+- **Build**: `npm run dev` for development, `npm run build` for production build
+- **Test**: `npm test` (all tests), `npm test -- -t "test name"` (single test), `npm run test:watch` (watch mode)
+- **Lint**: `npm run lint` for ESLint, `npm run format` for Prettier formatting
+- **Type Check**: `npm run typecheck` to verify TypeScript types
 
 ## Project Structure
-- Read `PLANNING.md` first for architecture overview
-- Use the Test-Driven Development workflow in `USER_STORIES/WORKFLOW.md`
-- Check `TASK.md` to identify current workflow phase
-- Reference `.cursor/rules/*.mdc` files for context-specific coding rules
+- **PLANNING.md**: Read first for architecture and tech stack overview
+- **WORKFLOW.md**: Follow TDD workflow with Red-Green-Refactor pattern
+- **TASK.md**: Check current workflow phase and implementation tasks
+- **.cursor/rules/**: Reference MDC files for context-specific coding rules
 
 ## Code Style Guidelines
-- **TypeScript**: Use type annotations for component props (e.g., variant?: "primary" | "secondary")
-- **Components**: Use Emotion styled components with TypeScript interfaces
-- **Design System**: Use tokens from `/DESIGN_SYSTEM/tokens/` for all styling
-- **Naming**: PascalCase for components, camelCase for functions/variables
-- **Components**: Keep in own directory with .tsx and .md documentation
-- **Imports**: Use absolute imports; prefer importing from index files
-- **File Size**: Keep files under 500 lines, split into modules when needed
-- **Testing**: Follow AAA pattern (Arrange-Act-Assert) and test edge cases
-- **Workflow**: Follow Red-Green-Refactor TDD cycle for all feature development
-- **Glassmorphism**: Implement container/interactive/emphasized/content hierarchy
+- **React**: Functional components with hooks, avoid classes
+- **TypeScript**: Strong typing (no `any`), use interfaces for component props 
+- **Components**: Follow design system, use tokens from `/DESIGN_SYSTEM/tokens/`
+- **Naming**: PascalCase for components/types, camelCase for functions/variables
+- **Imports**: Absolute imports, group by type (React, components, utils, types)
+- **Error Handling**: Use Error boundaries, consistent error patterns
+- **Testing**: AAA pattern (Arrange-Act-Assert), test edge cases and errors
+- **State**: Use React Context API for global state management
+- **Styling**: Tailwind CSS with consistent patterns
 
 ## Documentation
-- Each component should have its own .md documentation file
-- Use minimal code comments; let the code be self-documenting
-- For complex logic, explain the "why" not just the "what"
-- Update documentation as features change
+- Each component needs documentation in its own .md file
+- Self-documenting code preferred over comments
+- Document "why" not "what" for complex logic
+- Follow Glassmorphism patterns for UI components

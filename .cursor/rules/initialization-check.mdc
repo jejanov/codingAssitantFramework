@@ -1,0 +1,62 @@
+---
+description: Guidelines for checking and performing one-time project initialization
+globs: ["INITIALIZATION.md", "package.json", "tsconfig.json", ".eslintrc*"]
+---
+
+# Project Initialization Check
+
+This rule defines the process for checking and performing one-time project initialization.
+
+## When to Apply
+
+- At the beginning of any new project or feature
+- Before starting any development work
+- When the INITIALIZATION.md file indicates initialization has not been completed
+
+## Initialization Process
+
+1. **Check Initialization Status**
+   - Read INITIALIZATION.md to determine if project has been initialized
+   - Check if "Project initialization completed" is marked as complete
+
+2. **If Not Initialized:**
+   - Read PLANNING.md thoroughly to understand project requirements and architecture
+   - Create necessary project directories as specified in PLANNING.md
+   - Initialize package.json with required dependencies from PLANNING.md
+   - Setup testing environment based on PLANNING.md specifications
+   - Configure build tools and linters
+   - Create configuration files (tsconfig.json, .eslintrc, etc.)
+   - Update INITIALIZATION.md to mark initialization as complete
+   - Record completion details in INITIALIZATION.md
+
+3. **If Already Initialized:**
+   - Skip initialization steps completely
+   - Continue directly to User Story creation (Workflow step 1)
+
+## Important Considerations
+
+- Initialization should ONLY be performed ONCE per project
+- Do not repeat initialization steps if already marked complete
+- If in doubt whether initialization is needed for a sub-feature, check with the user
+- Initialization may not be required for small features in existing projects
+- Validate with user before installing dependencies or making major structural changes
+
+## Implementation Example
+
+```typescript
+// Example code for checking initialization status
+const checkInitializationStatus = async () => {
+  const initializationFile = await fs.readFile('INITIALIZATION.md', 'utf8');
+  return initializationFile.includes('[x] Project initialization completed');
+};
+
+// Example code for marking initialization as complete
+const markInitializationComplete = async () => {
+  let initializationFile = await fs.readFile('INITIALIZATION.md', 'utf8');
+  initializationFile = initializationFile.replace(
+    '- [ ] Project initialization completed',
+    '- [x] Project initialization completed'
+  );
+  await fs.writeFile('INITIALIZATION.md', initializationFile);
+};
+```
