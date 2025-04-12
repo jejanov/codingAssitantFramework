@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useCallback, useContext, memo } from 'react';
+import React, { useEffect, useState, useRef, useCallback, useContext, memo, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import RegisLogo from '@/components/ui/RegisLogo';
 import './Slide01.css';
@@ -48,9 +48,8 @@ interface Particle {
 // Create memoized child components to prevent re-renders
 
 // Memoized Logo component
-const LogoSection = memo(({ animationStage, registerPerspectiveElement }: {
+const LogoSection = memo(({ animationStage }: {
     animationStage: number;
-    registerPerspectiveElement: (el: HTMLElement | null, intensity?: number) => void;
 }) => (
     <div className="absolute top-10 w-full flex justify-center">
         <AnimatePresence>
@@ -59,8 +58,7 @@ const LogoSection = memo(({ animationStage, registerPerspectiveElement }: {
                     initial={{ opacity: 0, y: -20, scale: 0.95 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     transition={{ duration: 0.8, ease: [0.19, 1.0, 0.22, 1.0] }}
-                    className="relative z-20"
-                    ref={(el) => registerPerspectiveElement(el as HTMLElement, 1.0)}
+                    className="relative z-20 perspective-item-high"
                 >
                     <RegisLogo width={480} height={150} />
                 </motion.div>
@@ -70,9 +68,8 @@ const LogoSection = memo(({ animationStage, registerPerspectiveElement }: {
 ));
 
 // Memoized Title section
-const TitleSection = memo(({ animationStage, registerPerspectiveElement }: {
+const TitleSection = memo(({ animationStage }: {
     animationStage: number;
-    registerPerspectiveElement: (el: HTMLElement | null, intensity?: number) => void;
 }) => (
     <div className="absolute top-1/4 w-full flex justify-center">
         <AnimatePresence>
@@ -81,8 +78,7 @@ const TitleSection = memo(({ animationStage, registerPerspectiveElement }: {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8, ease: [0.19, 1.0, 0.22, 1.0] }}
-                    className="perspective-container"
-                    ref={(el) => registerPerspectiveElement(el as HTMLElement, 0.7)}
+                    className="perspective-container perspective-item-medium"
                 >
                     <h1
                         className="text-5xl font-bold text-center mb-3 title-headline glass-text glass-text-primary glass-text-refract text-depth-1"
@@ -107,14 +103,12 @@ const CodeSection = memo(({
     shouldShowCode,
     codeSnippet,
     handleCodeComplete,
-    playTypingSound,
-    registerPerspectiveElement
+    playTypingSound
 }: {
     shouldShowCode: boolean;
     codeSnippet: string;
     handleCodeComplete: () => void;
     playTypingSound: () => void;
-    registerPerspectiveElement: (el: HTMLElement | null, intensity?: number) => void;
 }) => (
     <div className="absolute top-[50%] w-full flex justify-center" style={{ zIndex: 30 }}>
         <AnimatePresence>
@@ -123,8 +117,7 @@ const CodeSection = memo(({
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.5 }}
-                    className="w-full max-w-lg"
-                    ref={(el) => registerPerspectiveElement(el as HTMLElement, 0.5)}
+                    className="w-full max-w-lg perspective-item-low"
                 >
                     <div className="glass-panel-interactive rounded-lg p-4 font-mono border border-teal-500/30" style={{ zIndex: 30 }}>
                         <CodeTyping
@@ -150,11 +143,9 @@ const CodeSection = memo(({
 
 // Memoized Presenter section
 const PresenterSection = memo(({
-    shouldShowPresenter,
-    registerPerspectiveElement
+    shouldShowPresenter
 }: {
     shouldShowPresenter: boolean;
-    registerPerspectiveElement: (el: HTMLElement | null, intensity?: number) => void;
 }) => (
     <div className="absolute bottom-10 w-full flex justify-center">
         <AnimatePresence>
@@ -163,21 +154,9 @@ const PresenterSection = memo(({
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, ease: "easeOut" }}
-                    className="text-center text-depth-3"
-                    ref={(el) => registerPerspectiveElement(el as HTMLElement, 0.3)}
+                    className="text-center text-depth-3 perspective-item-lowest"
                 >
-                    <p
-                        className="glass-text glass-text-accent text-lg mb-2"
-                        data-text="Presented by: Joel Janov"
-                    >
-                        Presented by: Joel Janov
-                    </p>
-                    <p
-                        className="glass-text glass-text-primary text-sm"
-                        data-text="April 15, 2025"
-                    >
-                        April 15, 2025
-                    </p>
+                    {/* Presenter content removed */}
                 </motion.div>
             )}
         </AnimatePresence>
@@ -197,36 +176,22 @@ const Slide01: React.FC = () => {
     const [shouldShowPresenter, setShouldShowPresenter] = useState(false);
     const particleContainerRef = useRef<HTMLDivElement>(null);
     const perspectiveContainerRef = useRef<HTMLDivElement>(null);
-    const perspectiveValuesRef = useRef({ rotateX: 0, rotateY: 0 });
-    const perspectiveElementsRef = useRef<HTMLElement[]>([]);
     const animationFrameRef = useRef<number>();
     const lastUpdateTimeRef = useRef<number>(Date.now());
     const isMouseMovingRef = useRef(false);
     const mouseUpdateTimeoutRef = useRef<number | null>(null);
+    const rootSlideRef = useRef<HTMLDivElement>(null);
 
     // Get audio effects from context
     const audioEffects = useContext(AudioContext);
 
-    // Code snippet from requirements
-    const codeSnippet = `// AI Dev Workshop - The Regis Company
+    // Code snippet from requirements - memoized to keep reference stable
+    const codeSnippet = useMemo(() => `// AI Dev Workshop - The Regis Company
 if (AI.codes) {
   engineer.thinkBigger();
   skills.practice.personalize();
   value.grow();
-}`;
-
-    // Debug output to verify codeSnippet is defined
-    console.log("Code snippet value:", codeSnippet);
-    console.log("Code snippet length:", codeSnippet.length);
-
-    // Register elements for perspective effect
-    const registerPerspectiveElement = useCallback((el: HTMLElement | null, intensity: number = 1) => {
-        if (el && !perspectiveElementsRef.current.includes(el)) {
-            // Store the intensity as a data attribute
-            el.dataset.perspectiveIntensity = intensity.toString();
-            perspectiveElementsRef.current.push(el);
-        }
-    }, []);
+}`, []);
 
     // Handle mouse movement for particle effect - with throttling
     const handleMouseMove = useCallback((e: React.MouseEvent) => {
@@ -257,9 +222,9 @@ if (AI.codes) {
     }, []);
 
     // Throttled version for performance
-    const throttledMouseMove = useCallback(throttle(handleMouseMove, 16), [handleMouseMove]); // ~60fps
+    const throttledMouseMove = useCallback(throttle(handleMouseMove, 16), [handleMouseMove]);
 
-    // Handle perspective mouse movement - with throttling
+    // Handle perspective mouse movement using CSS variables
     const handlePerspectiveMouseMove = useCallback((e: React.MouseEvent) => {
         // Stop event propagation to prevent bubbling to App.tsx
         e.stopPropagation();
@@ -269,27 +234,23 @@ if (AI.codes) {
             const x = e.clientX - rect.left;
             const y = e.clientY - rect.top;
 
-            // Calculate base perspective values
-            perspectiveValuesRef.current = {
-                rotateX: (y - rect.height / 2) / (rect.height / 2) * 10,
-                rotateY: (x - rect.width / 2) / (rect.width / 2) * 10
-            };
+            // Calculate rotation values based on mouse position
+            const rotateX = (y - rect.height / 2) / (rect.height / 2) * 10;
+            const rotateY = (x - rect.width / 2) / (rect.width / 2) * 10;
 
-            // Apply to all registered elements directly using DOM manipulation
-            requestAnimationFrame(() => {
-                perspectiveElementsRef.current.forEach(el => {
-                    if (el) {
-                        const intensity = parseFloat(el.dataset.perspectiveIntensity || "1");
-                        el.style.transform = `rotateX(${perspectiveValuesRef.current.rotateX * intensity}deg) rotateY(${perspectiveValuesRef.current.rotateY * intensity}deg) translateZ(${30 * intensity}px)`;
-                        el.style.transition = 'transform 0.1s ease-out';
-                    }
-                });
-            });
+            // Update CSS custom properties on the container
+            perspectiveContainerRef.current.style.setProperty('--rotate-x', `${rotateX}deg`);
+            perspectiveContainerRef.current.style.setProperty('--rotate-y', `${rotateY}deg`);
         }
     }, []);
 
     // Throttled version for performance
-    const throttledPerspectiveMouseMove = useCallback(throttle(handlePerspectiveMouseMove, 16), [handlePerspectiveMouseMove]); // ~60fps
+    const throttledPerspectiveMouseMove = useCallback(throttle(handlePerspectiveMouseMove, 16), [handlePerspectiveMouseMove]);
+
+    // Memoized function to play typing sound
+    const playTypingSound = useCallback(() => {
+        audioEffects?.playTypingSound();
+    }, [audioEffects]);
 
     // Handle code typing completion
     const handleCodeComplete = useCallback(() => {
@@ -727,19 +688,26 @@ if (AI.codes) {
         </div>
     ), [throttledMouseMove]);
 
-    // Memoized function to play typing sound
-    const playTypingSound = useCallback(() => {
-        audioEffects?.playTypingSound();
-    }, [audioEffects]);
+    // Handle mouse events to prevent propagation
+    const handleMouseEvents = useCallback((e: React.MouseEvent) => {
+        e.stopPropagation();
+    }, []);
 
     return (
-        <div className="h-full flex flex-col items-center justify-center relative bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 text-white p-8 overflow-hidden">
+        <div
+            ref={rootSlideRef}
+            className="h-full flex flex-col items-center justify-center relative bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 text-white p-8 overflow-hidden"
+            onMouseMove={(e) => e.stopPropagation()}
+            onMouseEnter={handleMouseEvents}
+            onMouseOver={handleMouseEvents}
+            onMouseLeave={handleMouseEvents}
+        >
             {/* Particle animation background */}
             <ParticleBackground />
 
             {/* Content container with z-index to appear above particles */}
             <div
-                className="z-10 flex flex-col items-center w-full h-full relative"
+                className="z-10 flex flex-col items-center w-full h-full relative perspective-container"
                 style={{
                     perspective: '1500px',
                     transformStyle: 'preserve-3d',
@@ -750,13 +718,11 @@ if (AI.codes) {
                 {/* Top section - Logo */}
                 <LogoSection
                     animationStage={animationStage}
-                    registerPerspectiveElement={registerPerspectiveElement}
                 />
 
                 {/* Middle section - Title and Subtitle */}
                 <TitleSection
                     animationStage={animationStage}
-                    registerPerspectiveElement={registerPerspectiveElement}
                 />
 
                 {/* Code section - Fixed position in the middle-lower part */}
@@ -765,13 +731,11 @@ if (AI.codes) {
                     codeSnippet={codeSnippet}
                     handleCodeComplete={handleCodeComplete}
                     playTypingSound={playTypingSound}
-                    registerPerspectiveElement={registerPerspectiveElement}
                 />
 
                 {/* Bottom section - Presenter info */}
                 <PresenterSection
                     shouldShowPresenter={shouldShowPresenter}
-                    registerPerspectiveElement={registerPerspectiveElement}
                 />
             </div>
         </div>

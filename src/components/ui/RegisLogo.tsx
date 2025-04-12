@@ -103,7 +103,7 @@ const RegisLogo: React.FC<RegisLogoProps> = ({
             </div>
 
             {/* Add keyframe animation for background gradients */}
-            <style jsx>{`
+            <style>{`
                 @keyframes gradientFlow {
                     0% {
                         background-position: 0% 50%;

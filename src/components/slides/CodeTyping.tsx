@@ -60,15 +60,15 @@ const CodeTypingComponent: React.FC<CodeTypingProps> = ({
         };
     }, []);
 
-    // Main typing animation effect - runs only once when component mounts
+    // Main typing animation effect - runs when component mounts and when code changes
     useEffect(() => {
-        // Prevent multiple starts
-        if (isTypingStartedRef.current) return;
-        isTypingStartedRef.current = true;
-
-        // Reset state
+        // Reset the typing started flag and state when code changes
+        isTypingStartedRef.current = false;
         setDisplayedCode('');
         setIsComplete(false);
+        
+        // Mark typing as started for this render cycle
+        isTypingStartedRef.current = true;
 
         let currentPosition = 0;
 
@@ -115,7 +115,7 @@ const CodeTypingComponent: React.FC<CodeTypingProps> = ({
             }
         };
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []); // Empty dependency array - run only once on mount
+    }, [code]); // Added code as a dependency to restart animation when code changes
 
     // Apply syntax highlighting
     const highlightedCode = displayedCode ?

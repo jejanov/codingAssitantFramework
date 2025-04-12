@@ -73,7 +73,7 @@ const TranslationPanel: React.FC<TranslationPanelProps> = ({
             <h2 style={{
                 margin: '0 0 1rem 0',
                 color: '#333',
-                fontSize: '1.4rem',
+                fontSize: '1.3rem',
                 fontWeight: 'bold',
                 textAlign: 'center',
                 textShadow: `0 1px 2px ${brandColors.primary}30`
@@ -146,7 +146,7 @@ const TranslationPanel: React.FC<TranslationPanelProps> = ({
                 animate={isVisible ? "visible" : "hidden"}
                 style={{
                     margin: '1.5rem 0 0.5rem 0',
-                    fontSize: '1.2rem',
+                    fontSize: '1.1rem',
                     fontWeight: 'bold',
                     color: brandColors.secondary
                 }}
@@ -158,7 +158,7 @@ const TranslationPanel: React.FC<TranslationPanelProps> = ({
                 variants={bulletVariants}
                 initial="hidden"
                 animate={isVisible ? "visible" : "hidden"}
-                style={{ margin: '0.5rem 0 0.5rem 1rem' }}
+                style={{ margin: '0.5rem 0 0.5rem 1rem', fontSize: '0.9rem' }}
             >
                 → With AI: We work 3x faster, have 50% fewer bugs, and deliver 2x more value
             </motion.p>
@@ -167,7 +167,7 @@ const TranslationPanel: React.FC<TranslationPanelProps> = ({
                 variants={bulletVariants}
                 initial="hidden"
                 animate={isVisible ? "visible" : "hidden"}
-                style={{ margin: '0.5rem 0 0.5rem 1rem' }}
+                style={{ margin: '0.5rem 0 0.5rem 1rem', fontSize: '0.9rem' }}
             >
                 → Without AI: ⚠️ We fall behind while competitors zoom ahead
             </motion.p>
@@ -179,7 +179,7 @@ const TranslationPanel: React.FC<TranslationPanelProps> = ({
                 animate={isVisible ? "visible" : "hidden"}
                 style={{
                     margin: '1.5rem 0 0.5rem 0',
-                    fontSize: '1.2rem',
+                    fontSize: '1.1rem',
                     fontWeight: 'bold',
                     color: brandColors.secondary
                 }}
@@ -191,7 +191,7 @@ const TranslationPanel: React.FC<TranslationPanelProps> = ({
                 variants={bulletVariants}
                 initial="hidden"
                 animate={isVisible ? "visible" : "hidden"}
-                style={{ margin: '0.5rem 0 0.5rem 1rem', fontStyle: 'italic' }}
+                style={{ margin: '0.5rem 0 0.5rem 1rem', fontStyle: 'italic', fontSize: '0.9rem' }}
             >
                 You finally get to focus on the fun stuff - architecture and solving real problems -
                 while AI handles the tedious bits that make you question your life choices.
@@ -204,7 +204,7 @@ const TranslationPanel: React.FC<TranslationPanelProps> = ({
                 animate={isVisible ? "visible" : "hidden"}
                 style={{
                     margin: '1.5rem 0 0.5rem 0',
-                    fontSize: '1.2rem',
+                    fontSize: '1.1rem',
                     fontWeight: 'bold',
                     color: brandColors.secondary
                 }}
@@ -216,7 +216,7 @@ const TranslationPanel: React.FC<TranslationPanelProps> = ({
                 variants={bulletVariants}
                 initial="hidden"
                 animate={isVisible ? "visible" : "hidden"}
-                style={{ margin: '0.5rem 0 0.5rem 1rem' }}
+                style={{ margin: '0.5rem 0 0.5rem 1rem', fontSize: '0.9rem' }}
             >
                 AI types the boring parts.
                 We think about the interesting parts.

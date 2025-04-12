@@ -61,6 +61,7 @@ console.log("We engineer the future.");
     const [currentPosition, setCurrentPosition] = useState(0);
     const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
     const containerRef = useRef<HTMLDivElement>(null);
+    const rootSlideRef = useRef<HTMLDivElement>(null);
 
     // Get audio effects from context
     const audioEffects = useContext(AudioContext);
@@ -190,11 +191,19 @@ console.log("We engineer the future.");
         </div>
     );
 
+    // Create handlers for mouse events
+    const handleMouseEvents = useCallback((e: React.MouseEvent) => {
+        e.stopPropagation();
+    }, []);
+
     return (
         <div
             ref={containerRef}
             className="slide-02-container"
             onMouseMove={throttledMouseMove}
+            onMouseEnter={handleMouseEvents}
+            onMouseOver={handleMouseEvents}
+            onMouseLeave={handleMouseEvents}
             style={{
                 width: '100%',
                 height: '100%',
@@ -276,7 +285,7 @@ console.log("We engineer the future.");
                                 {animationStage >= 3 && (
                                     <CodeTyping
                                         code={codeContent}
-                                        speed={8}
+                                        speed={30}
                                         onComplete={handleTypingComplete}
                                         onProgress={handleTypingProgress}
                                         brandColors={{

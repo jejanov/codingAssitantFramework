@@ -1,4 +1,4 @@
-import React, { useState, createContext, useEffect, useRef } from 'react';
+import React, { useState, createContext, useEffect, useRef, useCallback } from 'react';
 import Slide00 from '@/components/slides/Slide00';
 import Slide01 from '@/components/slides/Slide01';
 import Slide02 from '@/components/slides/Slide02';
@@ -109,9 +109,24 @@ const App: React.FC = () => {
         };
     }, []);
 
-    // Handle mouse movement to show/hide corner controls
-    const handleMouseMove = () => {
-        setShowControls(true);
+    // Throttle function for mouse movement
+    const throttle = (func: Function, limit: number) => {
+        let inThrottle: boolean;
+        return function (this: any, ...args: any[]) {
+            if (!inThrottle) {
+                func.apply(this, args);
+                inThrottle = true;
+                setTimeout(() => inThrottle = false, limit);
+            }
+        };
+    };
+
+    // Handle mouse movement to show/hide corner controls - optimized
+    const handleMouseMove = useCallback(() => {
+        // Only update state if controls aren't already visible
+        if (!showControls) {
+            setShowControls(true);
+        }
 
         if (controlsTimeoutRef.current) {
             window.clearTimeout(controlsTimeoutRef.current);
@@ -120,7 +135,13 @@ const App: React.FC = () => {
         controlsTimeoutRef.current = window.setTimeout(() => {
             setShowControls(false);
         }, 2000);
-    };
+    }, [showControls]);
+
+    // Throttled version to reduce state updates
+    const throttledMouseMove = useCallback(
+        throttle(handleMouseMove, 100), // Only process every 100ms
+        [handleMouseMove]
+    );
 
     // Clear timeout when component unmounts
     useEffect(() => {
@@ -199,7 +220,7 @@ const App: React.FC = () => {
                 <div
                     ref={fullscreenContainerRef}
                     className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 text-white flex flex-col"
-                    onMouseMove={handleMouseMove}
+                    onMouseMove={currentSlide !== 1 && currentSlide !== 3 ? throttledMouseMove : undefined}
                 >
                     {/* Header/Title bar - hide on Slide 0 or in fullscreen */}
                     {currentSlide > 0 && !isFullscreen && (

@@ -301,3 +301,43 @@
 .code-typing .token.punctuation {
   color: #89ddff;
 }
+
+.perspective-container {
+  --rotate-x: 0deg;
+  --rotate-y: 0deg;
+  --translate-z: 0px;
+  --perspective-intensity-1: 1;
+  --perspective-intensity-075: 0.75;
+  --perspective-intensity-05: 0.5;
+  --perspective-intensity-03: 0.3;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.perspective-item-high {
+  transform: rotateX(calc(var(--rotate-x) * var(--perspective-intensity-1)))
+    rotateY(calc(var(--rotate-y) * var(--perspective-intensity-1)))
+    translateZ(calc(30px * var(--perspective-intensity-1)));
+  transition: transform 0.2s ease-out;
+}
+
+.perspective-item-medium {
+  transform: rotateX(calc(var(--rotate-x) * var(--perspective-intensity-075)))
+    rotateY(calc(var(--rotate-y) * var(--perspective-intensity-075)))
+    translateZ(calc(20px * var(--perspective-intensity-075)));
+  transition: transform 0.3s ease-out;
+}
+
+.perspective-item-low {
+  transform: rotateX(calc(var(--rotate-x) * var(--perspective-intensity-05)))
+    rotateY(calc(var(--rotate-y) * var(--perspective-intensity-05)))
+    translateZ(calc(10px * var(--perspective-intensity-05)));
+  transition: transform 0.4s ease-out;
+}
+
+.perspective-item-lowest {
+  transform: rotateX(calc(var(--rotate-x) * var(--perspective-intensity-03)))
+    rotateY(calc(var(--rotate-y) * var(--perspective-intensity-03)))
+    translateZ(calc(5px * var(--perspective-intensity-03)));
+  transition: transform 0.5s ease-out;
+}

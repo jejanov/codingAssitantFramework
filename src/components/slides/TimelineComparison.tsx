@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AudioContext } from '../../App';
 
@@ -149,4 +149,4 @@ const TimelineComparison: React.FC<TimelineComparisonProps> = ({ raceProgress })
     );
 };
 
-export default TimelineComparison; 
+export default memo(TimelineComparison); 

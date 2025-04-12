@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useContext } from 'react';
+import React, { useState, useEffect, useRef, useContext, useCallback, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { Glass } from '../../../DESIGN_SYSTEM/components/Glass/Glass';
 import useAudioEffects from '../../hooks/useAudioEffects';
@@ -38,8 +38,8 @@ const Slide03: React.FC = () => {
                 if (!startTime) startTime = timestamp;
                 const elapsed = timestamp - startTime;
 
-                // Total duration: 15 seconds (slightly longer to match video)
-                const progress = Math.min(elapsed / 15000, 1);
+                // Total duration: 5 seconds (3x faster than original 15 seconds)
+                const progress = Math.min(elapsed / 5000, 1);
                 setAnimationProgress(progress);
 
                 // Continue animation if not complete
@@ -71,8 +71,18 @@ const Slide03: React.FC = () => {
         };
     }, [audioEffects]);
 
+    // Memoize the mouse handler to prevent unnecessary re-renders
+    const handleMouseMove = useCallback((e: React.MouseEvent) => {
+        e.stopPropagation();
+    }, []);
+
     return (
-        <div className="slide03-container">
+        <div 
+            className="slide03-container"
+            onMouseMove={handleMouseMove}
+            onMouseEnter={handleMouseMove}
+            onMouseOver={handleMouseMove}
+        >
             {/* Background Video - 16:9 aspect ratio */}
             <div className="video-background">
                 <video

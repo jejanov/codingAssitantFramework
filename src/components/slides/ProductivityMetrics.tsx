@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext, useEffect, memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Glass } from '../../../DESIGN_SYSTEM/components/Glass/Glass';
 import { AudioContext } from '../../App';
@@ -129,4 +129,4 @@ const ProductivityMetrics: React.FC<ProductivityMetricsProps> = ({ raceProgress 
     );
 };
 
-export default ProductivityMetrics; 
+export default memo(ProductivityMetrics); 
