@@ -347,31 +347,36 @@ const App: React.FC = () => {
                                     {/* Dialogue player now positioned below the slide container */}
                                 </div>
                                 
-                                {/* Dialogue player positioned below the slide container */}
-                                <div className={`${isFullscreen ? 'absolute bottom-6 w-4/5 left-1/2 transform -translate-x-1/2' : 'w-full max-w-7xl mt-4'}`}>
-                                    <SlideAwareDialoguePlayer 
-                                        autoPlayOnSlideChange={true}
-                                        floatingControls={isFullscreen}
-                                        compact={true}
-                                        showTranscript={true}
-                                        showOnlyCurrent={true}
-                                        // Force this to the value of the current slide
-                                        slideIndex={currentSlide}
-                                        // Add a custom style for appearance
-                                        style={{
-                                            position: 'relative',
-                                            height: '100px',
-                                            width: '100%',
-                                            backgroundColor: 'rgba(17, 24, 39, 0.8)',
-                                            backdropFilter: 'blur(12px)',
-                                            borderRadius: '8px',
-                                            border: '1px solid rgba(75, 85, 99, 0.5)'
-                                        }}
-                                    />
+                                {/* Directly include SlideAwareDialoguePlayer with fixed positioning */}
+                                {/* Ensure the component re-mounts by using key={currentSlide} */}
+                                <SlideAwareDialoguePlayer 
+                                    key={`dialogue-player-slide-${currentSlide}`}
+                                    autoPlayOnSlideChange={true}
+                                    floatingControls={isFullscreen}
+                                    compact={true}
+                                    showTranscript={true}
+                                    showOnlyCurrent={true}
+                                    // Force this to the value of the current slide
+                                    slideIndex={currentSlide}
+                                    className={`mt-4 ${isFullscreen ? 'fullscreen-dialogue' : ''}`}
+                                    // Add a custom style for appearance
+                                    style={{
+                                        position: 'relative', // Use relative positioning
+                                        bottom: isFullscreen ? 'auto' : '0',
+                                        left: isFullscreen ? 'auto' : '0',
+                                        height: '160px',
+                                        width: isFullscreen ? '800px' : '100%',
+                                        margin: isFullscreen ? '0 auto' : '0',
+                                        backgroundColor: 'rgba(17, 24, 39, 0.8)',
+                                        backdropFilter: 'blur(12px)',
+                                        borderRadius: '8px',
+                                        border: '1px solid rgba(75, 85, 99, 0.5)'
+                                    }}
+                                />
 
-                                    {/* Corner controls that appear on hover in fullscreen mode */}
-                                    {isFullscreen && showControls && (
-                                        <div className="absolute top-4 right-4 flex gap-2 transition-opacity duration-300 opacity-70 hover:opacity-100">
+                                {/* Corner controls that appear on hover in fullscreen mode */}
+                                {isFullscreen && showControls && (
+                                    <div className="absolute top-4 right-4 flex gap-2 transition-opacity duration-300 opacity-70 hover:opacity-100">
                                             {/* Navigation controls */}
                                             <button
                                                 onClick={previousSlide}
@@ -425,11 +430,10 @@ const App: React.FC = () => {
                                             </button>
                                         </div>
                                     )}
-                                </div>
-                            </SlideManager>
-                        </main>
+                                </SlideManager>
+                            </main>
 
-                        {/* Debug Panel - Press Shift+D to toggle */}
+                            {/* Debug Panel - Press Shift+D to toggle */}
                         {showDebug && (
                             <div className="fixed bottom-4 right-4 bg-gray-800 p-4 rounded-lg border border-gray-700 shadow-lg z-50">
                                 <h3 className="text-lg font-bold mb-2">Audio Debug</h3>

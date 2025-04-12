@@ -73,6 +73,8 @@ const SlideAwareDialoguePlayer: React.FC<SlideAwareDialoguePlayerProps> = ({
   
   // Construct the metadata path based on active slide
   useEffect(() => {
+    console.log(`Slide Change Detected - Loading metadata for slide ${activeSlide}`);
+    
     // Format the slide number with leading zero
     const formattedSlide = activeSlide.toString().padStart(2, '0');
     
@@ -80,7 +82,16 @@ const SlideAwareDialoguePlayer: React.FC<SlideAwareDialoguePlayerProps> = ({
     const newPath = `/sounds/dialogue/slide${formattedSlide}/metadata.json`;
     
     console.log(`Setting metadata path for slide ${activeSlide} to: ${newPath}`);
-    setMetadataPath(newPath);
+    
+    // First clear the metadata path to force the DialoguePlayer to reset
+    setMetadataPath('');
+    
+    // Use a small delay before setting the new path
+    // This ensures the DialoguePlayer fully unmounts and remounts between slides
+    setTimeout(() => {
+      // Set new metadata path after a short delay
+      setMetadataPath(newPath);
+    }, 50);
     
     // Reset loading state
     setIsLoading(true);
@@ -113,10 +124,10 @@ const SlideAwareDialoguePlayer: React.FC<SlideAwareDialoguePlayerProps> = ({
         setHasDialogue(true);
         setIsLoading(false);
         
-        // Auto-play if enabled
+        // Log autoplay state but don't trigger playback here
+        // We'll let the effect below handle it with the proper timing
         if (autoPlayOnSlideChange) {
-          console.log(`Auto-play enabled for slide ${activeSlide}, initiating playback`);
-          playDialogueForSlide(activeSlide);
+          console.log(`Auto-play enabled for slide ${activeSlide}, will initiate playback after setup`);
         } else {
           console.log(`Auto-play disabled for slide ${activeSlide}, waiting for user to initiate playback`);
         }
@@ -160,86 +171,63 @@ const SlideAwareDialoguePlayer: React.FC<SlideAwareDialoguePlayerProps> = ({
     // Note: restoreBackgroundAudio is already called inside stopDialogue in the context
   }, [activeSlide, stopDialogue]);
   
-  // Define container style based on props
+  // Define base container style but respect positioning from props
   const containerStyle: React.CSSProperties = {
-    position: 'fixed',
-    bottom: '120px',
-    right: '40px',
-    width: '800px',
-    height: '300px', // Fixed height
-    zIndex: 9999,
+    // Only use these defaults if position isn't specified in style
+    ...(style.position ? {} : { 
+      position: 'fixed',
+      bottom: '120px',
+      right: '40px',
+    }),
+    // Ensure we have width and height if not provided
+    width: style.width || '800px',
+    height: style.height || '160px',
     overflow: 'hidden', // Prevent content from overflowing
+    zIndex: style.zIndex || 9999,
+    // Merge with passed style, but our defaults above will be overridden by any matching props in style
     ...style
   };
   
-  // Add an effect to manually trigger play if needed
+  // For debugging - log when dialogue is found
   useEffect(() => {
-    // Skip if we're still loading or have no dialogue
-    if (isLoading || !hasDialogue) {
-      return;
+    if (!isLoading && hasDialogue) {
+      console.log(`SlideAwareDialoguePlayer: Slide ${activeSlide} has dialogue and is ready!`);
     }
-    
-    // For debugging - always show if we found dialogue
-    console.log(`SlideAwareDialoguePlayer: Slide ${activeSlide} has dialogue and is ready!`);
-    
-    // Special case for slide 3 - always try to play
-    if (activeSlide === 3) {
-      console.log(`SlideAwareDialoguePlayer: Slide 3 detected, forcing playback!`);
-      const timer = setTimeout(() => {
-        console.log(`SlideAwareDialoguePlayer: Playing slide 3 dialogue now!`);
-        handlePlay();
-      }, 1000); // Short delay
-      return () => clearTimeout(timer);
-    }
-    
-    // This is a backup mechanism for cases where DialoguePlayer's autoPlay doesn't work
-    if (autoPlayOnSlideChange) {
-      console.log(`SlideAwareDialoguePlayer: Setting up fallback autoplay timer for slide ${activeSlide}`);
-      
-      const timer = setTimeout(() => {
-        console.log(`SlideAwareDialoguePlayer: Attempting fallback autoplay for slide ${activeSlide}`);
-        handlePlay();
-      }, 1000); // Give the component time to mount and initialize
-      
-      return () => clearTimeout(timer);
-    } else {
-      console.log(`SlideAwareDialoguePlayer: Autoplay disabled for slide ${activeSlide} with dialogue`);
-    }
-  }, [hasDialogue, isLoading, autoPlayOnSlideChange, activeSlide, handlePlay]);
+  }, [hasDialogue, isLoading, activeSlide]);
 
   console.log(`SlideAwareDialoguePlayer: Rendering with state - activeSlide: ${activeSlide}, isLoading: ${isLoading}, hasDialogue: ${hasDialogue}, metadataPath: ${metadataPath}`);
   
   return (
-    <>
-      {/* Only render DialoguePlayer if we have dialogue for this slide */}
-      {hasDialogue && !isLoading && (
-        <div style={containerStyle} className={className}>
-          <DialoguePlayer
-            metadataPath={metadataPath}
-            autoPlay={autoPlayOnSlideChange}
-            showTranscript={showTranscript}
-            highlightCurrentLine={highlightCurrentLine}
-            compact={compact}
-            minPauseDuration={500}
-            maxPauseDuration={1500}
-            showTextOnlyLabel={false}
-            floatingControls={floatingControls}
-            maxLines={maxLines}
-            onComplete={handleComplete}
-            onPlay={handlePlay}
-            onPause={handlePause}
-            showOnlyCurrent={showOnlyCurrent}
-          />
-        </div>
+    // Always render the same container div regardless of content
+    <div style={containerStyle} className={className}>
+      {/* Conditionally render content inside the container */}
+      {hasDialogue && !isLoading ? (
+        // Render DialoguePlayer when we have dialogue
+        <DialoguePlayer
+          metadataPath={metadataPath}
+          autoPlay={true} /* Force autoPlay to always be true */
+          showTranscript={showTranscript}
+          highlightCurrentLine={highlightCurrentLine}
+          compact={compact}
+          minPauseDuration={500}
+          maxPauseDuration={1500}
+          showTextOnlyLabel={false}
+          floatingControls={floatingControls}
+          maxLines={maxLines}
+          onComplete={handleComplete}
+          onPlay={handlePlay}
+          onPause={handlePause}
+          showOnlyCurrent={showOnlyCurrent}
+        />
+      ) : (
+        // Render placeholder when no dialogue or still loading and not in floating mode
+        !floatingControls && (
+          <div className="p-2 text-xs text-gray-400">
+            {isLoading ? "Loading dialogue..." : "No dialogue available for this slide."}
+          </div>
+        )
       )}
-      
-      {/* Render placeholder for non-floating controls when dialogue isn't available */}
-      {(!hasDialogue || isLoading) && !floatingControls && (
-        <div className={`p-2 text-xs text-gray-400 ${className}`} style={style}>
-          {isLoading ? "Loading dialogue..." : "No dialogue available for this slide."}
-        </div>
-      )}
-    </>
+    </div>
   );
 };
 

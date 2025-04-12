@@ -207,8 +207,28 @@ const DialoguePlayer: React.FC<DialoguePlayerProps> = ({
     }
   }, [isPlaying, currentLineIndex, playDialogue, stopDialogue]);
   
-  // Load metadata
+  // Load metadata and reset state
   useEffect(() => {
+    // Reset state when metadata path changes
+    setCurrentLineIndex(-1);
+    setIsPlaying(false);
+    setError(null);
+    
+    // Reset the autoplay flag whenever metadata changes
+    hasAutoPlayedRef.current = false;
+    
+    // Clear any existing audio
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current = null;
+    }
+    
+    // Clear any existing timeouts
+    if (timeoutRef.current) {
+      window.clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
+    
     const fetchMetadata = async () => {
       setIsLoading(true);
       try {
@@ -226,11 +246,6 @@ const DialoguePlayer: React.FC<DialoguePlayerProps> = ({
           : metadataPath;
           
         console.log(`Full metadata URL: ${fullUrl}`);
-        
-        // Special case for slide 3 for testing
-        if (metadataPath.includes('slide03')) {
-          console.log('Attempting to load Slide 3 metadata directly');
-        }
         
         const response = await fetch(fullUrl);
         if (!response.ok) {
@@ -295,45 +310,49 @@ const DialoguePlayer: React.FC<DialoguePlayerProps> = ({
     };
   }, []);
   
-  // Auto-play effect with user interaction handling
+  // Enhanced auto-play effect with better handling and autoplay tracking
   useEffect(() => {
-    // Only attempt autoplay if we have actual dialogue content
-    if (metadata && metadata.audioFiles && metadata.audioFiles.length > 0 && 
-        autoPlay && !isPlaying && !hasAutoPlayedRef.current) {
-      console.log('Auto-play enabled, starting playback...');
+    // Only attempt autoplay if we have actual dialogue content and metadata is loaded
+    // AND we haven't already auto-played for this instance
+    if (metadata && 
+        metadata.audioFiles && 
+        metadata.audioFiles.length > 0 && 
+        autoPlay && 
+        !isPlaying &&
+        !hasAutoPlayedRef.current) {
+        
+      console.log('Auto-play enabled, preparing to start playback...');
+      
+      // Set the flag immediately to prevent multiple attempts
       hasAutoPlayedRef.current = true;
       
-      // Try auto-play with a delay
+      // Use a delay to ensure everything is ready
       const autoplayTimeout = setTimeout(() => {
-        // Auto-play might not work due to browser restrictions
+        console.log('Now attempting to auto-play dialogue...');
+        
+        // Try auto-play directly
         try {
           playDialogue();
+          console.log('Auto-play successfully initiated');
         } catch (e) {
-          console.error('Auto-play failed, waiting for user interaction:', e);
+          console.error('Auto-play failed, will try user interaction fallback:', e);
+          // If playback fails, reset the flag to allow another attempt
+          hasAutoPlayedRef.current = false;
         }
-      }, 1000);
-      
-      // Set up a user interaction handler as fallback
-      const userInteractionHandler = () => {
-        if (!isPlaying && hasAutoPlayedRef.current) {
-          console.log('User interaction detected, starting playback');
-          playDialogue();
-          // Remove the handler after first use
-          document.removeEventListener('click', userInteractionHandler);
-          document.removeEventListener('keydown', userInteractionHandler);
-        }
-      };
-      
-      // Add event listeners for user interaction
-      document.addEventListener('click', userInteractionHandler);
-      document.addEventListener('keydown', userInteractionHandler);
+      }, 800); // Reduced delay since we've already had loading time
       
       // Cleanup
       return () => {
         clearTimeout(autoplayTimeout);
-        document.removeEventListener('click', userInteractionHandler);
-        document.removeEventListener('keydown', userInteractionHandler);
+        console.log('Cleared auto-play timeout during cleanup');
       };
+    } else {
+      // Log why auto-play isn't happening
+      if (!metadata) console.log('Auto-play skipped: No metadata available');
+      else if (!metadata.audioFiles || metadata.audioFiles.length === 0) console.log('Auto-play skipped: No audio files available');
+      else if (!autoPlay) console.log('Auto-play skipped: Auto-play is disabled');
+      else if (isPlaying) console.log('Auto-play skipped: Already playing');
+      else if (hasAutoPlayedRef.current) console.log('Auto-play skipped: Already attempted auto-play');
     }
   }, [metadata, autoPlay, isPlaying, playDialogue]);
   
@@ -637,20 +656,17 @@ const DialoguePlayer: React.FC<DialoguePlayerProps> = ({
 
   return (
     <div className={containerClasses} style={compactStyles}>
-      {/* Header section with title and controls */}
-      <div className={`flex justify-between items-center ${compact ? 'mb-3' : 'mb-4'} pb-2 border-b border-gray-700`}>
+      {/* Compact header section with title and controls */}
+      <div className={`flex justify-between items-center ${compact ? 'mb-1' : 'mb-2'} pb-1 border-b border-gray-700`}>
         <div className="flex items-center">
-          <h3 className={`${compact ? 'text-base' : 'text-lg'} font-medium text-white truncate`}>
+          <h3 className={`${compact ? 'text-sm' : 'text-base'} font-medium text-white truncate`}>
             {compact ? (
-              <span>
-                {currentLineIndex >= 0 ? 
-                  <>
-                    {metadata.title} 
-                    <span className="ml-2 px-2 py-0.5 bg-indigo-700 text-white rounded-full text-xs">
-                      {currentLineIndex + 1}/{metadata.audioFiles.length}
-                    </span>
-                  </> 
-                  : metadata.title
+              <span className="flex items-center">
+                <span className="truncate">{metadata.title}</span>
+                {currentLineIndex >= 0 && 
+                  <span className="ml-2 px-1.5 py-0.5 bg-indigo-700 text-white rounded-full text-xs whitespace-nowrap">
+                    {currentLineIndex + 1}/{metadata.audioFiles.length}
+                  </span>
                 }
               </span>
             ) : metadata.title}
@@ -659,7 +675,7 @@ const DialoguePlayer: React.FC<DialoguePlayerProps> = ({
           {/* Text-only mode indicator - only shown if showTextOnlyLabel is true */}
           {showTextOnlyLabel && (
             <span 
-              className="ml-2 px-2 py-0.5 bg-gray-700 text-yellow-300 rounded-full text-xs"
+              className="ml-2 px-1.5 py-0 bg-gray-700 text-yellow-300 rounded-full text-xs"
               title="Audio files not available, using text-only mode"
             >
               Text Only
@@ -668,36 +684,33 @@ const DialoguePlayer: React.FC<DialoguePlayerProps> = ({
         </div>
         
         {!floatingControls && (
-          <div className="flex space-x-2">
+          <div className="flex space-x-1">
             <button
               onClick={togglePlayback}
-              className={`${compact ? 'text-sm px-3 py-1' : 'px-3 py-1'} bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg shadow flex items-center`}
+              className={`${compact ? 'text-xs px-2 py-0.5' : 'px-2 py-0.5'} bg-indigo-600 hover:bg-indigo-700 text-white rounded flex items-center`}
               aria-label={isPlaying ? 'Pause' : 'Play'}
             >
-              {isPlaying ? 
-                <><span className="mr-1">⏸︎</span> Pause</> : 
-                <><span className="mr-1">▶️</span> Play</>
-              }
+              {isPlaying ? <span>⏸︎</span> : <span>▶️</span>}
             </button>
             {isPlaying && (
               <button
                 onClick={stopDialogue}
-                className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-lg shadow flex items-center"
+                className="bg-red-600 hover:bg-red-700 text-white px-2 py-0.5 rounded text-xs flex items-center"
                 aria-label="Stop"
               >
-                <span className="mr-1">⏹︎</span> Stop
+                <span>⏹︎</span>
               </button>
             )}
           </div>
         )}
       </div>
       
-      {/* Floating controls */}
+      {/* Floating controls - smaller size */}
       {floatingControls && (
-        <div className="absolute top-3 right-3 z-10 flex space-x-2">
+        <div className="absolute top-1 right-1 z-10 flex space-x-1">
           <button
             onClick={togglePlayback}
-            className="w-8 h-8 flex items-center justify-center bg-indigo-600 hover:bg-indigo-700 text-white rounded-full text-sm shadow-lg"
+            className="w-6 h-6 flex items-center justify-center bg-indigo-600 hover:bg-indigo-700 text-white rounded-full text-xs shadow"
             aria-label={isPlaying ? 'Pause' : 'Play'}
           >
             {isPlaying ? '⏸︎' : '▶️'}
@@ -705,7 +718,7 @@ const DialoguePlayer: React.FC<DialoguePlayerProps> = ({
           {isPlaying && (
             <button
               onClick={stopDialogue}
-              className="w-8 h-8 flex items-center justify-center bg-red-600 hover:bg-red-700 text-white rounded-full text-sm shadow-lg"
+              className="w-6 h-6 flex items-center justify-center bg-red-600 hover:bg-red-700 text-white rounded-full text-xs shadow"
               aria-label="Stop"
             >
               ⏹︎
@@ -714,39 +727,47 @@ const DialoguePlayer: React.FC<DialoguePlayerProps> = ({
         </div>
       )}
       
-      {/* Progress bar */}
-      <div className={`w-full bg-gray-700 rounded-full ${compact ? 'h-1' : 'h-2'} ${compact ? 'mb-2' : 'mb-4'}`}>
+      {/* Progress bar - smaller height */}
+      <div className={`w-full bg-gray-700 rounded-full h-0.5 ${compact ? 'mb-1' : 'mb-2'}`}>
         <div 
           className="bg-indigo-500 rounded-full transition-all duration-300 ease-out"
-          style={{ width: `${progress}%`, height: compact ? '4px' : '8px' }}
+          style={{ width: `${progress}%`, height: '2px' }}
         />
       </div>
       
-      {/* Current line display for compact or showOnlyCurrent mode */}
+      {/* Current line display for compact or showOnlyCurrent mode - reduced padding */}
       {displayOnlyCurrent && showTranscript && currentLineIndex >= 0 && (
         <div className="flex-1 flex flex-col justify-center overflow-hidden">
-          <div className={`${showOnlyCurrent ? 'bg-opacity-70 rounded-md' : 'bg-indigo-700 bg-opacity-60 rounded-lg border-l-4 border-indigo-400'} p-4 shadow-lg ${showOnlyCurrent ? '' : 'animate-pulse-subtle'}`}>
+          <div className={`${showOnlyCurrent ? 'bg-opacity-70 rounded-md' : 'bg-indigo-700 bg-opacity-60 rounded-lg border-l-4 border-indigo-400'} px-4 py-4 shadow-lg ${showOnlyCurrent ? '' : 'animate-pulse-subtle'}`}>
             {!textOnly && (
-              <div className="font-semibold text-white text-base mb-1">
+              <span className={`font-semibold text-base mr-2 inline-block ${
+                metadata.audioFiles[currentLineIndex].speaker === 'Dev A' ? 'text-blue-300' :
+                metadata.audioFiles[currentLineIndex].speaker === 'Dev B' ? 'text-green-300' :
+                'text-white'
+              }`}>
                 {metadata.audioFiles[currentLineIndex].speaker}:
-              </div>
+              </span>
             )}
-            <div className="text-white text-lg leading-relaxed">
+            <span className="text-white text-lg leading-relaxed block mt-1">
               {metadata.audioFiles[currentLineIndex].text}
-            </div>
+            </span>
           </div>
           
-          {/* Show next line as preview if available and not in showOnlyCurrent mode */}
+          {/* Show next line as preview if available and not in showOnlyCurrent mode - more compact */}
           {!showOnlyCurrent && currentLineIndex < metadata.audioFiles.length - 1 && (
-            <div className="mt-3 bg-gray-800 bg-opacity-50 rounded p-3 opacity-70">
+            <div className="mt-2 bg-gray-800 bg-opacity-50 rounded px-3 py-1.5 opacity-70">
               {!textOnly && (
-                <div className="font-semibold text-indigo-300 text-sm mb-1">
-                  {metadata.audioFiles[currentLineIndex + 1].speaker}
-                </div>
+                <span className={`font-semibold text-xs mr-1 inline-block ${
+                  metadata.audioFiles[currentLineIndex + 1].speaker === 'Dev A' ? 'text-blue-300' :
+                  metadata.audioFiles[currentLineIndex + 1].speaker === 'Dev B' ? 'text-green-300' :
+                  'text-indigo-300'
+                }`}>
+                  {metadata.audioFiles[currentLineIndex + 1].speaker}:
+                </span>
               )}
-              <div className="text-gray-300 text-sm">
+              <span className="text-gray-300 text-xs inline-block">
                 {metadata.audioFiles[currentLineIndex + 1].text}
-              </div>
+              </span>
             </div>
           )}
         </div>
@@ -786,7 +807,13 @@ const DialoguePlayer: React.FC<DialoguePlayerProps> = ({
                 } : undefined}
               >
                 {!textOnly && (
-                  <div className={`font-semibold ${isCurrent ? 'text-white' : 'text-indigo-300'} ${compact ? 'text-sm mb-1' : ''}`}>
+                  <div className={`font-semibold ${
+                    line.speaker === 'Dev A' ? 
+                      (isCurrent ? 'text-blue-200' : 'text-blue-400') : 
+                    line.speaker === 'Dev B' ? 
+                      (isCurrent ? 'text-green-200' : 'text-green-400') : 
+                      (isCurrent ? 'text-white' : 'text-indigo-300')
+                  } ${compact ? 'text-sm mb-1' : ''}`}>
                     {line.speaker}
                   </div>
                 )}
