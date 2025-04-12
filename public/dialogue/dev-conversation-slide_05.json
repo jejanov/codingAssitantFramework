@@ -1,0 +1,145 @@
+{
+  "title": "Slide 05: The AI Workshop - Real-World Transformation",
+  "dialogue": [
+    {
+      "speaker": "Dev A",
+      "line": "I'm still trying to wrap my head around how quickly we could adapt these tools into our workflow...",
+      "emotion": "thoughtfully processing, brow slightly furrowed",
+      "speed": 0.9,
+      "trailingSilence": 0.5
+    },
+    {
+      "speaker": "Dev B",
+      "line": "It's surprisingly intuitive once you start. The learning curve isn't nearly as steep as picking up a new framework.",
+      "emotion": "reassuringly confident, casually gesturing",
+      "speed": 1.05,
+      "trailingSilence": 0.4
+    },
+    {
+      "speaker": "Dev A",
+      "line": "But who's going to teach us? I don't want to spend weeks figuring out optimal prompting strategies.",
+      "emotion": "mildly concerned, practically minded",
+      "speed": 0.95,
+      "trailingSilence": 0.5
+    },
+    {
+      "speaker": "Dev B",
+      "line": "We could start with some online tutorials and...",
+      "emotion": "beginning to explain, slightly uncertain",
+      "speed": 1.0,
+      "trailingSilence": 0.2
+    },
+    {
+      "speaker": "Dev C",
+      "line": "Hey guys! Did I hear someone talking about AI coding? Have you heard Joel's doing an AI workshop in Golden next week?",
+      "emotion": "excitedly interrupting, bursting with energy",
+      "speed": 1.25,
+      "trailingSilence": 0.3
+    },
+    {
+      "speaker": "Dev A",
+      "line": "Joel? Our Joel? The one who still talks about COBOL occasionally?",
+      "emotion": "surprised disbelief, eyebrows raised",
+      "speed": 0.9,
+      "trailingSilence": 0.6
+    },
+    {
+      "speaker": "Dev C",
+      "line": "The very same! Don't let the dad jokes fool you. He's gone full AI-native developer in the last few months.",
+      "emotion": "amusedly defensive, knowingly smiling",
+      "speed": 1.15,
+      "trailingSilence": 0.4
+    },
+    {
+      "speaker": "Dev B",
+      "line": "Joel? Really? I mean, no offense, but he's not exactly our resident early adopter.",
+      "emotion": "politely skeptical, slightly confused",
+      "speed": 1.0,
+      "trailingSilence": 0.5
+    },
+    {
+      "speaker": "Dev C",
+      "line": "That's what makes it so wild! He built this entire feature without writing a single line of code himself. It's over 50,000 lines of code.",
+      "emotion": "impressively animated, gesturing enthusiastically",
+      "speed": 1.2,
+      "trailingSilence": 0.3
+    },
+    {
+      "speaker": "Dev A",
+      "line": "Wait, what? Joel did that? There's no way.",
+      "emotion": "completely incredulous, leaning back in shock",
+      "speed": 0.85,
+      "trailingSilence": 0.7
+    },
+    {
+      "speaker": "Dev C",
+      "line": "I'm telling you! It uses websockets, various APIs, MobX, React, Neo4j knowledge graphs, MongoDB, TypeScript... the works!",
+      "emotion": "excitedly listing, counting on fingers",
+      "speed": 1.3,
+      "trailingSilence": 0.4
+    },
+    {
+      "speaker": "Dev B",
+      "line": "Joel? The guy who asked me what JSON stood for last year? That Joel?",
+      "emotion": "humorously disbelieving, half-smiling",
+      "speed": 1.05,
+      "trailingSilence": 0.5
+    },
+    {
+      "speaker": "Dev C",
+      "line": "And here's the kicker – he's doing dot product calculations between vector matrices to figure out relationships between document chunks and something he calls 'Ontologies.'",
+      "emotion": "dramatically revealing, wide-eyed enthusiasm",
+      "speed": 1.25,
+      "trailingSilence": 0.4
+    },
+    {
+      "speaker": "Dev A",
+      "line": "Joel? Vector matrices? Ontologies? Are we talking about the same person who still prints his emails?",
+      "emotion": "laughingly shocked, completely bewildered",
+      "speed": 0.9,
+      "trailingSilence": 0.6
+    },
+    {
+      "speaker": "Dev C",
+      "line": "[laughs] I know, right? But he's been working with AI coding tools for months now. Says it's like having a team of junior devs who actually understand his jokes.",
+      "emotion": "amusedly confirming, warmly laughing",
+      "speed": 1.15,
+      "trailingSilence": 0.5
+    },
+    {
+      "speaker": "Dev B",
+      "line": "Well, if Joel can do it... maybe we're overthinking how hard this transition will be.",
+      "emotion": "thoughtfully humbled, professionally reflective",
+      "speed": 0.95,
+      "trailingSilence": 0.7
+    },
+    {
+      "speaker": "Dev C",
+      "line": "Exactly! The workshop is next Tuesday. He's going to show us his whole workflow and how he built that feature. You guys should definitely come!",
+      "emotion": "enthusiastically inviting, leaning forward eagerly",
+      "speed": 1.2,
+      "trailingSilence": 0.4
+    },
+    {
+      "speaker": "Dev A",
+      "line": "If Joel's leading the AI revolution, I feel like I need to see this with my own eyes. Count me in.",
+      "emotion": "amusedly convinced, hands up in surrender",
+      "speed": 1.0,
+      "trailingSilence": 0.5
+    },
+    {
+      "speaker": "Dev B",
+      "line": "Same here. This I've got to see. The world really is changing when Joel's our AI coding guru.",
+      "emotion": "playfully resigned, smiling broadly",
+      "speed": 1.1,
+      "trailingSilence": 0.6
+    },
+    {
+      "speaker": "Dev C",
+      "line": "Perfect! Trust me, you won't believe what's possible until you see it. Joel says he's finally having fun coding again after twenty years.",
+      "emotion": "happily concluding, genuinely excited",
+      "speed": 1.15,
+      "trailingSilence": 0.8
+    }
+  ]
+}

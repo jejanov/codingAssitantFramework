@@ -4,7 +4,7 @@ import { Glass } from '../../../DESIGN_SYSTEM/components/Glass/Glass';
 import ProductivityMetrics from './ProductivityMetrics';
 import TimelineComparison from './TimelineComparison';
 import './Slide03.css';
-import { useGlobalAudio } from '../../contexts/AudioContext';
+import { useAudioStore } from '@/stores/StoreContext';
 
 /**
  * Slide03: Productivity Visualization slide as specified in slide_instructions/slide_03.md
@@ -16,8 +16,8 @@ const Slide03: React.FC = () => {
     const [animationProgress, setAnimationProgress] = useState(0);
     const videoRef = useRef<HTMLVideoElement>(null);
 
-    // Get global audio context
-    const { isDialoguePlaying } = useGlobalAudio();
+    // Get audio store from MobX
+    const audioStore = useAudioStore();
 
     // Animate metrics appearance - separated from audio effect
     useEffect(() => {
@@ -61,6 +61,16 @@ const Slide03: React.FC = () => {
             clearTimeout(startDelay);
         };
     }, []);
+
+    // Play background music when component mounts
+    useEffect(() => {
+        audioStore.playBackgroundMusic();
+
+        // Clean up on unmount
+        return () => {
+            audioStore.stopBackgroundMusic();
+        };
+    }, [audioStore]);
 
     // Memoize the mouse handler to prevent unnecessary re-renders
     const handleMouseMove = useCallback((e: React.MouseEvent) => {

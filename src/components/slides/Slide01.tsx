@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef, useCallback, useContext, memo, useM
 import { motion, AnimatePresence } from 'framer-motion';
 import RegisLogo from '@/components/ui/RegisLogo';
 import './Slide01.css';
-import { AudioContext } from '@/App';
+import { useAudioStore } from '../../stores/StoreContext';
 import CodeTyping from '@/components/slides/CodeTyping';
 import Typewriter from 'typewriter-effect';
 
@@ -182,8 +182,8 @@ const Slide01: React.FC = () => {
     const mouseUpdateTimeoutRef = useRef<number | null>(null);
     const rootSlideRef = useRef<HTMLDivElement>(null);
 
-    // Get audio effects from context
-    const audioEffects = useContext(AudioContext);
+    // Get audio effects from MobX store
+    const audioStore = useAudioStore();
 
     // Code snippet from requirements - memoized to keep reference stable
     const codeSnippet = useMemo(() => `// AI Dev Workshop - The Regis Company
@@ -249,25 +249,25 @@ if (AI.codes) {
 
     // Memoized function to play typing sound
     const playTypingSound = useCallback(() => {
-        audioEffects?.playTypingSound();
-    }, [audioEffects]);
+        audioStore.playTypingSound();
+    }, [audioStore]);
 
     // Handle code typing completion
     const handleCodeComplete = useCallback(() => {
         setIsCodeComplete(true);
-        audioEffects?.playSuccessSound();
+        audioStore.playSuccessSound();
 
         // Add pulsing effect to title
         const titleElement = document.querySelector('.title-headline');
         if (titleElement) {
             titleElement.classList.add('pulse-animation');
         }
-    }, [audioEffects]);
+    }, [audioStore]);
 
     // Move through animation stages
     useEffect(() => {
         // Start background music specific to Slide01
-        audioEffects?.playSpecificBackgroundAudio('/audio/cool-hip-hop-loop-275527.mp3');
+        audioStore.playBackgroundMusic();
 
         // Clear any previous state
         setShouldShowCode(false);
@@ -279,7 +279,7 @@ if (AI.codes) {
             // Logo appears after 800ms
             setTimeout(() => {
                 setAnimationStage(1);
-                audioEffects?.playPanelSlideSound();
+                audioStore.playWhooshSound();
             }, 800),
             // Headline appears after 1.8s 
             setTimeout(() => setAnimationStage(2), 1800),
@@ -287,21 +287,21 @@ if (AI.codes) {
             setTimeout(() => {
                 console.log('Setting shouldShowCode to true');
                 setShouldShowCode(true);
-                audioEffects?.playPanelSlideSound();
+                audioStore.playWhooshSound();
             }, 3000),
             // Presenter info appears after 7.5s (more time for code typing)
             setTimeout(() => {
                 setShouldShowPresenter(true);
-                audioEffects?.playPanelSlideSound();
+                audioStore.playWhooshSound();
             }, 7500),
         ];
 
         // Cleanup timers and audio on unmount
         return () => {
             stageTimers.forEach(timer => clearTimeout(timer));
-            audioEffects?.stopBackgroundAmbience();
+            audioStore.stopBackgroundMusic();
         };
-    }, [audioEffects]);
+    }, [audioStore]);
 
     // Initialize particles with DOM elements instead of React state
     useEffect(() => {

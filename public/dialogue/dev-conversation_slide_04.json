@@ -1,0 +1,117 @@
+{
+  "title": "Slide 04: The New Frontier - From Coders to Architects",
+  "dialogue": [
+    {
+      "speaker": "Dev A",
+      "line": "So beyond the stats and speed, what does this actually mean for us as developers day-to-day?",
+      "emotion": "genuinely curious, leaning forward, professionally engaged",
+      "speed": 0.95,
+      "trailingSilence": 0.6
+    },
+    {
+      "speaker": "Dev B",
+      "line": "That's the best part! We get to be architects instead of keyboard monkeys. All that boilerplate code, repetitive patterns, documentation...AI handles it.",
+      "emotion": "enthusiastically relieved, gesturing broadly",
+      "speed": 1.15,
+      "trailingSilence": 0.4
+    },
+    {
+      "speaker": "Dev A",
+      "line": "Architects? That sounds a bit grandiose. We still need to understand the code, right?",
+      "emotion": "skeptically intrigued, slightly furrowed brow",
+      "speed": 0.9,
+      "trailingSilence": 0.5
+    },
+    {
+      "speaker": "Dev B",
+      "line": "Of course! But instead of spending 80% of our time writing boilerplate and 20% solving interesting problems, it flips. We focus on the creative, complex challenges.",
+      "emotion": "confidently explaining, professionally passionate",
+      "speed": 1.1,
+      "trailingSilence": 0.3
+    },
+    {
+      "speaker": "Dev A",
+      "line": "Wait, so we're not getting replaced? I keep hearing about how AI is coming for everyone's jobs...",
+      "emotion": "cautiously relieved, slightly hesitant",
+      "speed": 0.9,
+      "trailingSilence": 0.7
+    },
+    {
+      "speaker": "Dev B",
+      "line": "Quite the opposite! Our jobs get way more interesting. We become product-focused problem solvers who happen to use code as our medium.",
+      "emotion": "reassuringly confident, leaning in slightly",
+      "speed": 1.05,
+      "trailingSilence": 0.4
+    },
+    {
+      "speaker": "Dev A",
+      "line": "So you're saying instead of wrestling with TypeScript errors, we could be designing better simulation experiences for Regis customers?",
+      "emotion": "increasingly interested, thoughtfully considering",
+      "speed": 1.0,
+      "trailingSilence": 0.5
+    },
+    {
+      "speaker": "Dev B",
+      "line": "Exactly! Think about those complex simulations we build. AI lets us iterate on the experience and logic instead of getting bogged down in implementation details.",
+      "emotion": "excitedly confirming, gesturing toward imaginary screen",
+      "speed": 1.15,
+      "trailingSilence": 0.3
+    },
+    {
+      "speaker": "Dev A",
+      "line": "But why now? I mean, these tools have been around for a bit already...",
+      "emotion": "curiously puzzled, head slightly tilted",
+      "speed": 0.9,
+      "trailingSilence": 0.6
+    },
+    {
+      "speaker": "Dev B",
+      "line": "Because we're at the tipping point! The latest models actually understand context, can debug their own mistakes, and have enough knowledge to be truly useful collaborators.",
+      "emotion": "urgently excited, leaning forward intensely",
+      "speed": 1.2,
+      "trailingSilence": 0.4
+    },
+    {
+      "speaker": "Dev A",
+      "line": "And you really think this will help deliver more value to Regis customers faster?",
+      "emotion": "seriously considering, professionally focused",
+      "speed": 0.95,
+      "trailingSilence": 0.5
+    },
+    {
+      "speaker": "Dev B",
+      "line": "Without a doubt. Imagine bringing every product idea to life in half the time. Those simulation concepts we've had on the backlog for months? We could actually build them now.",
+      "emotion": "confidently visionary, hands spreading wide",
+      "speed": 1.1,
+      "trailingSilence": 0.3
+    },
+    {
+      "speaker": "Dev A",
+      "line": "I have to admit, being able to focus on the challenging parts of our simulations rather than fighting with MobX state management sounds pretty appealing.",
+      "emotion": "gradually convinced, slightly smiling",
+      "speed": 1.0,
+      "trailingSilence": 0.4
+    },
+    {
+      "speaker": "Dev B",
+      "line": "And that's just development. It streamlines everything—planning, testing, documentation. The whole process gets this productivity boost.",
+      "emotion": "enthusiastically explaining, hands animating points",
+      "speed": 1.15,
+      "trailingSilence": 0.3
+    },
+    {
+      "speaker": "Dev A",
+      "line": "So it's kind of like... we're finally getting to be the developers we always wanted to be when we started coding?",
+      "emotion": "thoughtfully optimistic, reflectively hopeful",
+      "speed": 0.9,
+      "trailingSilence": 0.7
+    },
+    {
+      "speaker": "Dev B",
+      "line": "You nailed it. It's like having a junior dev who works at superhuman speed, never complains, and lets us focus on the architectural and creative challenges we love.",
+      "emotion": "warmly affirming, genuinely excited about future",
+      "speed": 1.05,
+      "trailingSilence": 0.4
+    }
+  ]
+}

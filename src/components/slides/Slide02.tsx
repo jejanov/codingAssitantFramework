@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useCallback, useRef, useContext } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import CodeTyping from './CodeTyping';
 import LineNumbers from './LineNumbers';
 import TranslationPanel from './TranslationPanel';
 import StatusBar from './StatusBar';
 import Minimap from './Minimap';
-import { AudioContext } from '@/App';
+import { useAudioStore } from '@/stores/StoreContext';
 import './Slide02.css';
 
 /**
@@ -63,8 +63,8 @@ console.log("We engineer the future.");
     const containerRef = useRef<HTMLDivElement>(null);
     const rootSlideRef = useRef<HTMLDivElement>(null);
 
-    // Get audio effects from context
-    const audioEffects = useContext(AudioContext);
+    // Get audio store from context
+    const audioStore = useAudioStore();
 
     // Count lines in the code
     const lineCount = codeContent.split('\n').length;
@@ -119,20 +119,20 @@ console.log("We engineer the future.");
     // Handle typing completion
     const handleTypingComplete = useCallback(() => {
         setIsTypingComplete(true);
-        audioEffects?.playSuccessSound();
+        audioStore.playSuccessSound();
 
         // Wait a moment and then show translation panel
         setTimeout(() => {
             setShowTranslation(true);
-            audioEffects?.playPanelSlideSound();
+            audioStore.playPanelSlideSound();
 
             // Play pop sounds for bullet points with delay
-            setTimeout(() => audioEffects?.playPopSound(), 500);
-            setTimeout(() => audioEffects?.playPopSound(), 1000);
-            setTimeout(() => audioEffects?.playPopSound(), 1500);
-            setTimeout(() => audioEffects?.playPopSound(), 2000);
+            setTimeout(() => audioStore.playPopSound(), 500);
+            setTimeout(() => audioStore.playPopSound(), 1000);
+            setTimeout(() => audioStore.playPopSound(), 1500);
+            setTimeout(() => audioStore.playPopSound(), 2000);
         }, 1000);
-    }, [audioEffects]);
+    }, [audioStore]);
 
     // Update current line based on typing progress
     const handleTypingProgress = useCallback((position: number, text: string) => {
@@ -143,19 +143,19 @@ console.log("We engineer the future.");
 
         // Play typing sound occasionally (not on every character to avoid sound overload)
         if (position % 3 === 0) {
-            audioEffects?.playTypingSound();
+            audioStore.playTypingSound();
         }
-    }, [audioEffects]);
+    }, [audioStore]);
 
     // Start background ambience on mount
     useEffect(() => {
-        audioEffects?.playBackgroundAmbience();
+        audioStore.playBackgroundMusic();
 
         // Clean up on unmount
         return () => {
-            audioEffects?.stopBackgroundAmbience();
+            audioStore.stopBackgroundMusic();
         };
-    }, [audioEffects]);
+    }, [audioStore]);
 
     // Generate subtle particles
     const ParticleBackground = () => (

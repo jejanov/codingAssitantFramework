@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { SlideContext } from '@/App';
+import { useSlideStore } from '../../stores/StoreContext';
 import './Slide00.css';
 
 /**
@@ -10,7 +10,7 @@ import './Slide00.css';
 const Slide00: React.FC = () => {
     const [hover, setHover] = useState(false);
     const [pulsate, setPulsate] = useState(false);
-    const { navigateToSlide } = useContext(SlideContext);
+    const slideStore = useSlideStore();
 
     // Start pulsating animation after a short delay
     useEffect(() => {
@@ -23,7 +23,7 @@ const Slide00: React.FC = () => {
 
     // Handle start button click
     const handleStart = () => {
-        navigateToSlide(1); // Navigate to Slide 1
+        slideStore.navigateToSlide(1); // Navigate to Slide 1
     };
 
     return (

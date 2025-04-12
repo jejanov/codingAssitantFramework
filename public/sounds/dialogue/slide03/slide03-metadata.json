@@ -14,7 +14,7 @@
     {
       "index": 1,
       "speaker": "Dev B",
-      "text": "What do you think I am doing, I'm watching the Syntax Speedway: Keyboard Warriors Edition...and working on a presentation.",
+      "text": "What do you think I'm doing, I'm watching the Syntax Speedway: Keyboard Warriors Edition...and working on a presentation.",
       "emotion": "playfully sarcastic, slightly boastful",
       "speed": 1.1,
       "trailingSilence": 0.4,
@@ -120,11 +120,91 @@
       "trailingSilence": 0.4,
       "filename": "slide03-11.json",
       "path": "public/sounds/dialogue/slide03/slide03-11.json"
+    },
+    {
+      "index": 12,
+      "speaker": "Dev A",
+      "text": "Wait, it says documentation time went from 1 week to 0.3 weeks? That's... actually amazing if true.",
+      "emotion": "reluctantly impressed, beginning to be convinced",
+      "speed": 0.9,
+      "trailingSilence": 0.6,
+      "filename": "slide03-12.json",
+      "path": "public/sounds/dialogue/slide03/slide03-12.json"
+    },
+    {
+      "index": 13,
+      "speaker": "Dev B",
+      "text": "[laughs] Yeah, nobody likes writing docs. AI just does it while you code. It's like having a co-pilot who handles the boring stuff.",
+      "emotion": "amusedly relieved, casually confident",
+      "speed": 1.1,
+      "trailingSilence": 0.3,
+      "filename": "slide03-13.json",
+      "path": "public/sounds/dialogue/slide03/slide03-13.json"
+    },
+    {
+      "index": 14,
+      "speaker": "Dev A",
+      "text": "So if we adopted this, our team could theoretically ship twice as fast?",
+      "emotion": "cautiously optimistic, professionally curious",
+      "speed": 0.95,
+      "trailingSilence": 0.7,
+      "filename": "slide03-14.json",
+      "path": "public/sounds/dialogue/slide03/slide03-14.json"
+    },
+    {
+      "index": 15,
+      "speaker": "Dev B",
+      "text": "More than that! The field study from Wharton showed 26% more PRs merged weekly. And that's just the beginning.",
+      "emotion": "excitedly informative, leaning in closer",
+      "speed": 1.15,
+      "trailingSilence": 0.4,
+      "filename": "slide03-15.json",
+      "path": "public/sounds/dialogue/slide03/slide03-15.json"
+    },
+    {
+      "index": 16,
+      "speaker": "Dev A",
+      "text": "...I'm starting to see why you're obsessed with your 'Syntax Speedway' now.",
+      "emotion": "gradually convinced, slightly amused",
+      "speed": 0.9,
+      "trailingSilence": 0.5,
+      "filename": "slide03-16.json",
+      "path": "public/sounds/dialogue/slide03/slide03-16.json"
+    },
+    {
+      "index": 17,
+      "speaker": "Dev B",
+      "text": "Right?! It's not even a fair race anymore. It's like bringing a rocket to a bicycle race.",
+      "emotion": "playfully triumphant, gesturing widely",
+      "speed": 1.2,
+      "trailingSilence": 0.3,
+      "filename": "slide03-17.json",
+      "path": "public/sounds/dialogue/slide03/slide03-17.json"
+    },
+    {
+      "index": 18,
+      "speaker": "Dev A",
+      "text": "Fine, you've convinced me. I'll give this AI-assisted development a shot. Where do I start?",
+      "emotion": "cautiously eager, professionally curious",
+      "speed": 0.95,
+      "trailingSilence": 0.6,
+      "filename": "slide03-18.json",
+      "path": "public/sounds/dialogue/slide03/slide03-18.json"
+    },
+    {
+      "index": 19,
+      "speaker": "Dev B",
+      "text": "That's the spirit! Buckle up for the next slide, my friend. You're about to join the Keyboard Warriors league.",
+      "emotion": "warmly encouraging, excited to share more",
+      "speed": 1.1,
+      "trailingSilence": 0.7,
+      "filename": "slide03-19.json",
+      "path": "public/sounds/dialogue/slide03/slide03-19.json"
     }
   ],
   "voices": {
-    "Dev A": "cf0ea40d-75c1-4680-b4e7-d27007cc85a1",
-    "Dev B": "0034cd44-8025-457a-9246-8aa3d5431d81"
+    "Dev A": "163d50ef-f0cf-411c-9543-eda58046303f",
+    "Dev B": "c0e88ad7-5b25-40f7-aca6-3714ae6ee91d"
   },
   "slideNumber": "slide03"
 }

@@ -168,12 +168,12 @@ const DialoguePlayer: React.FC<DialoguePlayerProps> = ({
       onPlay();
     }
 
-    // Start with a slight delay to ensure browser is ready for audio
+    // Start with minimal delay to ensure browser is ready for audio
     console.log('Setting timeout to start playback...');
     timeoutRef.current = window.setTimeout(() => {
       console.log('Starting from the first line...');
       setCurrentLineIndex(0); // Start with the first line
-    }, 500);
+    }, 50);
   }, [metadata, preloadAudioFiles, onPlay, onComplete]);
 
   // Stop the dialogue playback
@@ -326,7 +326,7 @@ const DialoguePlayer: React.FC<DialoguePlayerProps> = ({
       // Set the flag immediately to prevent multiple attempts
       hasAutoPlayedRef.current = true;
 
-      // Use a delay to ensure everything is ready
+      // Use minimal delay to ensure everything is ready
       const autoplayTimeout = setTimeout(() => {
         console.log('Now attempting to auto-play dialogue...');
 
@@ -339,7 +339,7 @@ const DialoguePlayer: React.FC<DialoguePlayerProps> = ({
           // If playback fails, reset the flag to allow another attempt
           hasAutoPlayedRef.current = false;
         }
-      }, 800); // Reduced delay since we've already had loading time
+      }, 50); // Minimal delay to ensure UI responsiveness
 
       // Cleanup
       return () => {
@@ -378,27 +378,20 @@ const DialoguePlayer: React.FC<DialoguePlayerProps> = ({
         onPlay();
       }
 
-      // Simulate audio playing by displaying transcript and advancing after a delay
-      // Calculate a realistic delay based on text length (avg reading speed)
-      const text = currentLine.text || '';
-      const wordCount = text.split(' ').length;
-      const timePerWord = 300; // milliseconds per word (adjust as needed)
-      const simulatedDuration = Math.max(1500, wordCount * timePerWord);
+      // Simulate audio playing by displaying transcript but with minimal delay
+      console.log(`Simulating playback for line ${currentLineIndex}, proceeding immediately`);
 
-      console.log(`Simulating playback for line ${currentLineIndex}, duration: ${simulatedDuration}ms`);
-
-      // Set a timeout to advance to the next line
+      // Proceed immediately to the next line
       if (currentLineIndex < metadata.audioFiles.length - 1) {
+        // Use a minimal timeout to ensure the UI can update
         timeoutRef.current = window.setTimeout(() => {
           console.log(`Simulated playback complete, advancing to next line`);
           setCurrentLineIndex(currentLineIndex + 1);
-        }, simulatedDuration);
+        }, 50); // Very short delay just to allow UI updates
       } else if (onComplete) {
-        // Last line - call completion callback after delay
-        timeoutRef.current = window.setTimeout(() => {
-          console.log('Reached end of dialogue, calling onComplete');
-          onComplete();
-        }, simulatedDuration);
+        // Last line - call completion callback immediately
+        console.log('Reached end of dialogue, calling onComplete');
+        onComplete();
       }
     };
 
@@ -509,15 +502,9 @@ const DialoguePlayer: React.FC<DialoguePlayerProps> = ({
               console.log(`Audio for line ${currentLineIndex} completed`);
               URL.revokeObjectURL(audioUrl);
 
-              // Add pause between lines
-              const pauseDuration = Math.floor(
-                Math.random() * (maxPauseDuration - minPauseDuration) + minPauseDuration
-              );
-
+              // Proceed immediately to the next line without pause
               if (currentLineIndex < metadata.audioFiles.length - 1) {
-                timeoutRef.current = window.setTimeout(() => {
-                  setCurrentLineIndex(currentLineIndex + 1);
-                }, pauseDuration);
+                setCurrentLineIndex(currentLineIndex + 1);
               } else {
                 console.log('Reached end of dialogue');
                 if (onComplete) onComplete();
