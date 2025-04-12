@@ -162,13 +162,13 @@ const App: React.FC = () => {
     const renderCurrentSlide = () => {
         switch (currentSlide) {
             case 0:
-                return <Slide00 />;
+                return <Slide00 key="slide-0" />;
             case 1:
-                return <Slide01 />;
+                return <Slide01 key="slide-1" />;
             case 2:
-                return <Slide02 />;
+                return <Slide02 key="slide-2" />;
             case 3:
-                return <Slide03 />;
+                return <Slide03 key="slide-3" />;
             // Future slides will be added here
             default:
                 return <div className="p-10 text-center">Slide {currentSlide} not found</div>;

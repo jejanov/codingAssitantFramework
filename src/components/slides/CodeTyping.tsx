@@ -1,7 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, memo } from 'react';
 import Prism from 'prismjs';
 import 'prismjs/components/prism-javascript';
 import 'prismjs/themes/prism-tomorrow.css';
+// Explicitly import Prism CSS again to ensure it's loaded
+import 'prismjs/themes/prism-okaidia.css'; // Try a different theme
 
 interface CodeTypingProps {
     code: string;
@@ -19,7 +21,7 @@ interface CodeTypingProps {
 /**
  * CodeTyping component that animates typing code with syntax highlighting
  */
-const CodeTyping: React.FC<CodeTypingProps> = ({
+const CodeTypingComponent: React.FC<CodeTypingProps> = ({
     code,
     speed = 10,
     onComplete,
@@ -29,6 +31,8 @@ const CodeTyping: React.FC<CodeTypingProps> = ({
     const [displayedCode, setDisplayedCode] = useState('');
     const [isComplete, setIsComplete] = useState(false);
     const typingTimeoutRef = useRef<number | null>(null);
+    const isTypingStartedRef = useRef(false);
+    const isUnmountedRef = useRef(false);
 
     // Apply custom syntax highlighting colors if provided
     useEffect(() => {
@@ -48,10 +52,29 @@ const CodeTyping: React.FC<CodeTypingProps> = ({
         }
     }, [brandColors]);
 
+    // Track component unmount to prevent state updates after unmount
     useEffect(() => {
+        isUnmountedRef.current = false;
+        return () => {
+            isUnmountedRef.current = true;
+        };
+    }, []);
+
+    // Main typing animation effect - runs only once when component mounts
+    useEffect(() => {
+        // Prevent multiple starts
+        if (isTypingStartedRef.current) return;
+        isTypingStartedRef.current = true;
+
+        // Reset state
+        setDisplayedCode('');
+        setIsComplete(false);
+
         let currentPosition = 0;
 
         const typeNextCharacter = () => {
+            if (isUnmountedRef.current) return;
+
             if (currentPosition < code.length) {
                 // Add next character to displayed code
                 setDisplayedCode(code.substring(0, currentPosition + 1));
@@ -73,14 +96,16 @@ const CodeTyping: React.FC<CodeTypingProps> = ({
                 typingTimeoutRef.current = window.setTimeout(typeNextCharacter, delay);
             } else {
                 // Typing complete
-                setIsComplete(true);
-                if (onComplete) {
-                    onComplete();
+                if (!isUnmountedRef.current) {
+                    setIsComplete(true);
+                    if (onComplete) {
+                        onComplete();
+                    }
                 }
             }
         };
 
-        // Start typing
+        // Start typing with a small delay
         typingTimeoutRef.current = window.setTimeout(typeNextCharacter, 500);
 
         // Cleanup function
@@ -89,7 +114,8 @@ const CodeTyping: React.FC<CodeTypingProps> = ({
                 clearTimeout(typingTimeoutRef.current);
             }
         };
-    }, [code, speed, onComplete, onProgress]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []); // Empty dependency array - run only once on mount
 
     // Apply syntax highlighting
     const highlightedCode = displayedCode ?
@@ -101,10 +127,17 @@ const CodeTyping: React.FC<CodeTypingProps> = ({
         highlightedCode + '<span class="cursor">|</span>';
 
     return (
-        <pre data-testid="code-content" className="code-typing">
+        <pre data-testid="code-content" className="code-typing" style={{
+            color: '#e0e0e0',
+            fontSize: '16px',
+            lineHeight: '1.5'
+        }}>
             <code dangerouslySetInnerHTML={{ __html: codeWithCursor }} />
         </pre>
     );
 };
+
+// Use React.memo to prevent re-renders unless props change
+const CodeTyping = memo(CodeTypingComponent);
 
 export default CodeTyping; 

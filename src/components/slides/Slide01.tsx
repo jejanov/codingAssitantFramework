@@ -1,10 +1,22 @@
-import React, { useEffect, useState, useRef, useCallback, useContext } from 'react';
+import React, { useEffect, useState, useRef, useCallback, useContext, memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import RegisLogo from '@/components/ui/RegisLogo';
 import './Slide01.css';
 import { AudioContext } from '@/App';
 import CodeTyping from '@/components/slides/CodeTyping';
 import Typewriter from 'typewriter-effect';
+
+// Throttle function to limit how often a function runs
+const throttle = (func: Function, limit: number) => {
+    let inThrottle: boolean;
+    return function (this: any, ...args: any[]) {
+        if (!inThrottle) {
+            func.apply(this, args);
+            inThrottle = true;
+            setTimeout(() => inThrottle = false, limit);
+        }
+    };
+};
 
 // Particle type definition
 interface Particle {
@@ -33,6 +45,145 @@ interface Particle {
     };
 }
 
+// Create memoized child components to prevent re-renders
+
+// Memoized Logo component
+const LogoSection = memo(({ animationStage, registerPerspectiveElement }: {
+    animationStage: number;
+    registerPerspectiveElement: (el: HTMLElement | null, intensity?: number) => void;
+}) => (
+    <div className="absolute top-10 w-full flex justify-center">
+        <AnimatePresence>
+            {animationStage >= 1 && (
+                <motion.div
+                    initial={{ opacity: 0, y: -20, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    transition={{ duration: 0.8, ease: [0.19, 1.0, 0.22, 1.0] }}
+                    className="relative z-20"
+                    ref={(el) => registerPerspectiveElement(el as HTMLElement, 1.0)}
+                >
+                    <RegisLogo width={480} height={150} />
+                </motion.div>
+            )}
+        </AnimatePresence>
+    </div>
+));
+
+// Memoized Title section
+const TitleSection = memo(({ animationStage, registerPerspectiveElement }: {
+    animationStage: number;
+    registerPerspectiveElement: (el: HTMLElement | null, intensity?: number) => void;
+}) => (
+    <div className="absolute top-1/4 w-full flex justify-center">
+        <AnimatePresence>
+            {animationStage >= 2 && (
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8, ease: [0.19, 1.0, 0.22, 1.0] }}
+                    className="perspective-container"
+                    ref={(el) => registerPerspectiveElement(el as HTMLElement, 0.7)}
+                >
+                    <h1
+                        className="text-5xl font-bold text-center mb-3 title-headline glass-text glass-text-primary glass-text-refract text-depth-1"
+                        data-text="AI Dev Workshop"
+                    >
+                        AI Dev Workshop
+                    </h1>
+                    <h2
+                        className="text-2xl text-center glass-text glass-text-secondary text-depth-2"
+                        data-text="Revolutionizing Development with AI Coding Tools"
+                    >
+                        Revolutionizing Development with AI Coding Tools
+                    </h2>
+                </motion.div>
+            )}
+        </AnimatePresence>
+    </div>
+));
+
+// Memoized Code section
+const CodeSection = memo(({
+    shouldShowCode,
+    codeSnippet,
+    handleCodeComplete,
+    playTypingSound,
+    registerPerspectiveElement
+}: {
+    shouldShowCode: boolean;
+    codeSnippet: string;
+    handleCodeComplete: () => void;
+    playTypingSound: () => void;
+    registerPerspectiveElement: (el: HTMLElement | null, intensity?: number) => void;
+}) => (
+    <div className="absolute top-[50%] w-full flex justify-center" style={{ zIndex: 30 }}>
+        <AnimatePresence>
+            {shouldShowCode && (
+                <motion.div
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.5 }}
+                    className="w-full max-w-lg"
+                    ref={(el) => registerPerspectiveElement(el as HTMLElement, 0.5)}
+                >
+                    <div className="glass-panel-interactive rounded-lg p-4 font-mono border border-teal-500/30" style={{ zIndex: 30 }}>
+                        <CodeTyping
+                            code={codeSnippet}
+                            speed={12}
+                            onComplete={handleCodeComplete}
+                            onProgress={(position, text) => {
+                                playTypingSound();
+                            }}
+                            brandColors={{
+                                keyword: '#00bcd4',   // teal
+                                string: '#9c27b0',    // purple
+                                function: '#2196f3',  // blue
+                                comment: '#757575'    // gray
+                            }}
+                        />
+                    </div>
+                </motion.div>
+            )}
+        </AnimatePresence>
+    </div>
+));
+
+// Memoized Presenter section
+const PresenterSection = memo(({
+    shouldShowPresenter,
+    registerPerspectiveElement
+}: {
+    shouldShowPresenter: boolean;
+    registerPerspectiveElement: (el: HTMLElement | null, intensity?: number) => void;
+}) => (
+    <div className="absolute bottom-10 w-full flex justify-center">
+        <AnimatePresence>
+            {shouldShowPresenter && (
+                <motion.div
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, ease: "easeOut" }}
+                    className="text-center text-depth-3"
+                    ref={(el) => registerPerspectiveElement(el as HTMLElement, 0.3)}
+                >
+                    <p
+                        className="glass-text glass-text-accent text-lg mb-2"
+                        data-text="Presented by: Joel Janov"
+                    >
+                        Presented by: Joel Janov
+                    </p>
+                    <p
+                        className="glass-text glass-text-primary text-sm"
+                        data-text="April 15, 2025"
+                    >
+                        April 15, 2025
+                    </p>
+                </motion.div>
+            )}
+        </AnimatePresence>
+    </div>
+));
+
 /**
  * Title Slide (Slide 01) for the AI Dev Workshop presentation.
  * Includes animations, styling, and branding elements as specified.
@@ -40,16 +191,18 @@ interface Particle {
 const Slide01: React.FC = () => {
     // State for animation sequence
     const [animationStage, setAnimationStage] = useState(0);
-    const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+    const mousePositionRef = useRef({ x: 0, y: 0 });
     const [isCodeComplete, setIsCodeComplete] = useState(false);
     const [shouldShowCode, setShouldShowCode] = useState(false);
     const [shouldShowPresenter, setShouldShowPresenter] = useState(false);
     const particleContainerRef = useRef<HTMLDivElement>(null);
     const perspectiveContainerRef = useRef<HTMLDivElement>(null);
-    const [perspectiveValues, setPerspectiveValues] = useState({ rotateX: 0, rotateY: 0 });
-    const [particles, setParticles] = useState<Particle[]>([]);
+    const perspectiveValuesRef = useRef({ rotateX: 0, rotateY: 0 });
+    const perspectiveElementsRef = useRef<HTMLElement[]>([]);
     const animationFrameRef = useRef<number>();
     const lastUpdateTimeRef = useRef<number>(Date.now());
+    const isMouseMovingRef = useRef(false);
+    const mouseUpdateTimeoutRef = useRef<number | null>(null);
 
     // Get audio effects from context
     const audioEffects = useContext(AudioContext);
@@ -62,286 +215,93 @@ if (AI.codes) {
   value.grow();
 }`;
 
-    // Initialize particles
-    useEffect(() => {
-        const initialParticles: Particle[] = [];
-        const neuralNodeIds: number[] = [];
+    // Debug output to verify codeSnippet is defined
+    console.log("Code snippet value:", codeSnippet);
+    console.log("Code snippet length:", codeSnippet.length);
 
-        // Create particles with more varied properties
-        for (let i = 0; i < 75; i++) {
-            const size = Math.random() * 2 + 2; // Base size between 2-4px
-            const isNeuralNode = i % 15 === 0;
-
-            // Create the particle
-            const particle: Particle = {
-                id: i,
-                x: Math.random() * 100, // % position
-                y: Math.random() * 100, // % position
-                size: isNeuralNode ? 8 : size,
-                color: isNeuralNode
-                    ? '#9c27b0' // Neural nodes are purple
-                    : i % 4 === 0
-                        ? '#2196f3' // Blue particles
-                        : i % 4 === 1
-                            ? '#00bcd4' // Teal particles
-                            : i % 4 === 2
-                                ? '#673ab7' // Deep purple particles
-                                : '#ffffff', // White particles
-                velocity: {
-                    x: (Math.random() - 0.5) * 0.05, // Slower, more natural movement
-                    y: (Math.random() - 0.5) * 0.05,
-                },
-                opacity: 0.1 + Math.random() * 0.5,
-                type: isNeuralNode ? 'neural' : 'normal',
-                effect: Math.random() > 0.7
-                    ? ['sparkle', 'pulse', 'color-shift', 'none'][Math.floor(Math.random() * 4)] as any
-                    : 'none',
-                effectState: {
-                    timer: Math.random() * 5000, // Random start time
-                    duration: 2000 + Math.random() * 3000, // Effect duration between 2-5 seconds
-                    intensity: Math.random(),
-                },
-                connectedTo: [],
-                pulseData: {
-                    active: false,
-                    progress: 0
-                }
-            };
-
-            // Track neural node IDs for connections
-            if (isNeuralNode) {
-                neuralNodeIds.push(i);
-            }
-
-            initialParticles.push(particle);
+    // Register elements for perspective effect
+    const registerPerspectiveElement = useCallback((el: HTMLElement | null, intensity: number = 1) => {
+        if (el && !perspectiveElementsRef.current.includes(el)) {
+            // Store the intensity as a data attribute
+            el.dataset.perspectiveIntensity = intensity.toString();
+            perspectiveElementsRef.current.push(el);
         }
-
-        // Create neural connections between nodes
-        neuralNodeIds.forEach((nodeId, index) => {
-            const particle = initialParticles[nodeId];
-
-            // Connect to 1-3 other neural nodes
-            const connectionsCount = Math.floor(Math.random() * 3) + 1;
-
-            for (let i = 0; i < connectionsCount; i++) {
-                // Find another neural node to connect to
-                const targetIndex = (index + 1 + Math.floor(Math.random() * (neuralNodeIds.length - 1))) % neuralNodeIds.length;
-                const targetId = neuralNodeIds[targetIndex];
-
-                // Avoid self-connections and duplicates
-                if (targetId !== nodeId && !particle.connectedTo?.includes(targetId)) {
-                    // Add connection to both particles
-                    particle.connectedTo = [...(particle.connectedTo || []), targetId];
-                    initialParticles[targetId].connectedTo = [...(initialParticles[targetId].connectedTo || []), nodeId];
-
-                    // Create a connector particle that will visualize the connection
-                    const connectorParticle: Particle = {
-                        id: initialParticles.length,
-                        x: (particle.x + initialParticles[targetId].x) / 2, // Middle point
-                        y: (particle.y + initialParticles[targetId].y) / 2, // Middle point
-                        size: 1,
-                        color: '#9c27b0',
-                        velocity: { x: 0, y: 0 },
-                        opacity: 0.2 + Math.random() * 0.2,
-                        type: 'connector',
-                        connectedTo: [nodeId, targetId]
-                    };
-
-                    initialParticles.push(connectorParticle);
-                }
-            }
-        });
-
-        setParticles(initialParticles);
     }, []);
 
-    // Animation loop for particle physics
-    useEffect(() => {
-        const updateParticles = (timestamp: number) => {
-            // Calculate delta time for smoother animations
-            const deltaTime = timestamp - lastUpdateTimeRef.current;
-            lastUpdateTimeRef.current = timestamp;
+    // Handle mouse movement for particle effect - with throttling
+    const handleMouseMove = useCallback((e: React.MouseEvent) => {
+        // Stop event propagation to prevent bubbling to App.tsx
+        e.stopPropagation();
 
-            // Skip if delta is too large (tab was inactive)
-            if (deltaTime > 100) {
-                animationFrameRef.current = requestAnimationFrame(updateParticles);
-                return;
-            }
+        // Set flag that mouse is moving and needs updating
+        isMouseMovingRef.current = true;
 
-            setParticles(prevParticles => {
-                return prevParticles.map(particle => {
-                    // Skip updating connector particles
-                    if (particle.type === 'connector') {
-                        // Update connector positions based on connected particles
-                        if (particle.connectedTo && particle.connectedTo.length === 2) {
-                            const [id1, id2] = particle.connectedTo;
-                            const p1 = prevParticles.find(p => p.id === id1);
-                            const p2 = prevParticles.find(p => p.id === id2);
+        // Store mouse position for animation frame updates
+        if (particleContainerRef.current) {
+            const rect = particleContainerRef.current.getBoundingClientRect();
+            mousePositionRef.current = {
+                x: e.clientX - rect.left,
+                y: e.clientY - rect.top
+            };
+        }
 
-                            if (p1 && p2) {
-                                return {
-                                    ...particle,
-                                    x: (p1.x + p2.x) / 2,
-                                    y: (p1.y + p2.y) / 2
-                                };
-                            }
-                        }
-                        return particle;
+        // Clear previous timeout if exists
+        if (mouseUpdateTimeoutRef.current) {
+            window.clearTimeout(mouseUpdateTimeoutRef.current);
+        }
+
+        // Set timeout to mark mouse as stopped after delay
+        mouseUpdateTimeoutRef.current = window.setTimeout(() => {
+            isMouseMovingRef.current = false;
+        }, 100);
+    }, []);
+
+    // Throttled version for performance
+    const throttledMouseMove = useCallback(throttle(handleMouseMove, 16), [handleMouseMove]); // ~60fps
+
+    // Handle perspective mouse movement - with throttling
+    const handlePerspectiveMouseMove = useCallback((e: React.MouseEvent) => {
+        // Stop event propagation to prevent bubbling to App.tsx
+        e.stopPropagation();
+
+        if (perspectiveContainerRef.current) {
+            const rect = perspectiveContainerRef.current.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            // Calculate base perspective values
+            perspectiveValuesRef.current = {
+                rotateX: (y - rect.height / 2) / (rect.height / 2) * 10,
+                rotateY: (x - rect.width / 2) / (rect.width / 2) * 10
+            };
+
+            // Apply to all registered elements directly using DOM manipulation
+            requestAnimationFrame(() => {
+                perspectiveElementsRef.current.forEach(el => {
+                    if (el) {
+                        const intensity = parseFloat(el.dataset.perspectiveIntensity || "1");
+                        el.style.transform = `rotateX(${perspectiveValuesRef.current.rotateX * intensity}deg) rotateY(${perspectiveValuesRef.current.rotateY * intensity}deg) translateZ(${30 * intensity}px)`;
+                        el.style.transition = 'transform 0.1s ease-out';
                     }
-
-                    // Get mouse influence - particles are attracted to or repelled by mouse
-                    let mouseInfluenceX = 0;
-                    let mouseInfluenceY = 0;
-
-                    if (mousePosition.x > 0 && mousePosition.y > 0) {
-                        // Convert percentage positions to container relative
-                        const containerWidth = particleContainerRef.current?.clientWidth || 1000;
-                        const containerHeight = particleContainerRef.current?.clientHeight || 600;
-
-                        const particleX = particle.x * containerWidth / 100;
-                        const particleY = particle.y * containerHeight / 100;
-
-                        // Calculate distance to mouse
-                        const dx = mousePosition.x - particleX;
-                        const dy = mousePosition.y - particleY;
-                        const distance = Math.sqrt(dx * dx + dy * dy);
-
-                        // Apply mouse influence inversely proportional to distance
-                        // (closer particles are affected more)
-                        if (distance < 200) {
-                            const influence = (1 - distance / 200) * 0.03;
-                            mouseInfluenceX = dx * influence;
-                            mouseInfluenceY = dy * influence;
-                        }
-                    }
-
-                    // Update particle position
-                    let newX = particle.x + particle.velocity.x * deltaTime + mouseInfluenceX;
-                    let newY = particle.y + particle.velocity.y * deltaTime + mouseInfluenceY;
-
-                    // Bounce off edges
-                    if (newX < 0 || newX > 100) {
-                        particle.velocity.x *= -1;
-                        newX = Math.max(0, Math.min(100, newX));
-                    }
-
-                    if (newY < 0 || newY > 100) {
-                        particle.velocity.y *= -1;
-                        newY = Math.max(0, Math.min(100, newY));
-                    }
-
-                    // Update special effects
-                    let updatedOpacity = particle.opacity;
-                    let updatedSize = particle.size;
-                    let updatedColor = particle.color;
-                    let updatedEffect = particle.effect;
-                    let updatedEffectState = particle.effectState ? {
-                        timer: particle.effectState.timer || 0,
-                        duration: particle.effectState.duration || 3000,
-                        intensity: particle.effectState.intensity || 0.5
-                    } : undefined;
-
-                    if (particle.effect && particle.effect !== 'none' && updatedEffectState) {
-                        // Increment effect timer
-                        updatedEffectState.timer += deltaTime;
-
-                        // Reset effect after duration
-                        if (updatedEffectState.timer >= updatedEffectState.duration) {
-                            updatedEffectState.timer = 0;
-
-                            // Randomize next effect for variety
-                            if (Math.random() > 0.7) {
-                                updatedEffect = ['sparkle', 'pulse', 'color-shift', 'none'][Math.floor(Math.random() * 4)] as any;
-                                updatedEffectState.duration = 2000 + Math.random() * 3000;
-                                updatedEffectState.intensity = Math.random();
-                            }
-                        }
-
-                        // Apply effects based on type
-                        const effectProgress = updatedEffectState.timer / updatedEffectState.duration;
-
-                        if (updatedEffect === 'sparkle' && effectProgress > 0.3 && effectProgress < 0.7) {
-                            // Sparkle effect - increase opacity and size briefly
-                            const sparkleIntensity = Math.sin(effectProgress * Math.PI) * updatedEffectState.intensity;
-                            updatedOpacity = particle.opacity * (1 + sparkleIntensity);
-                            updatedSize = particle.size * (1 + sparkleIntensity * 0.5);
-                        } else if (updatedEffect === 'pulse') {
-                            // Pulse effect - size oscillation
-                            const pulseIntensity = Math.sin(effectProgress * Math.PI * 2) * updatedEffectState.intensity;
-                            updatedSize = particle.size * (1 + pulseIntensity * 0.3);
-                        } else if (updatedEffect === 'color-shift' && particle.type === 'normal') {
-                            // Color shift effect - smoothly transition between colors
-                            const colorPhase = effectProgress * 2 * Math.PI;
-                            const r = 33 + Math.sin(colorPhase) * 100;
-                            const g = 150 + Math.sin(colorPhase + 2) * 50;
-                            const b = 243 + Math.sin(colorPhase + 4) * 50;
-                            updatedColor = `rgb(${r}, ${g}, ${b})`;
-                        }
-                    }
-
-                    // Handle neural pulses
-                    let updatedPulseData = particle.pulseData ? {
-                        active: particle.pulseData.active,
-                        progress: particle.pulseData.progress || 0,
-                        targetId: particle.pulseData.targetId
-                    } : {
-                        active: false,
-                        progress: 0
-                    };
-
-                    if (particle.type === 'neural' && Math.random() < 0.001) {
-                        // Randomly initiate neural pulses
-                        if (!updatedPulseData.active && particle.connectedTo && particle.connectedTo.length > 0) {
-                            // Pick a random connection to pulse to
-                            const targetId = particle.connectedTo[Math.floor(Math.random() * particle.connectedTo.length)];
-                            updatedPulseData = {
-                                active: true,
-                                progress: 0,
-                                targetId
-                            };
-                        }
-                    }
-
-                    // Update pulse progress
-                    if (updatedPulseData.active) {
-                        updatedPulseData.progress += deltaTime / 1000; // Progress in seconds
-
-                        // Reset when complete
-                        if (updatedPulseData.progress >= 1) {
-                            updatedPulseData = {
-                                active: false,
-                                progress: 0
-                            };
-                        }
-                    }
-
-                    return {
-                        ...particle,
-                        x: newX,
-                        y: newY,
-                        opacity: updatedOpacity,
-                        size: updatedSize,
-                        color: updatedColor,
-                        effect: updatedEffect,
-                        effectState: updatedEffectState,
-                        pulseData: updatedPulseData
-                    } as Particle; // Explicitly cast to Particle type to resolve TypeScript error
                 });
             });
+        }
+    }, []);
 
-            animationFrameRef.current = requestAnimationFrame(updateParticles);
-        };
+    // Throttled version for performance
+    const throttledPerspectiveMouseMove = useCallback(throttle(handlePerspectiveMouseMove, 16), [handlePerspectiveMouseMove]); // ~60fps
 
-        // Start animation loop
-        animationFrameRef.current = requestAnimationFrame(updateParticles);
+    // Handle code typing completion
+    const handleCodeComplete = useCallback(() => {
+        setIsCodeComplete(true);
+        audioEffects?.playSuccessSound();
 
-        // Cleanup on component unmount
-        return () => {
-            if (animationFrameRef.current) {
-                cancelAnimationFrame(animationFrameRef.current);
-            }
-        };
-    }, [mousePosition]);
+        // Add pulsing effect to title
+        const titleElement = document.querySelector('.title-headline');
+        if (titleElement) {
+            titleElement.classList.add('pulse-animation');
+        }
+    }, [audioEffects]);
 
     // Move through animation stages
     useEffect(() => {
@@ -382,171 +342,395 @@ if (AI.codes) {
         };
     }, [audioEffects]);
 
-    // Handle code typing completion
-    const handleCodeComplete = useCallback(() => {
-        setIsCodeComplete(true);
-        audioEffects?.playSuccessSound();
+    // Initialize particles with DOM elements instead of React state
+    useEffect(() => {
+        // Create container for particles
+        const particleContainer = particleContainerRef.current?.querySelector('.particle-container');
+        if (!particleContainer) return;
 
-        // Add pulsing effect to title
-        const titleElement = document.querySelector('.title-headline');
-        if (titleElement) {
-            titleElement.classList.add('pulse-animation');
+        // Clear any existing particles
+        particleContainer.innerHTML = '';
+
+        const neuralNodeIds: number[] = [];
+        const particleElements: Array<{
+            element: HTMLDivElement;
+            data: Particle;
+        }> = [];
+
+        // Create particles with DOM elements
+        for (let i = 0; i < 75; i++) {
+            const size = Math.random() * 2 + 2; // Base size between 2-4px
+            const isNeuralNode = i % 15 === 0;
+
+            // Create the particle data
+            const particle: Particle = {
+                id: i,
+                x: Math.random() * 100, // % position
+                y: Math.random() * 100, // % position
+                size: isNeuralNode ? 8 : size,
+                color: isNeuralNode
+                    ? '#9c27b0' // Neural nodes are purple
+                    : i % 4 === 0
+                        ? '#2196f3' // Blue particles
+                        : i % 4 === 1
+                            ? '#00bcd4' // Teal particles
+                            : i % 4 === 2
+                                ? '#673ab7' // Deep purple particles
+                                : '#ffffff', // White particles
+                velocity: {
+                    x: (Math.random() - 0.5) * 0.05, // Slower, more natural movement
+                    y: (Math.random() - 0.5) * 0.05,
+                },
+                opacity: 0.1 + Math.random() * 0.5,
+                type: isNeuralNode ? 'neural' : 'normal',
+                effect: Math.random() > 0.7
+                    ? ['sparkle', 'pulse', 'color-shift', 'none'][Math.floor(Math.random() * 4)] as any
+                    : 'none',
+                effectState: {
+                    timer: Math.random() * 5000, // Random start time
+                    duration: 2000 + Math.random() * 3000, // Effect duration between 2-5 seconds
+                    intensity: Math.random(),
+                },
+                connectedTo: [],
+                pulseData: {
+                    active: false,
+                    progress: 0
+                }
+            };
+
+            // Create and position DOM element for particle
+            const particleEl = document.createElement('div');
+            particleEl.className = particle.type === 'neural' ? 'neural-node' : 'particle';
+            particleEl.style.position = 'absolute';
+            particleEl.style.left = `${particle.x}%`;
+            particleEl.style.top = `${particle.y}%`;
+            particleEl.style.width = `${particle.size}px`;
+            particleEl.style.height = `${particle.size}px`;
+            particleEl.style.backgroundColor = particle.color;
+            particleEl.style.opacity = particle.opacity.toString();
+            particleEl.style.borderRadius = '50%';
+
+            if (particle.type === 'neural') {
+                particleEl.style.boxShadow = `0 0 10px 2px rgba(156, 39, 176, 0.5)`;
+                particleEl.style.zIndex = '2';
+            }
+
+            // Add particle to DOM
+            particleContainer.appendChild(particleEl);
+
+            // Store element reference with particle data
+            particleElements.push({ element: particleEl, data: particle });
+
+            // Track neural node IDs for connections
+            if (isNeuralNode) {
+                neuralNodeIds.push(i);
+            }
         }
-    }, [audioEffects]);
 
-    // Handle mouse movement for particle effect
-    const handleMouseMove = useCallback((e: React.MouseEvent) => {
-        if (particleContainerRef.current) {
-            const rect = particleContainerRef.current.getBoundingClientRect();
-            setMousePosition({
-                x: e.clientX - rect.left,
-                y: e.clientY - rect.top
+        // Create neural connections between nodes
+        const connectionElements: Array<{
+            line: HTMLDivElement;
+            pulse?: HTMLDivElement;
+            sourceId: number;
+            targetId: number;
+        }> = [];
+
+        neuralNodeIds.forEach((nodeId, index) => {
+            const particle = particleElements.find(p => p.data.id === nodeId)?.data;
+            if (!particle) return;
+
+            // Connect to 1-3 other neural nodes
+            const connectionsCount = Math.floor(Math.random() * 3) + 1;
+
+            for (let i = 0; i < connectionsCount; i++) {
+                // Find another neural node to connect to
+                const targetIndex = (index + 1 + Math.floor(Math.random() * (neuralNodeIds.length - 1))) % neuralNodeIds.length;
+                const targetId = neuralNodeIds[targetIndex];
+                const target = particleElements.find(p => p.data.id === targetId)?.data;
+
+                if (!target) continue;
+
+                // Avoid self-connections and duplicates
+                if (targetId === nodeId || particle.connectedTo?.includes(targetId)) {
+                    continue;
+                }
+
+                // Add connection to both particles
+                particle.connectedTo = [...(particle.connectedTo || []), targetId];
+                target.connectedTo = [...(target.connectedTo || []), nodeId];
+
+                // Only create connection once (from lower ID to higher ID)
+                if (particle.id > targetId) continue;
+
+                // Create connection line element
+                const connectionEl = document.createElement('div');
+                connectionEl.className = 'neural-connection';
+                connectionEl.style.position = 'absolute';
+                connectionEl.style.left = `${particle.x}%`;
+                connectionEl.style.top = `${particle.y}%`;
+                connectionEl.style.height = '1px';
+                connectionEl.style.backgroundColor = '#9c27b0';
+                connectionEl.style.opacity = '0.25';
+                connectionEl.style.transformOrigin = 'left center';
+
+                // Calculate length and angle
+                const dx = target.x - particle.x;
+                const dy = target.y - particle.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                const angle = Math.atan2(dy, dx) * 180 / Math.PI;
+
+                connectionEl.style.width = `${distance}%`;
+                connectionEl.style.transform = `rotate(${angle}deg)`;
+
+                // Create pulse element (hidden initially)
+                const pulseEl = document.createElement('div');
+                pulseEl.className = 'neural-pulse';
+                pulseEl.style.position = 'absolute';
+                pulseEl.style.width = '6px';
+                pulseEl.style.height = '6px';
+                pulseEl.style.backgroundColor = '#ff00ff';
+                pulseEl.style.borderRadius = '50%';
+                pulseEl.style.transform = 'translate(-50%, -50%)';
+                pulseEl.style.boxShadow = '0 0 10px 2px rgba(255, 0, 255, 0.7)';
+                pulseEl.style.zIndex = '5';
+                pulseEl.style.display = 'none';
+
+                // Add connection elements to DOM
+                particleContainer.appendChild(connectionEl);
+                particleContainer.appendChild(pulseEl);
+
+                // Store connection for animation
+                connectionElements.push({
+                    line: connectionEl,
+                    pulse: pulseEl,
+                    sourceId: nodeId,
+                    targetId: targetId
+                });
+            }
+        });
+
+        // Paper texture overlay
+        const textureOverlay = document.createElement('div');
+        textureOverlay.className = 'absolute inset-0 bg-paper-texture opacity-5';
+        particleContainer.appendChild(textureOverlay);
+
+        // Animation loop with direct DOM manipulation
+        let animationFrameId: number;
+        let lastUpdateTime = Date.now();
+
+        const updateParticles = (timestamp: number) => {
+            // Calculate delta time
+            const now = Date.now();
+            const deltaTime = now - lastUpdateTime;
+            lastUpdateTime = now;
+
+            // Skip if delta is too large (tab was inactive)
+            if (deltaTime > 100) {
+                animationFrameId = requestAnimationFrame(updateParticles);
+                return;
+            }
+
+            // Update particles with DOM manipulation
+            particleElements.forEach(({ element, data }) => {
+                // Skip connector particles
+                if (data.type === 'connector') return;
+
+                // Get mouse influence
+                let mouseInfluenceX = 0;
+                let mouseInfluenceY = 0;
+
+                if (mousePositionRef.current.x > 0 && mousePositionRef.current.y > 0 && isMouseMovingRef.current) {
+                    // Convert percentage positions to pixels
+                    const containerWidth = particleContainerRef.current?.clientWidth || 1000;
+                    const containerHeight = particleContainerRef.current?.clientHeight || 600;
+
+                    const particleX = data.x * containerWidth / 100;
+                    const particleY = data.y * containerHeight / 100;
+
+                    // Calculate distance to mouse
+                    const dx = mousePositionRef.current.x - particleX;
+                    const dy = mousePositionRef.current.y - particleY;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+
+                    // Apply influence based on distance
+                    if (distance < 200) {
+                        const influence = (1 - distance / 200) * 0.03;
+                        mouseInfluenceX = dx * influence;
+                        mouseInfluenceY = dy * influence;
+                    }
+                }
+
+                // Update position
+                data.x += data.velocity.x * deltaTime + mouseInfluenceX;
+                data.y += data.velocity.y * deltaTime + mouseInfluenceY;
+
+                // Bounce off edges
+                if (data.x < 0 || data.x > 100) {
+                    data.velocity.x *= -1;
+                    data.x = Math.max(0, Math.min(100, data.x));
+                }
+
+                if (data.y < 0 || data.y > 100) {
+                    data.velocity.y *= -1;
+                    data.y = Math.max(0, Math.min(100, data.y));
+                }
+
+                // Apply position update to DOM
+                element.style.left = `${data.x}%`;
+                element.style.top = `${data.y}%`;
+
+                // Update effects
+                if (data.effect !== 'none' && data.effectState) {
+                    // Increment effect timer
+                    data.effectState.timer += deltaTime;
+
+                    // Reset after duration
+                    if (data.effectState.timer >= data.effectState.duration) {
+                        data.effectState.timer = 0;
+
+                        // Randomize next effect
+                        if (Math.random() > 0.7) {
+                            data.effect = ['sparkle', 'pulse', 'color-shift', 'none'][Math.floor(Math.random() * 4)] as any;
+                            data.effectState.duration = 2000 + Math.random() * 3000;
+                            data.effectState.intensity = Math.random();
+                        }
+                    }
+
+                    // Apply effects
+                    const effectProgress = data.effectState.timer / data.effectState.duration;
+
+                    if (data.effect === 'sparkle' && effectProgress > 0.3 && effectProgress < 0.7) {
+                        const sparkleIntensity = Math.sin(effectProgress * Math.PI) * data.effectState.intensity;
+                        element.style.opacity = (data.opacity * (1 + sparkleIntensity)).toString();
+                        element.style.width = `${data.size * (1 + sparkleIntensity * 0.5)}px`;
+                        element.style.height = `${data.size * (1 + sparkleIntensity * 0.5)}px`;
+
+                        if (data.type !== 'neural') {
+                            element.style.boxShadow = `0 0 ${5 + Math.random() * 5}px ${Math.random() * 2}px rgba(255, 255, 255, 0.8)`;
+                        }
+                    } else if (data.effect === 'pulse') {
+                        const pulseIntensity = Math.sin(effectProgress * Math.PI * 2) * data.effectState.intensity;
+                        element.style.width = `${data.size * (1 + pulseIntensity * 0.3)}px`;
+                        element.style.height = `${data.size * (1 + pulseIntensity * 0.3)}px`;
+                    } else if (data.effect === 'color-shift' && data.type === 'normal') {
+                        const colorPhase = effectProgress * 2 * Math.PI;
+                        const r = 33 + Math.sin(colorPhase) * 100;
+                        const g = 150 + Math.sin(colorPhase + 2) * 50;
+                        const b = 243 + Math.sin(colorPhase + 4) * 50;
+                        element.style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
+                    } else {
+                        // Reset to default
+                        element.style.opacity = data.opacity.toString();
+                        element.style.width = `${data.size}px`;
+                        element.style.height = `${data.size}px`;
+                        element.style.backgroundColor = data.color;
+
+                        if (data.type !== 'neural') {
+                            element.style.boxShadow = 'none';
+                        }
+                    }
+                }
+
+                // Neural pulses
+                if (data.type === 'neural' && Math.random() < 0.001) {
+                    if (!data.pulseData?.active && data.connectedTo && data.connectedTo.length > 0) {
+                        // Start a pulse to a random connected node
+                        const targetId = data.connectedTo[Math.floor(Math.random() * data.connectedTo.length)];
+                        data.pulseData = {
+                            active: true,
+                            progress: 0,
+                            targetId
+                        };
+                    }
+                }
+
+                if (data.pulseData?.active) {
+                    data.pulseData.progress += deltaTime / 1000;
+
+                    if (data.pulseData.progress >= 1) {
+                        data.pulseData = {
+                            active: false,
+                            progress: 0
+                        };
+                    }
+                }
             });
-        }
-    }, []);
 
-    // Handle perspective mouse movement
-    const handlePerspectiveMouseMove = useCallback((e: React.MouseEvent) => {
-        if (perspectiveContainerRef.current) {
-            const rect = perspectiveContainerRef.current.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            setPerspectiveValues({
-                rotateX: (y - rect.height / 2) / (rect.height / 2) * 10,
-                rotateY: (x - rect.width / 2) / (rect.width / 2) * 10
-            });
-        }
-    }, []);
+            // Update connections and pulses
+            connectionElements.forEach(conn => {
+                // Get source and target particles
+                const source = particleElements.find(p => p.data.id === conn.sourceId)?.data;
+                const target = particleElements.find(p => p.data.id === conn.targetId)?.data;
 
-    // Enhanced particle background with fluid physics
-    const ParticleBackground = () => (
-        <div
-            ref={particleContainerRef}
-            className="absolute inset-0 overflow-hidden z-0"
-            onMouseMove={handleMouseMove}
-        >
-            <div className="particle-container">
-                {/* Render neural connections first (so they appear behind particles) */}
-                {particles.filter(p => p.type === 'neural' && p.connectedTo && p.connectedTo.length > 0).map(particle => {
-                    return particle.connectedTo!.map(targetId => {
-                        const target = particles.find(p => p.id === targetId);
-                        if (!target) return null;
+                if (source && target) {
+                    // Update connection line position
+                    conn.line.style.left = `${source.x}%`;
+                    conn.line.style.top = `${source.y}%`;
 
-                        // Only render each connection once (from lower ID to higher ID)
-                        if (particle.id > targetId) return null;
+                    // Calculate updated length and angle
+                    const dx = target.x - source.x;
+                    const dy = target.y - source.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    const angle = Math.atan2(dy, dx) * 180 / Math.PI;
 
-                        // Calculate connection properties
-                        const startX = `${particle.x}%`;
-                        const startY = `${particle.y}%`;
-                        const endX = `${target.x}%`;
-                        const endY = `${target.y}%`;
+                    conn.line.style.width = `${distance}%`;
+                    conn.line.style.transform = `rotate(${angle}deg)`;
 
-                        // Calculate length and angle for proper rendering
-                        const dx = target.x - particle.x;
-                        const dy = target.y - particle.y;
-                        const distance = Math.sqrt(dx * dx + dy * dy);
-                        const angle = Math.atan2(dy, dx) * 180 / Math.PI;
+                    // Check for active pulses
+                    const sourcePulsing = source.pulseData?.active && source.pulseData.targetId === conn.targetId;
+                    const targetPulsing = target.pulseData?.active && target.pulseData.targetId === conn.sourceId;
 
-                        // Check if there's an active pulse on this connection
-                        const isPulsing = (particle.pulseData?.active && particle.pulseData.targetId === targetId) ||
-                            (target.pulseData?.active && target.pulseData.targetId === particle.id);
-
-                        // Get pulse position if pulsing
+                    if (sourcePulsing || targetPulsing) {
                         let pulsePosition = 0;
-                        if (particle.pulseData?.active && particle.pulseData.targetId === targetId) {
-                            pulsePosition = particle.pulseData.progress;
-                        } else if (target.pulseData?.active && target.pulseData.targetId === particle.id) {
+
+                        if (sourcePulsing && source.pulseData) {
+                            pulsePosition = source.pulseData.progress;
+                        } else if (targetPulsing && target.pulseData) {
                             pulsePosition = 1 - target.pulseData.progress;
                         }
 
-                        return (
-                            <React.Fragment key={`connection-${particle.id}-${targetId}`}>
-                                {/* Neural connection line */}
-                                <div
-                                    className="neural-connection"
-                                    style={{
-                                        position: 'absolute',
-                                        left: startX,
-                                        top: startY,
-                                        width: `${distance}%`,
-                                        height: '1px',
-                                        transform: `rotate(${angle}deg)`,
-                                        transformOrigin: 'left center',
-                                        backgroundColor: '#9c27b0',
-                                        opacity: 0.25 + Math.random() * 0.15
-                                    }}
-                                />
+                        if (conn.pulse) {
+                            conn.pulse.style.display = 'block';
+                            conn.pulse.style.left = `calc(${source.x}% + ${pulsePosition * distance}% * cos(${angle}deg))`;
+                            conn.pulse.style.top = `calc(${source.y}% + ${pulsePosition * distance}% * sin(${angle}deg))`;
+                        }
+                    } else if (conn.pulse) {
+                        conn.pulse.style.display = 'none';
+                    }
+                }
+            });
 
-                                {/* Pulse effect if active */}
-                                {isPulsing && (
-                                    <div
-                                        className="neural-pulse"
-                                        style={{
-                                            position: 'absolute',
-                                            left: `calc(${startX} + ${pulsePosition * distance}% * cos(${angle}deg))`,
-                                            top: `calc(${startY} + ${pulsePosition * distance}% * sin(${angle}deg))`,
-                                            width: '6px',
-                                            height: '6px',
-                                            backgroundColor: '#ff00ff',
-                                            borderRadius: '50%',
-                                            transform: 'translate(-50%, -50%)',
-                                            boxShadow: '0 0 10px 2px rgba(255, 0, 255, 0.7)',
-                                            zIndex: 5
-                                        }}
-                                    />
-                                )}
-                            </React.Fragment>
-                        );
-                    });
-                })}
+            animationFrameId = requestAnimationFrame(updateParticles);
+        };
 
-                {/* Render all particles */}
-                {particles.filter(p => p.type !== 'connector').map(particle => {
-                    // Determine if particle has any special effects active
-                    const hasActiveEffect = particle.effect !== 'none' &&
-                        particle.effectState &&
-                        particle.effectState.timer < particle.effectState.duration &&
-                        particle.effectState.timer > 0;
+        // Start animation
+        animationFrameId = requestAnimationFrame(updateParticles);
 
-                    // Determine if this is a neural node with active pulse
-                    const hasPulse = particle.type === 'neural' &&
-                        particle.pulseData &&
-                        particle.pulseData.active;
+        // Cleanup
+        return () => {
+            if (animationFrameId) {
+                cancelAnimationFrame(animationFrameId);
+            }
+        };
+    }, []);
 
-                    return (
-                        <div
-                            key={`particle-${particle.id}`}
-                            className={`
-                                ${particle.type === 'neural' ? 'neural-node' : 'particle'}
-                                ${hasActiveEffect ? `effect-${particle.effect}` : ''}
-                                ${hasPulse ? 'pulse-active' : ''}
-                            `}
-                            style={{
-                                position: 'absolute',
-                                left: `${particle.x}%`,
-                                top: `${particle.y}%`,
-                                width: `${particle.size}px`,
-                                height: `${particle.size}px`,
-                                backgroundColor: particle.color,
-                                opacity: particle.opacity,
-                                borderRadius: '50%',
-                                transition: 'transform 0.3s ease-out',
-                                boxShadow: particle.type === 'neural'
-                                    ? `0 0 ${10 + (hasPulse ? 5 : 0)}px ${2 + (hasPulse ? 2 : 0)}px rgba(156, 39, 176, ${0.5 + (hasPulse ? 0.3 : 0)})`
-                                    : particle.effect === 'sparkle' && hasActiveEffect
-                                        ? `0 0 ${5 + Math.random() * 5}px ${Math.random() * 2}px rgba(255, 255, 255, 0.8)`
-                                        : 'none',
-                                zIndex: particle.type === 'neural' ? 2 : 1
-                            }}
-                        />
-                    );
-                })}
+    // Memoized particle background
+    const ParticleBackground = useCallback(() => (
+        <div
+            ref={particleContainerRef}
+            className="absolute inset-0 overflow-hidden z-0"
+            onMouseMove={throttledMouseMove}
+        >
+            <div className="particle-container">
+                {/* Particles will be created and managed with DOM manipulation */}
             </div>
-
-            {/* Paper texture overlay */}
-            <div className="absolute inset-0 bg-paper-texture opacity-5" />
         </div>
-    );
+    ), [throttledMouseMove]);
+
+    // Memoized function to play typing sound
+    const playTypingSound = useCallback(() => {
+        audioEffects?.playTypingSound();
+    }, [audioEffects]);
 
     return (
         <div className="h-full flex flex-col items-center justify-center relative bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 text-white p-8 overflow-hidden">
@@ -561,125 +745,34 @@ if (AI.codes) {
                     transformStyle: 'preserve-3d',
                 }}
                 ref={perspectiveContainerRef}
-                onMouseMove={handlePerspectiveMouseMove}
+                onMouseMove={throttledPerspectiveMouseMove}
             >
                 {/* Top section - Logo */}
-                <div className="absolute top-10 w-full flex justify-center">
-                    <AnimatePresence>
-                        {animationStage >= 1 && (
-                            <motion.div
-                                initial={{ opacity: 0, y: -20, scale: 0.95 }}
-                                animate={{ opacity: 1, y: 0, scale: 1 }}
-                                transition={{ duration: 0.8, ease: [0.19, 1.0, 0.22, 1.0] }}
-                                className="relative z-20"
-                                style={{
-                                    transform: `rotateX(${perspectiveValues.rotateX}deg) rotateY(${perspectiveValues.rotateY}deg) translateZ(30px)`,
-                                    transition: 'transform 0.2s ease-out',
-                                }}
-                            >
-                                <RegisLogo width={480} height={150} />
-                            </motion.div>
-                        )}
-                    </AnimatePresence>
-                </div>
+                <LogoSection
+                    animationStage={animationStage}
+                    registerPerspectiveElement={registerPerspectiveElement}
+                />
 
                 {/* Middle section - Title and Subtitle */}
-                <div className="absolute top-1/4 w-full flex justify-center">
-                    <AnimatePresence>
-                        {animationStage >= 2 && (
-                            <motion.div
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.8, ease: [0.19, 1.0, 0.22, 1.0] }}
-                                className="perspective-container"
-                                style={{
-                                    transform: `rotateX(${perspectiveValues.rotateX * 0.7}deg) rotateY(${perspectiveValues.rotateY * 0.7}deg) translateZ(20px)`,
-                                    transition: 'transform 0.3s ease-out',
-                                }}
-                            >
-                                <h1
-                                    className="text-5xl font-bold text-center mb-3 title-headline glass-text glass-text-primary glass-text-refract text-depth-1"
-                                    data-text="AI Dev Workshop"
-                                >
-                                    AI Dev Workshop
-                                </h1>
-                                <h2
-                                    className="text-2xl text-center glass-text glass-text-secondary text-depth-2"
-                                    data-text="Revolutionizing Development with AI Coding Tools"
-                                >
-                                    Revolutionizing Development with AI Coding Tools
-                                </h2>
-                            </motion.div>
-                        )}
-                    </AnimatePresence>
-                </div>
+                <TitleSection
+                    animationStage={animationStage}
+                    registerPerspectiveElement={registerPerspectiveElement}
+                />
 
                 {/* Code section - Fixed position in the middle-lower part */}
-                <div className="absolute top-[50%] w-full flex justify-center" style={{ zIndex: 30 }}>
-                    <AnimatePresence>
-                        {shouldShowCode && (
-                            <motion.div
-                                initial={{ opacity: 0, scale: 0.95 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                transition={{ duration: 0.5 }}
-                                className="w-full max-w-lg"
-                                style={{
-                                    transform: `rotateX(${perspectiveValues.rotateX * 0.5}deg) rotateY(${perspectiveValues.rotateY * 0.5}deg) translateZ(10px)`,
-                                    transition: 'transform 0.4s ease-out',
-                                    zIndex: 30
-                                }}
-                            >
-                                <div className="glass-panel-interactive rounded-lg p-4 font-mono border border-teal-500/30" style={{ zIndex: 30 }}>
-                                    <CodeTyping
-                                        code={codeSnippet}
-                                        speed={12}
-                                        onComplete={handleCodeComplete}
-                                        onProgress={(position, text) => {
-                                            audioEffects?.playTypingSound();
-                                        }}
-                                        brandColors={{
-                                            keyword: '#00bcd4',   // teal
-                                            string: '#9c27b0',    // purple
-                                            function: '#2196f3',  // blue
-                                            comment: '#757575'    // gray
-                                        }}
-                                    />
-                                </div>
-                            </motion.div>
-                        )}
-                    </AnimatePresence>
-                </div>
+                <CodeSection
+                    shouldShowCode={shouldShowCode}
+                    codeSnippet={codeSnippet}
+                    handleCodeComplete={handleCodeComplete}
+                    playTypingSound={playTypingSound}
+                    registerPerspectiveElement={registerPerspectiveElement}
+                />
 
                 {/* Bottom section - Presenter info */}
-                <div className="absolute bottom-10 w-full flex justify-center">
-                    <AnimatePresence>
-                        {shouldShowPresenter && (
-                            <motion.div
-                                initial={{ opacity: 0, y: 30 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.5, ease: "easeOut" }}
-                                className="text-center text-depth-3"
-                                style={{
-                                    transform: `rotateX(${perspectiveValues.rotateX * 0.3}deg) rotateY(${perspectiveValues.rotateY * 0.3}deg) translateZ(5px)`,
-                                    transition: 'transform 0.5s ease-out',
-                                }}
-                            >
-                                <p
-                                    className="glass-text glass-text-accent text-lg mb-2"
-                                    data-text="Presented by: Joel Janov"
-                                >
-                                    Presented by: Joel Janov
-                                </p>
-                                <p
-                                    className="glass-text glass-text-primary text-sm"
-                                    data-text="April 15, 2025"
-                                >
-                                    April 15, 2025
-                                </p>
-                            </motion.div>
-                        )}
-                    </AnimatePresence>
-                </div>
+                <PresenterSection
+                    shouldShowPresenter={shouldShowPresenter}
+                    registerPerspectiveElement={registerPerspectiveElement}
+                />
             </div>
         </div>
     );

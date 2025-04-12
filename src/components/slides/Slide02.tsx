@@ -68,8 +68,23 @@ console.log("We engineer the future.");
     // Count lines in the code
     const lineCount = codeContent.split('\n').length;
 
+    // Throttle function to limit how often a function runs
+    const throttle = (func: Function, limit: number) => {
+        let inThrottle: boolean;
+        return function (this: any, ...args: any[]) {
+            if (!inThrottle) {
+                func.apply(this, args);
+                inThrottle = true;
+                setTimeout(() => inThrottle = false, limit);
+            }
+        };
+    };
+
     // Handle mouse movement for particle effect
     const handleMouseMove = useCallback((e: React.MouseEvent) => {
+        // Stop event propagation to prevent bubbling to App.tsx
+        e.stopPropagation();
+
         if (containerRef.current) {
             const rect = containerRef.current.getBoundingClientRect();
             setMousePosition({
@@ -78,6 +93,9 @@ console.log("We engineer the future.");
             });
         }
     }, []);
+
+    // Throttled version for performance
+    const throttledMouseMove = useCallback(throttle(handleMouseMove, 16), [handleMouseMove]);
 
     // Start animation sequence
     useEffect(() => {
@@ -176,7 +194,7 @@ console.log("We engineer the future.");
         <div
             ref={containerRef}
             className="slide-02-container"
-            onMouseMove={handleMouseMove}
+            onMouseMove={throttledMouseMove}
             style={{
                 width: '100%',
                 height: '100%',
