@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext, useCallback, useEffect, ReactNode } from 'react';
+import React, { createContext, useState, useContext, useCallback, useEffect, ReactNode, useRef } from 'react';
 import useAudioEffects from '../hooks/useAudioEffects';
 
 // Define the interface for our context
@@ -76,12 +76,15 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
     console.log(`Restoring background audio to volume: ${preDialogueVolume}`);
   }, [audioEffects, preDialogueVolume]);
   
+  // Track the reason for slide changes to control autoplay
+  const slideChangeReasonRef = useRef<'next'|'prev'|'direct'|'other'>('other');
+  
   // Handle slide transitions
   const handleSlideChange = useCallback((newSlideIndex: number) => {
     // Don't do anything if trying to set to the same slide
     if (newSlideIndex === currentSlide) return;
     
-    console.log(`Changing active slide from ${currentSlide} to ${newSlideIndex}`);
+    console.log(`Changing active slide from ${currentSlide} to ${newSlideIndex}, change reason: ${slideChangeReasonRef.current}`);
     
     // Update the current slide
     setCurrentSlide(newSlideIndex);
@@ -93,6 +96,11 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
     }
     
     // The SlideAwareDialoguePlayer will detect the slide change and update its content
+    
+    // Reset the slide change reason immediately after handling
+    setTimeout(() => {
+      slideChangeReasonRef.current = 'other';
+    }, 10);
   }, [currentSlide, isDialoguePlaying]);
   
   // Play dialogue for a specific slide
@@ -162,8 +170,24 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
     isMuted: audioEffects?.isSilentMode || false
   };
   
+  // Create a ref to store the context instance
+  const contextInstanceRef = useRef<any>({
+    slideChangeReasonRef,
+    // Add any other refs that need to be accessed directly
+  });
+  
   return (
     <GlobalAudioContext.Provider value={contextValue}>
+      {/* Use a hidden div to expose the context instance to imperative code */}
+      <div 
+        data-audio-context="true" 
+        ref={(el) => {
+          if (el) {
+            (el as any).__AUDIO_CONTEXT__ = contextInstanceRef.current;
+          }
+        }}
+        style={{ display: 'none' }}
+      />
       {children}
     </GlobalAudioContext.Provider>
   );

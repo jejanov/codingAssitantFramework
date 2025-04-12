@@ -71,21 +71,48 @@ const App: React.FC = () => {
     // Total number of slides
     const totalSlides = 4;
 
-    // Slide navigation functions
+    // Slide navigation functions with reason tracking via refs
+    // Access AudioContext directly for slide change reason
+    const audioContextRef = useRef<any>(null);
+    
+    // Store the context when we have it
+    useEffect(() => {
+        // Find the AudioContext instance from the document
+        const contextElement = document.querySelector('[data-audio-context]');
+        if (contextElement) {
+            const contextInstance = (contextElement as any).__AUDIO_CONTEXT__;
+            if (contextInstance && contextInstance.slideChangeReasonRef) {
+                audioContextRef.current = contextInstance;
+            }
+        }
+    }, []);
+    
     const navigateToSlide = (slideNumber: number) => {
         if (slideNumber >= 0 && slideNumber <= totalSlides) {
+            // Set reason if possible
+            if (audioContextRef.current && audioContextRef.current.slideChangeReasonRef) {
+                audioContextRef.current.slideChangeReasonRef.current = 'direct';
+            }
             setCurrentSlide(slideNumber);
         }
     };
 
     const nextSlide = () => {
         if (currentSlide < totalSlides) {
+            // Set reason if possible
+            if (audioContextRef.current && audioContextRef.current.slideChangeReasonRef) {
+                audioContextRef.current.slideChangeReasonRef.current = 'next';
+            }
             setCurrentSlide(prev => prev + 1);
         }
     };
 
     const previousSlide = () => {
         if (currentSlide > 0) {
+            // Set reason if possible
+            if (audioContextRef.current && audioContextRef.current.slideChangeReasonRef) {
+                audioContextRef.current.slideChangeReasonRef.current = 'prev';
+            }
             setCurrentSlide(prev => prev - 1);
         }
     };
@@ -329,7 +356,11 @@ const App: React.FC = () => {
 
                         {/* Main content with SlideManager for audio coordination */}
                         <main className={`flex-1 flex flex-col items-center justify-center ${isFullscreen ? 'p-0' : 'p-6'} overflow-hidden`}>
-                            <SlideManager currentSlideIndex={currentSlide} autoPlayBackgroundMusic={true}>
+                            <SlideManager 
+                                key={`slide-manager-${currentSlide}`}
+                                currentSlideIndex={currentSlide} 
+                                autoPlayBackgroundMusic={true}
+                                autoPlayDialogue={false} /* Disable autoPlayDialogue in SlideManager to prevent double triggers */>
                                 <div
                                     className={`${isFullscreen ? '' : 'w-full max-w-7xl'} aspect-video bg-gray-800 rounded-lg overflow-hidden shadow-2xl relative slide-container`}
                                     style={isFullscreen ? {

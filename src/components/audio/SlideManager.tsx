@@ -32,15 +32,26 @@ const SlideManager: React.FC<SlideManagerProps> = ({
     playDialogueForSlide
   } = useGlobalAudio();
   
+  // Track if we've already initiated auto-play for this slide
+  const autoPlayTriggeredRef = React.useRef<boolean>(false);
+
   // Update global slide index when our prop changes
   useEffect(() => {
     // Always update to ensure synchronization
     console.log(`SlideManager: Updating global slide from ${currentSlide} to ${currentSlideIndex}`);
-    setCurrentSlide(currentSlideIndex);
     
-    // Auto-play dialogue if enabled
-    if (autoPlayDialogue) {
+    // Only update if different, to prevent unnecessary re-renders
+    if (currentSlide !== currentSlideIndex) {
+      setCurrentSlide(currentSlideIndex);
+      // Reset the auto-play tracking when slide changes
+      autoPlayTriggeredRef.current = false;
+    }
+    
+    // Auto-play dialogue if enabled and not already triggered for this slide
+    if (autoPlayDialogue && !autoPlayTriggeredRef.current) {
       console.log(`SlideManager: Auto-playing dialogue for slide ${currentSlideIndex}`);
+      // Mark that we've triggered auto-play for this slide
+      autoPlayTriggeredRef.current = true;
       playDialogueForSlide(currentSlideIndex);
     }
   }, [currentSlideIndex, currentSlide, setCurrentSlide, autoPlayDialogue, playDialogueForSlide]);

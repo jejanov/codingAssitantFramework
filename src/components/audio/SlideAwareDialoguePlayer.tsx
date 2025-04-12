@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import DialoguePlayer from '../slides/DialoguePlayer';
 import { useGlobalAudio } from '../../contexts/AudioContext';
 
@@ -71,9 +71,25 @@ const SlideAwareDialoguePlayer: React.FC<SlideAwareDialoguePlayerProps> = ({
     console.log(`SlideAwareDialoguePlayer: Slide tracking info - currentSlide from context: ${currentSlide}, slideIndex from props: ${slideIndex}, activeSlide: ${activeSlide}`);
   }, [currentSlide, slideIndex, activeSlide]);
   
+  // Track slide change reason
+  const [slideChangeReason, setSlideChangeReason] = useState<string>('other');
+  
+  // Get slide change reason from the global context
+  useEffect(() => {
+    // Find the AudioContext instance from the document
+    const contextElement = document.querySelector('[data-audio-context]');
+    if (contextElement) {
+      const contextInstance = (contextElement as any).__AUDIO_CONTEXT__;
+      if (contextInstance && contextInstance.slideChangeReasonRef) {
+        setSlideChangeReason(contextInstance.slideChangeReasonRef.current);
+        console.log(`Slide change reason detected: ${contextInstance.slideChangeReasonRef.current}`);
+      }
+    }
+  }, [activeSlide]);
+  
   // Construct the metadata path based on active slide
   useEffect(() => {
-    console.log(`Slide Change Detected - Loading metadata for slide ${activeSlide}`);
+    console.log(`Slide Change Detected - Loading metadata for slide ${activeSlide}, reason: ${slideChangeReason}`);
     
     // Format the slide number with leading zero
     const formattedSlide = activeSlide.toString().padStart(2, '0');
@@ -205,7 +221,7 @@ const SlideAwareDialoguePlayer: React.FC<SlideAwareDialoguePlayerProps> = ({
         // Render DialoguePlayer when we have dialogue
         <DialoguePlayer
           metadataPath={metadataPath}
-          autoPlay={true} /* Force autoPlay to always be true */
+          autoPlay={autoPlayOnSlideChange && slideChangeReason === 'next'} /* Only auto-play when using the next button */
           showTranscript={showTranscript}
           highlightCurrentLine={highlightCurrentLine}
           compact={compact}
