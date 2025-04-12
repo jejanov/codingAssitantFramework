@@ -35,58 +35,45 @@ We think about the interesting parts.
 ```
 
 ## Visual Elements
-- Full-screen IDE environment with dark theme using the same color palette as slide_01
+- Full-screen IDE environment with dark theme using linear-gradient(135deg, #1e1e1e 0%, #2c2c2c 100%) background
 - Syntax highlighting for JavaScript with brand colors: 
   - Keywords in accent teal (#00bcd4)
   - Strings in secondary purple (#9c27b0)
   - Function calls in primary blue (#2196f3)
-- GlassPanel with hierarchy="container" for main code editor background
-- Line numbers with subtle accent color (#00bcd4)
-- Animated cursor indicator with realistic blink timing
-- Simulated status bar at bottom using GlassPanel with hierarchy="interactive" and "AI Assisted" indicator
-- Mini-map on right side with subtle paper texture overlay (public/images/paper-texture.png)
-- "Translation for Normal Humans" panel implemented as GlassPanel with hierarchy="emphasized":
-  - Panel slides in from right after code animation completes
-  - Uses frosted glass effect with gradient backdrop
-  - Includes elevation through tokens.glassShadow[3] for depth
-  - Small translator icon with brand colors
-  - Tilted with slight rotation transform to contrast with the precise code editor
+  - Comments in gray (#757575)
+- Glass-panel-container class for main code editor background with dark theme
+- Line numbers component with teal accent color (#00bcd4)
+- Tab bar with "workshop.js" tab at the top
+- Simulated status bar at bottom showing line count and AI Assisted status
+- Minimap on right side showing code overview with syntax highlighting
+- "Translation for Normal Humans" panel that slides in after code animation completes
+- Subtle paper texture overlay with low opacity (5%)
 
 ## Interactive Elements
-- Typing animation that shows code being written in real-time (using the same CodeTyping component as slide_01)
-- Cursor blinks realistically with animation.keyframes implementation
-- Syntax highlighting applies in real-time as code is typed with smooth color transitions
-- Particle system that subtly responds to cursor movements during typing pauses
-- Simulated AI suggestions appearing with glassmorphism effect (using GlassPanel with hierarchy="interactive")
-- Mouse hover effects on status bar elements using animation.preset.buttonHover
-- Subtle elevation changes on hover for interactive elements using tokens.glassShadow
+- Typing animation that shows code being written in real-time using CodeTyping component
+- Syntax highlighting applies in real-time as code is typed
+- Particle system that subtly responds to cursor movements (30 particles with blue, teal, and purple colors)
+- Mouse event handling with throttling for performance optimization
 
 ## Animation Sequences
-1. IDE environment appears using animation.transition.fadeIn with duration="fast"
-2. Status bar and minimap slide in from bottom and right using animation.keyframes.slideInUp
-3. Code header comment types first with synchronized keyboard sounds
-4. Variable declarations type with realistic speed and syntax highlighting applied in real-time
-5. Console.log statement types with slight pause for emphasis
-6. Conditional blocks type with animation.transition.transform between sections
-7. Logic inside conditionals appears with proper indentation and syntax coloring
-8. Final console.log statements type with dramatic pause before last line using animation.duration.slow
-9. Cursor continues to blink with animation.keyframes implementation
-10. "Translation for Normal Humans" panel slides in from right using animation.preset.cardHover with elevation increase
-11. Plain English explanations fade in one by one with animation.keyframes.slideInUp and subtle glow effect
-12. Bullet points appear with synchronized "pop" sound effects and slight bounce using animation.keyframes.pulse
+1. IDE environment appears with fade-in and subtle y-axis movement (500ms)
+2. Status bar and minimap slide in from bottom and right (1000ms)
+3. Code typing begins (1500ms) with synchronized typing sounds
+4. Code types with realistic speed (speed=30) and syntax highlighting
+5. After typing completes, success sound plays
+6. After a short delay (1000ms), translation panel slides in with panel slide sound
+7. Bullet points in translation panel appear with pop sounds at 500ms intervals
 
 ## Audio Elements
-- Realistic mechanical keyboard typing sounds (public/sounds/keyboard-typing.mp3) precisely synchronized with typing animation
-- Tech ambient background sound (public/sounds/tech-ambience.mp3) continued from slide_01 for continuity
-- "Success" sound effect (public/sounds/success.mp3) when final code line is completed
-- "Whoosh" sound effect (public/sounds/whoosh.mp3) when translation panel slides in
-- "Pop" sound effect (public/sounds/pop.mp3) for each translation bullet point appearance
-- All audio implemented using the useAudioEffects hook for precise timing and volume control
-- Volume levels matched with slide_01 for consistent audio experience
-- Optional: brief silence before important sections to create audio emphasis
+- Background ambience sound playing throughout the slide
+- Typing sound effects that play occasionally during code typing (every 3 characters)
+- Success sound effect when code typing completes
+- Panel slide sound when translation panel appears
+- Pop sounds for bullet points in the translation panel
+- All audio implemented through AudioContext from App.tsx
 
 ## Code Content
-The following is the actual code content to be displayed in the simulated IDE, with syntax elements aligned to Regis brand colors:
+The following is the actual code content displayed in the simulated IDE:
 
 ```javascript
 // AI Dev Workshop – A Story in Code
@@ -130,70 +117,52 @@ console.log("We engineer the future.");
 ```
 
 ## Design Notes
-- Use the same monospaced font from slide_01 for consistency
-- Apply brand-based syntax highlighting using colors:
+- Uses 'JetBrains Mono' monospaced font for code
+- Syntax highlighting using brand colors:
   - Keywords: accent teal (#00bcd4)
   - Strings: secondary purple (#9c27b0)
   - Functions: primary blue (#2196f3)
-  - Comments: neutral.600 (#757575)
-- Implement glassmorphism using GlassPanel components with proper hierarchy and levels
-- Use proper layering with tokens.zIndex for depth perception
-- Include subtle paper texture overlay (public/images/paper-texture.png) at low opacity
-- Apply elevation through shadows (tokens.glassShadow) to create depth
-- Typing speed calibrated to match animation.duration tokens
-
-**Translation panel design:**
-- Implement with GlassPanel using hierarchy="emphasized" for proper contrast
-- Apply subtle rotation transform (3-5 degrees) for a less formal appearance
-- Include brand colors for emphasis points and icons
-- Use a readable sans-serif font that contrasts with the monospace code font
-- Apply animation.preset.cardHover on hover for microinteractions
-- Ensure WCAG AA compliance for text contrast against glass backgrounds
+  - Comments: gray (#757575)
+- Dark theme IDE with glass-panel-container class
+- Code editor with glass-panel-content and code-container-background classes
+- Tab bar with darkened active tab and teal bottom border
+- Particle system with 30 particles that respond subtly to mouse movement
+- Proper z-indexing for layered elements
 
 ## User Interactions
-- Subtle particle system response to cursor movements matching slide_01's interactive elements
-- Mouse hover effects on translation panel using animation.preset.cardHover
-- Optional click interaction on translation panel reveals additional "developer humor" content
-- Subtle hover states on code snippets to indicate they are part of the narrative
-- Consistent interactive behavior with slide_01 for cohesive presentation experience
-- Presentation can be advanced manually, but will auto-advance after all animations complete
+- Subtle particle movement that responds to mouse position using transform property
+- Throttled mouse movement event handlers for performance (16ms throttle)
+- Mouse event propagation stopping to prevent interference with parent containers
 
 ## Transitions
-- Enter: Consistent with slide_01's exit transition using animation.transition.fadeIn
-  * Background with particle system fades in first
-  * IDE elements appear with staggered glassmorphism effects
-  * Status bar and minimap slide in from bottom and right
-  * Typing begins with synchronized audio
-- Exit: Coordinated transition to next slide
-  * Elements fade using animation.transition.fadeOut with staggered timing
-  * Translation panel exits last with animation.keyframes.fadeOut
-  * Brief pause after all animations complete before advancing
-  * Optional zoom-out effect to reveal the broader context of the presentation
+- Enter: Staggered animations with consistent ease curve [0.19, 1.0, 0.22, 1.0]
+  * IDE container fades in first with Y-axis movement (500ms)
+  * Status bar fades in from bottom (1000ms)
+  * Minimap slides in from right (1000ms)
+  * Code typing starts at 1500ms
+- Exit: Handled through useEffect cleanup that stops background ambience
+- Animations controlled through React useState and useEffect hooks with setTimeout
 
 ## Special Implementation Notes
-- **Implementation Component Reuse:** Use the CodeTyping component from slide_01 for consistency
-  - Reuse the same animation timing and settings for a cohesive presentation
-  - Utilize the existing useAudioEffects hook for synchronized sound effects
-  - Match glassmorphism implementation with slide_01's Glass components
-
-- **Glassmorphism Implementation:**
-  - Use GlassPanel components with appropriate hierarchy and level settings
-  - Implement proper stacking context using tokens.zIndex
-  - Apply consistent shadow depth with tokens.glassShadow
-  - Ensure proper blur intensity and transparency for readability
-
-- **Animation Coordination:**
-  - Synchronize animation.transition timings between slides for smooth flow
-  - Use staggered animations with consistent easing functions
-  - Maintain consistent particle system behavior with slide_01
-  - Calibrate typing speed to match with animation.duration tokens
-
-- **Audio Implementation:**
-  - Preload all sound files to prevent lag in playback
-  - Use consistent volume levels with slide_01
-  - Implement precise timing for synchronized typing sounds
-
+- **Component Structure:** Uses several sub-components:
+  - CodeTyping for code typing animation
+  - LineNumbers for line numbering
+  - TranslationPanel for the explanation panel
+  - StatusBar for the IDE status information
+  - Minimap for code overview
+  
+- **Animation Timing:**
+  - IDE container appears at 500ms
+  - Status bar and minimap at 1000ms
+  - Code typing starts at 1500ms
+  - Translation panel appears 1000ms after typing completes
+  
+- **Performance Optimization:**
+  - Throttled mouse movement handlers to limit event firing
+  - Efficient updates of current line tracking during typing
+  - Conditional rendering of components based on animation stage
+  
 - **Accessibility Considerations:**
-  - Ensure sufficient contrast for text against glassmorphism backgrounds
-  - Use animations that respect user preferences for reduced motion
-  - Maintain readable font sizes throughout the presentation
+  - Maintains readable font size (14px) with 1.5 line height
+  - High contrast between code text (#d4d4d4) and dark background
+  - Clear visual hierarchy with distinct UI sections

@@ -175,54 +175,78 @@ async function getOrCreateVoice(speakerType, baseDescription) {
  * @param {string} text The text to convert to speech
  * @param {string} speakerType The speaker type (Dev A or Dev B)
  * @param {string} outputPath The path to save the audio file
- * @returns {Promise<void>}
+ * @param {string} [emotion=''] Emotional tone and delivery style (e.g., "excited, confident")
+ * @param {number|null} [speed=null] Speaking rate (0.8=slower, 1.0=normal, 1.2=faster)
+ * @param {number|null} [trailingSilence=null] Pause after speech in seconds (0.2-1.0)
+ * @returns {Promise<string>} Path to the generated JSON file
  */
-async function generateAudioLine(text, speakerType, outputPath) {
+async function generateAudioLine(text, speakerType, outputPath, emotion = '', speed = null, trailingSilence = null) {
   console.log(`Generating audio for: "${text.substring(0, 50)}${text.length > 50 ? '...' : ''}"`)
   
   try {
     // Process special text markers and create appropriate acting instructions
     let processedText = text;
-    let actingInstructions = '';
     
+    // Start with the provided emotion if available
+    let actingInstructions = emotion ? emotion : '';
+    
+    // Process special markers in the text and add to acting instructions if not explicitly provided
     if (text.includes('[laughs]')) {
       processedText = processedText.replace('[laughs]', '');
-      actingInstructions += 'laughing, amused, with a slight chuckle, ';
+      if (!emotion.includes('laugh') && !emotion.includes('amus')) {
+        actingInstructions += actingInstructions ? ', laughing, amused' : 'laughing, amused';
+      }
     }
     if (text.includes('[typing sounds]')) {
       processedText = processedText.replace('[typing sounds]', '');
-      actingInstructions += 'interrupted briefly, slight pause, ';
+      if (!emotion.includes('interrupt')) {
+        actingInstructions += actingInstructions ? ', interrupted briefly' : 'interrupted briefly';
+      }
     }
     if (text.includes('[chuckles]')) {
       processedText = processedText.replace('[chuckles]', '');
-      actingInstructions += 'chuckling, bemused, with a small laugh, ';
+      if (!emotion.includes('chuckl') && !emotion.includes('bemused')) {
+        actingInstructions += actingInstructions ? ', chuckling, bemused' : 'chuckling, bemused';
+      }
     }
     if (text.includes('[sarcastically]')) {
       processedText = processedText.replace('[sarcastically]', '');
-      actingInstructions += 'sarcastic, dry tone, exaggerated inflection, ';
+      if (!emotion.includes('sarcastic')) {
+        actingInstructions += actingInstructions ? ', sarcastic, dry tone' : 'sarcastic, dry tone';
+      }
     }
     if (text.includes('[triumphantly]')) {
       processedText = processedText.replace('[triumphantly]', '');
-      actingInstructions += 'triumphant, confident, proud, ';
+      if (!emotion.includes('triumph') && !emotion.includes('proud')) {
+        actingInstructions += actingInstructions ? ', triumphant, proud' : 'triumphant, proud';
+      }
     }
     
-    // Add character-specific acting instructions
-    if (speakerType === 'Dev A') {
-      actingInstructions += 'conversational, natural, casual, curious';
-    } else {
-      actingInstructions += 'enthusiastic, confident, energetic, excited about technology';
+    // Add character-specific acting instructions if no emotion is provided
+    if (!actingInstructions) {
+      if (speakerType === 'Dev A') {
+        actingInstructions = 'conversational, natural, casual, curious';
+      } else {
+        actingInstructions = 'enthusiastic, confident, energetic, excited about technology';
+      }
     }
     
-    // Determine speed based on the content of the text
-    let speed = 1.0;
-    if (processedText.includes('...')) {
-      // Slower for thoughtful pauses
-      speed = 0.9;
+    // Determine speed based on provided value, text content, or emotion
+    let speechSpeed = speed !== null ? speed : 1.0;
+    
+    // If speed is not explicitly set, infer from content
+    if (speed === null) {
+      if (processedText.includes('...')) {
+        // Slower for thoughtful pauses
+        speechSpeed = 0.9;
+      } else if (actingInstructions.includes('excited') || actingInstructions.includes('enthusiastic')) {
+        // Slightly faster for excited speech
+        speechSpeed = 1.1;
+      }
     }
-    if (actingInstructions.includes('excited') || actingInstructions.includes('enthusiastic')) {
-      // Slightly faster for excited speech
-      speed = 1.1;
-    }
+    
+    // Use provided trailing silence or default
+    const silence = trailingSilence !== null ? trailingSilence : 0.5;
     
     // Get or create a voice for this speaker
     const voiceId = await getOrCreateVoice(speakerType, 
@@ -240,8 +264,8 @@ async function generateAudioLine(text, speakerType, outputPath) {
           },
           // Use acting instructions to modify the voice characteristics
           description: actingInstructions,
-          speed: speed,
-          trailing_silence: 0.5
+          speed: speechSpeed,
+          trailing_silence: silence
         }
       ],
       format: {
@@ -359,16 +383,33 @@ async function processDialogue(dialogueFilePath, outputPrefix = 'dialogue') {
     // Use the slide-specific or default OUTPUT_DIR
     const outputPath = path.join(OUTPUT_DIR, filename.replace('.json', '.mp3'))  // Still use .mp3 for generateAudioLine
     
+    // Extract any emotion, speed, and trailingSilence parameters if present
+    const emotion = line.emotion || '';
+    const speed = typeof line.speed !== 'undefined' ? line.speed : null;
+    const trailingSilence = typeof line.trailingSilence !== 'undefined' ? line.trailingSilence : null;
+    
+    console.log(`Line ${i}: Using emotion="${emotion}", speed=${speed}, trailingSilence=${trailingSilence}`);
+    
     try {
-      // Generate audio for this line
-      const jsonPath = await generateAudioLine(line.line, line.speaker, outputPath)
+      // Generate audio for this line with the enhanced parameters
+      const jsonPath = await generateAudioLine(
+        line.line, 
+        line.speaker, 
+        outputPath,
+        emotion,
+        speed,
+        trailingSilence
+      )
       const jsonFilename = path.basename(jsonPath)
       
-      // Add to metadata
+      // Add to metadata with the enhanced parameters
       audioMetadata.audioFiles.push({
         index: i,
         speaker: line.speaker,
         text: line.line,
+        emotion: emotion,
+        speed: speed,
+        trailingSilence: trailingSilence,
         filename: jsonFilename,  // Use the JSON filename
         path: path.relative(path.join(__dirname, '..'), jsonPath)
       })

@@ -13,8 +13,8 @@ This system converts JSON dialogue files into voice-acted audio conversations us
    Create a `.env` file in the project root with the following variables:
    ```
    HUME_API_KEY=your_api_key_here
-   DEV_A_VOICE_DESCRIPTION="A professional male developer, 30s, with a clear conversational tone"
-   DEV_B_VOICE_DESCRIPTION="A technical expert male developer, mid 30s, enthusiastic about AI technology"
+   DEV_A_VOICE_DESCRIPTION="A professional male developer, 30s, with a clear conversational tone and casual demeanor"
+   DEV_B_VOICE_DESCRIPTION="A technical expert male developer, mid 30s, energetic and enthusiastic about AI technology"
    ```
 
    You can get your Hume.ai API key by signing up at [platform.hume.ai](https://platform.hume.ai) and visiting the API keys page.
@@ -27,31 +27,51 @@ This system converts JSON dialogue files into voice-acted audio conversations us
 
 ## Generating Dialogue Audio
 
-1. **Create a JSON dialogue file** like this:
+1. **Create a JSON dialogue file** 
+   
+   The easiest way is to use the LLM prompt in `/public/dialogue/README.md` to generate a properly structured dialogue file. Save it as `dialogue_slide_XX.json` in the `/public/dialogue/` directory.
+
+   Example format:
    ```json
    {
-     "title": "My Dialogue",
+     "title": "Slide 03: Productivity Gains",
      "dialogue": [
        {
          "speaker": "Dev A",
-         "line": "Hello there!"
+         "line": "Hello there!",
+         "emotion": "curious, slightly skeptical",
+         "speed": 0.95,
+         "trailingSilence": 0.3
        },
        {
          "speaker": "Dev B",
-         "line": "Hi, how's it going?"
+         "line": "Hi, how's it going?",
+         "emotion": "enthusiastic, confident",
+         "speed": 1.1,
+         "trailingSilence": 0.2
        }
      ]
    }
    ```
 
 2. **Run the generation script:**
+   
+   Interactive mode (recommended):
    ```bash
-   node scripts/generateDialogueAudio.js path/to/dialogue.json output-prefix
+   node scripts/generateDialogueAudio.js
+   ```
+   
+   Direct mode:
+   ```bash
+   node scripts/generateDialogueAudio.js public/dialogue/dialogue_slide_XX.json
    ```
    
    This will:
+   - Create consistent voices for each character (Dev A, Dev B)
    - Generate MP3 files for each line using Hume.ai's Octave TTS
-   - Save them to `public/sounds/dialogue/`
+   - Apply emotional parameters from the dialogue file
+   - Detect slide number from filename and organize files by slide
+   - Save audio files to `public/sounds/dialogue/slideXX/`
    - Create a metadata file with information about all generated files
 
 ## Using the DialoguePlayer Component

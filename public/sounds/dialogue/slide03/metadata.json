@@ -1,138 +1,130 @@
 {
-  "title": "Slide 3: Productivity Metrics Narration",
+  "title": "Slide 03: Breaking the Speed Limit - Productivity Visualized",
   "audioFiles": [
     {
       "index": 0,
       "speaker": "Dev A",
-      "text": "Hey there Brandon, what are you working on?",
+      "text": "Hey there Brandon, what are you doing?",
+      "emotion": "curious, casual, slightly distracted",
+      "speed": 1,
+      "trailingSilence": 0.3,
       "filename": "slide03-00.json",
-      "path": "/sounds/dialogue/slide03/slide03-00.json"
+      "path": "public/sounds/dialogue/slide03/slide03-00.json"
     },
     {
       "index": 1,
       "speaker": "Dev B",
-      "text": "I'm working on the next big thing for Regis... a revolutionary 12-month development roadmap.",
+      "text": "What do you think I am doing, I'm watching the Syntax Speedway: Keyboard Warriors Edition...and working on a presentation.",
+      "emotion": "playfully sarcastic, slightly boastful",
+      "speed": 1.1,
+      "trailingSilence": 0.4,
       "filename": "slide03-01.json",
-      "path": "/sounds/dialogue/slide03/slide03-01.json"
+      "path": "public/sounds/dialogue/slide03/slide03-01.json"
     },
     {
       "index": 2,
       "speaker": "Dev A",
-      "text": "Cool! How far along are you?",
+      "text": "Syntax Speedway? Is that some kind of weird developer racing thing you made up?",
+      "emotion": "skeptically amused, eyebrow raised",
+      "speed": 0.95,
+      "trailingSilence": 0.5,
       "filename": "slide03-02.json",
-      "path": "/sounds/dialogue/slide03/slide03-02.json"
+      "path": "public/sounds/dialogue/slide03/slide03-02.json"
     },
     {
       "index": 3,
       "speaker": "Dev B",
-      "text": "Well, I started about... 20 minutes ago?",
+      "text": "No, it's a real thing! Well, kinda. It's this visualization showing how AI-assisted coding smokes traditional coding in a race. Look at these numbers from Microsoft and MIT.",
+      "emotion": "enthusiastically defensive, eager to share",
+      "speed": 1.15,
+      "trailingSilence": 0.3,
       "filename": "slide03-03.json",
-      "path": "/sounds/dialogue/slide03/slide03-03.json"
+      "path": "public/sounds/dialogue/slide03/slide03-03.json"
     },
     {
       "index": 4,
       "speaker": "Dev A",
-      "text": "You're kidding, right? That would normally take weeks!",
+      "text": "Those numbers can't be right. 55% faster task completion? Come on.",
+      "emotion": "professionally doubtful, arms crossed",
+      "speed": 0.9,
+      "trailingSilence": 0.5,
       "filename": "slide03-04.json",
-      "path": "/sounds/dialogue/slide03/slide03-04.json"
+      "path": "public/sounds/dialogue/slide03/slide03-04.json"
     },
     {
       "index": 5,
       "speaker": "Dev B",
-      "text": "Nope. I've got an AI copilot now. It's like having a senior developer who never needs coffee breaks sitting next to me.",
+      "text": "Totally real! Microsoft/MIT field research. And check this out - devs complete 126% more tasks weekly with AI assistance. That's DOUBLE!",
+      "emotion": "confidently insistent, pointing excitedly",
+      "speed": 1.2,
+      "trailingSilence": 0.4,
       "filename": "slide03-05.json",
-      "path": "/sounds/dialogue/slide03/slide03-05.json"
+      "path": "public/sounds/dialogue/slide03/slide03-05.json"
     },
     {
       "index": 6,
       "speaker": "Dev A",
-      "text": "So you're just... what? Supervising the AI while it codes?",
+      "text": "Okay, but what about quality? Speed means nothing if you're just pumping out bugs faster.",
+      "emotion": "challenging but thoughtful, pragmatically concerned",
+      "speed": 0.95,
+      "trailingSilence": 0.6,
       "filename": "slide03-06.json",
-      "path": "/sounds/dialogue/slide03/slide03-06.json"
+      "path": "public/sounds/dialogue/slide03/slide03-06.json"
     },
     {
       "index": 7,
       "speaker": "Dev B",
-      "text": "More like collaborating. I tell it what I need, it handles the tedious parts, and I focus on the architecture and creative stuff. Look at this - it's like having superpowers.",
+      "text": "That's the beauty of it! Production time is down 50%, AND bug rates drop. [points excitedly] McKinsey's research backs this up too.",
+      "emotion": "triumphantly explaining, gesturing enthusiastically",
+      "speed": 1.15,
+      "trailingSilence": 0.3,
       "filename": "slide03-07.json",
-      "path": "/sounds/dialogue/slide03/slide03-07.json"
+      "path": "public/sounds/dialogue/slide03/slide03-07.json"
     },
     {
       "index": 8,
       "speaker": "Dev A",
-      "text": "That's... actually pretty impressive. So what happens to our jobs when AI writes all the code?",
+      "text": "Hmm... and that timeline comparison? Is that theoretical or...?",
+      "emotion": "cautiously interested, leaning forward slightly",
+      "speed": 0.9,
+      "trailingSilence": 0.7,
       "filename": "slide03-08.json",
-      "path": "/sounds/dialogue/slide03/slide03-08.json"
+      "path": "public/sounds/dialogue/slide03/slide03-08.json"
     },
     {
       "index": 9,
       "speaker": "Dev B",
-      "text": "That's like asking what happened to architects when we invented power tools. We build bigger, better things! We just don't waste time hammering every nail manually anymore.",
+      "text": "Real-world project data! Traditional development: 10 weeks. AI-augmented: under 5 weeks. That's a 52% reduction across all phases.",
+      "emotion": "confidently informative, professionally excited",
+      "speed": 1.1,
+      "trailingSilence": 0.4,
       "filename": "slide03-09.json",
-      "path": "/sounds/dialogue/slide03/slide03-09.json"
+      "path": "public/sounds/dialogue/slide03/slide03-09.json"
     },
     {
       "index": 10,
       "speaker": "Dev A",
-      "text": "So instead of typing out another FOR loop, you're thinking about solving actual problems?",
+      "text": "Including testing? I find that hard to believe.",
+      "emotion": "skeptically surprised, genuinely curious",
+      "speed": 0.85,
+      "trailingSilence": 0.5,
       "filename": "slide03-10.json",
-      "path": "/sounds/dialogue/slide03/slide03-10.json"
+      "path": "public/sounds/dialogue/slide03/slide03-10.json"
     },
     {
       "index": 11,
       "speaker": "Dev B",
-      "text": "Exactly! Less typing, more thinking. By next year, I'll barely touch the keyboard.",
+      "text": "Especially testing! From 3 weeks down to 1.5 weeks. AI helps generate test cases and finds edge cases humans miss.",
+      "emotion": "confidently reassuring, knowingly nodding",
+      "speed": 1.05,
+      "trailingSilence": 0.4,
       "filename": "slide03-11.json",
-      "path": "/sounds/dialogue/slide03/slide03-11.json"
-    },
-    {
-      "index": 12,
-      "speaker": "Dev A",
-      "text": "Sounds like science fiction.",
-      "filename": "slide03-12.json",
-      "path": "/sounds/dialogue/slide03/slide03-12.json"
-    },
-    {
-      "index": 13,
-      "speaker": "Dev B",
-      "text": "Nope, it's just the new reality. Look at these stats - today AI writes about 65% of new code. By mid-2025, it'll be 90%...",
-      "filename": "slide03-13.json",
-      "path": "/sounds/dialogue/slide03/slide03-13.json"
-    },
-    {
-      "index": 14,
-      "speaker": "Dev A",
-      "text": "And let me guess, by 2026...",
-      "filename": "slide03-14.json",
-      "path": "/sounds/dialogue/slide03/slide03-14.json"
-    },
-    {
-      "index": 15,
-      "speaker": "Dev B",
-      "text": "100%! Then we'll all just be prompt engineers with computer science degrees.",
-      "filename": "slide03-15.json",
-      "path": "/sounds/dialogue/slide03/slide03-15.json"
-    },
-    {
-      "index": 16,
-      "speaker": "Dev A",
-      "text": "So what happens when the AI makes a mistake?",
-      "filename": "slide03-16.json",
-      "path": "/sounds/dialogue/slide03/slide03-16.json"
-    },
-    {
-      "index": 17,
-      "speaker": "Dev B",
-      "text": "Same thing that happens when I make one - we fix it. But get this - it makes 50% fewer bugs than I do.",
-      "filename": "slide03-17.json",
-      "path": "/sounds/dialogue/slide03/slide03-17.json"
-    },
-    {
-      "index": 18,
-      "speaker": "Dev A",
-      "text": "That's a low bar, Brandon.",
-      "filename": "slide03-18.json",
-      "path": "/sounds/dialogue/slide03/slide03-18.json"
+      "path": "public/sounds/dialogue/slide03/slide03-11.json"
     }
-  ]
+  ],
+  "voices": {
+    "Dev A": "cf0ea40d-75c1-4680-b4e7-d27007cc85a1",
+    "Dev B": "0034cd44-8025-457a-9246-8aa3d5431d81"
+  },
+  "slideNumber": "slide03"
 }
