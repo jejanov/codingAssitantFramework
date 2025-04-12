@@ -1,0 +1,21 @@
+{
+  "title": "Three Speakers Test",
+  "dialogue": [
+    {
+      "speaker": "Dev A",
+      "line": "This is the first speaker."
+    },
+    {
+      "speaker": "Dev B",
+      "line": "I'm the second speaker in this dialogue."
+    },
+    {
+      "speaker": "Dev C",
+      "line": "And I'm the third unique speaker in this conversation."
+    },
+    {
+      "speaker": "Dev A",
+      "line": "Now I'm speaking again, but should use the same voice as before."
+    }
+  ]
+}

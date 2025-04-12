@@ -1,154 +1,204 @@
-# Tasks
+# Multi-Slide Audio System Improvement Plan
 
-This document tracks current and completed tasks in the project, organized by user story and TDD workflow phase.
+This document outlines the plan for improving the audio system to support dialogue across all slides with background music and sound effects playing simultaneously.
 
-## Active User Stories
+## Current Architecture Analysis
 
+1. **Audio System Components**:
+   - `useAudioEffects.ts` hook - Manages all audio (background, sound effects)
+   - `DialoguePlayer.tsx` - Handles dialogue playback
+   - `Slide03.tsx` - Currently has dialogue integration
 
-## General Tasks
-- [x] Setup initial project structure (✅ Completed during initialization)
+2. **Current Limitations**:
+   - Dialogue is only integrated with Slide03
+   - Background audio stops when dialogue plays (mutually exclusive)
+   - No slide awareness in DialoguePlayer
+   - No automatic slide transition detection
+   - Dialogue files organization doesn't support multiple slides
 
-## New Feature: Slide01 Enhancement
-**Current Status:** Implementation Phase (Phase 0-3)
+3. **Technical Challenges**:
+   - Audio ducking not implemented (lowering background volume during dialogue)
+   - No coordination between audio systems
+   - Missing lifecycle management for audio across slide transitions
 
-### Enhancement Summary
-Based on feedback, we'll enhance Slide01 with more cutting-edge visual elements, focusing on improved logo presentation, glassmorphism text effects, and sophisticated particle animations. The goal is to create a truly state-of-the-art presentation with next-generation web technologies.
+## Implementation Plan
 
-### Implementation Decision
-We'll implement a modernized approach focusing on:
-- Removing container panels in favor of floating glass-effect text
-- Enhancing the Regis Company logo with dynamic effects
-- Creating more sophisticated particle animations with fluid physics
-- Adding subtle interactive elements for visual interest
-- Implementing advanced WebGL, typography, and reactive elements
+### Phase 1: Infrastructure Setup
 
-### Implementation Phases
+- [x] Create the AudioContext for global audio state
+  - [x] Implement context provider with slide tracking
+    - [x] Create AudioProvider component
+    - [x] Implement useGlobalAudio hook
+  - [x] Add audio state management (playing/paused/muted)
+    - [x] Track dialogue playback state
+    - [x] Add mute controls via existing useAudioEffects
+    - [x] Track background music state
+  - [x] Create slide transition detection logic
+    - [x] Add slide change handling 
+    - [x] Add dialogue start/stop functionality
+    - [x] Implement background audio ducking during dialogue
 
-#### Phase 0: Full Screen Presentation Mode
-- [x] Implement full-screen 16:9 aspect ratio display:
-  - [x] Create presentation container with fixed 16:9 aspect ratio
-  - [x] Remove header bar and footer from presentation view
-  - [x] Add full-screen toggle capability with proper browser API
-  - [x] Ensure proper scaling on different display sizes
-  - [x] Add subtle corner controls that appear on hover
-  - [x] Fix: Ensure proper 16:9 aspect ratio maintenance in fullscreen mode
+- [ ] Update useAudioEffects with enhanced functionality
+  - [x] Implement stopBackgroundAmbience function
+  - [x] Add volume control functions
+    - [x] Implement setBackgroundVolume function
+    - [x] Implement getBackgroundVolume function
+    - [x] Add volume state tracking with volumeSettingsRef
+  - [x] Create audio ducking capabilities 
+    - [x] Implement fadeBackgroundVolume function
+    - [x] Support smooth transitions between volume levels
+  - [x] Add audio fade in/out transitions
+    - [x] Update toggleSilentMode to use fading
+    - [x] Update playSpecificBackgroundAudio with cross-fading
 
-#### Phase 1: Base Enhancements
-- [x] Update presenter information to read "Joel Janov" and date to "April 15, 2025"
-- [x] Logo Enhancement:
-  - [x] Remove rectangular glass panel container for logo
-  - [x] Increase logo size and adjust z-index for proper layering
-  - [x] Apply brand color gradient fill to logo (blue #2196f3, purple #9c27b0, teal #00bcd4) with 85-90% opacity
-  - [x] Add animated light trace effect that travels across logo letterforms
+- [x] Set up folder structure for multi-slide dialogue
+  - [x] Create slide-specific dialogue folders
+    - [x] Create folders for slide00, slide01, slide02, and slide03
+  - [x] Define metadata structure for each slide
+    - [x] Create metadata.json files with consistent format
+    - [x] Update paths to use proper format with leading slashes
+  - [x] Organize audio files by slide
+    - [x] Create slide-specific dialogue references in metadata
 
-#### Phase 2: Glassmorphism Text Treatment
-- [x] Convert all text containers to direct text glassmorphism:
-  - [x] Apply backdrop-filter and blur effects directly to text elements
-  - [x] Create transparent letter effect with proper edge highlighting
-  - [x] Add subtle light refraction effect within text characters
-- [x] Implement depth-based typography:
-  - [x] Set different z-depths for headline, subtitle, and other text elements
-  - [x] Create parallax movement based on subtle page scrolling or mouse movement
-- [x] Fix: Implement absolute positioning for slide elements to prevent content shifting during animations
-- [x] Fix: Temporarily improve text readability with inline styles (will refine in later phases)
-- [x] Fix: Refine glassmorphism text effect for better readability while maintaining modern look
-  - [x] Reduce excessive blur and shadow effects
-  - [x] Increase text opacity for better contrast
-  - [x] Fine-tune text shadows to enhance readability
-  - [x] Adjust gradient colors and opacity values
+### Phase 2: Enhanced Components
 
-#### Phase 2.5: Bug Fixes & Refinement
-- [x] Fix code typing component visibility issues:
-  - [x] Adjust z-index values to ensure code is displayed above other elements
-  - [x] Fix timing for code animation appearance
-  - [x] Add debugging to track code component visibility
-  - [x] Fix CSS styling for code-typing component
-  - [x] Increase transparency in title text to enhance glassmorphism effect
+- [x] Build the SlideAwareDialoguePlayer
+  - [x] Make DialoguePlayer work with any slide
+    - [x] Create slide-aware component that wraps DialoguePlayer
+    - [x] Add automatic slide-specific dialogue path construction
+  - [x] Add slide change detection
+    - [x] Listen to global slide context changes
+    - [x] Update dialogue playback on slide change
+  - [x] Implement proper metadata path construction
+    - [x] Format slide numbers with padStart
+    - [x] Build correct path to slide-specific metadata
+  - [x] Handle missing dialogue gracefully
+    - [x] Detect missing dialogue files
+    - [x] Hide player when no dialogue is available
 
-#### Phase 3: Advanced Particle System
-- [x] Implement fluid physics for particle movement:
-  - [x] Create natural-looking flow patterns with gentle turbulence
-  - [x] Add particle avoidance around text elements
-  - [x] Implement subtle gravitational pulls based on mouse position
-- [x] Add random particle effects for visual interest:
-  - [x] Create occasional sparkle effects on random particles
-  - [x] Add subtle size pulsing on select particles
-  - [x] Implement occasional color transitions on particles
-  - [x] Add varying opacity transitions
-- [x] Enhance neural network visualization:
-  - [x] Improve connection line rendering
-  - [x] Add subtle animation to connection lines
-  - [x] Create occasional "data transfer" pulses along neural paths
+- [x] Implement the SlideManager component
+  - [x] Create slide transition management
+    - [x] Track current slide index
+    - [x] Update global slide context
+  - [x] Add audio coordination on slide change
+    - [x] Connect to global audio context
+    - [x] Support auto-play options
+  - [x] Implement cleanup for previous slide audio
+    - [x] Proper handling in global audio context
 
-#### Phase 4: Logo Interaction & Animation
-- [ ] Create "logo interaction zone" where particles behave differently:
-  - [ ] Implement particle acceleration or color-change when passing through logo boundaries
-  - [ ] Add subtle parallax effect on hover
-- [ ] Add animated light trace effect:
-  - [ ] Design sequential highlight animation that travels across logo letterforms
-  - [ ] Create subtle glow that follows the trace path
-  - [ ] Synchronize with ambient sound if possible
+- [x] Update AudioProvider with advanced features
+  - [x] Implement background audio ducking during dialogue
+    - [x] Add duckBackgroundAudio function
+    - [x] Add restoreBackgroundAudio function
+  - [x] Add audio coordination
+    - [x] Connect ducking with dialogue playback
+    - [x] Track pre-ducking volume levels
+  - [x] Create global mute/unmute functionality
+    - [x] Connect to existing useAudioEffects
+  - [x] Add audio state tracking
+    - [x] Track current slide
+    - [x] Track dialogue playing status
 
-#### Phase 5: Animated Code Execution
-- [ ] Enhance the code typing animation:
-  - [ ] Improve timing variations for more realistic typing
-  - [ ] Add subtle character correction/backspace moments for authenticity
-- [ ] Create visual "code execution" sequence after typing completes:
-  - [ ] Design subtle glow effect emanating from code block
-  - [ ] Create particle emission from specific code functions when "executed"
-  - [ ] Add visual trace that travels from each function to affected elements (e.g., `engineer.thinkBigger()` sends visual pulse to headline)
-  - [ ] Implement subtle transformations on target elements when "activated" by code (slight scale, glow, or color shift)
-- [ ] Add sound effects synchronized with code execution visualization
+### Phase 3: Integration
 
-#### Phase 6: Next-Level Cutting-Edge Enhancements
+- [x] Integrate with App.tsx
+  - [x] Add AudioProvider at app root
+    - [x] Wrap the app with AudioProvider
+    - [x] Keep legacy AudioContext for backward compatibility
+  - [x] Implement SlideManager
+    - [x] Wrap slides with SlideManager
+    - [x] Connect current slide state
+  - [x] Add global SlideAwareDialoguePlayer
+    - [x] Add component inside the slide container
+    - [x] Configure with proper settings
+  
+- [ ] Refactor existing slides
+  - [ ] Update Slide03 to use new system (instead of direct DialoguePlayer)
+  - [ ] Add dialogue support to all slides
+  - [ ] Implement proper audio coordination
 
-##### WebGL Integration
-- [ ] Implement WebGL rendering for improved visual quality:
-  - [ ] Create 3D depth effects using WebGL for volumetric particles
-  - [ ] Implement realistic light refraction that responds to virtual light sources
-  - [ ] Add subtle depth-of-field effects based on focus areas
-  - [ ] Enable true 3D perspective transformations on hover interactions
+- [ ] Test with multiple slides
+  - [ ] Verify slide transitions
+  - [ ] Test audio coordination
+  - [ ] Validate background music continues during dialogue
 
-##### Advanced Typography Innovations
-- [ ] Implement next-generation typography effects:
-  - [ ] Add variable font animations that subtly modify weight/width properties
-  - [ ] Create micro-animations for individual characters (subtle rotation, scaling)
-  - [ ] Develop kinetic typography effects that respond to audio cues
-  - [ ] Add subtle text transformations based on content meaning
+### Phase 4: Dialogue Content Creation
 
-##### Reactive Environment
-- [ ] Create an environment that responds organically to user presence:
-  - [ ] Develop virtual physics system where text elements have subtle "weight"
-  - [ ] Add ripple effects throughout the interface when interactions occur
-  - [ ] Build ambient motion that mimics natural phenomena (wind/water)
-  - [ ] Implement subtle attraction/repulsion forces between elements
+- [ ] Create metadata and dialogue files for each slide
+  - [ ] Slide00 dialogue content
+  - [ ] Slide01 dialogue content
+  - [ ] Slide02 dialogue content
+  - [ ] Slide03 dialogue content (update existing)
 
-##### Data Visualization Elements
-- [ ] Add sophisticated data-driven visual elements:
-  - [ ] Create data visualization patterns that represent "AI processing"
-  - [ ] Build dynamic graph structures that evolve throughout presentation
-  - [ ] Implement "thought visualization" patterns that simulate cognitive processes
-  - [ ] Add subtle metadata visualizations that respond to presentation progress
+- [ ] Final testing and refinement
+  - [ ] Test slide transitions
+  - [ ] Verify dialogue auto-playing
+  - [ ] Ensure proper audio mixing
+  - [ ] Validate performance
 
-##### Immersive Audio-Visual Synchronization
-- [ ] Design precise audio-visual connections:
-  - [ ] Implement precision-timed audio cues that match exact visual moments
-  - [ ] Create interface elements that pulse subtly with audio rhythm
-  - [ ] Add spatial audio effects corresponding to visual element positions
-  - [ ] Develop ambient soundscape that evolves with visual complexity
+## Technical Details
 
-#### Phase 7: Performance Optimization
-- [ ] Implement efficient particle system with pooling to maintain performance
-- [ ] Add capability detection for scaling effects based on device performance
-- [ ] Optimize animations using GPU acceleration where possible
-- [ ] Create fallback visualizations for lower-end devices
-- [ ] Implement progressive enhancement based on browser capabilities
-- [ ] Add frame rate monitoring with dynamic quality adjustment
+### Global Audio Context Structure
 
-#### Phase 8: Testing and Finalization
-- [ ] Test animations across different browsers and devices
-- [ ] Fine-tune timing of all animation sequences
-- [ ] Adjust visual hierarchy to ensure readability
-- [ ] Ensure all enhancements align with design system
-- [ ] Conduct performance testing and optimization
-- [ ] Create comprehensive documentation of visual effects
+```tsx
+// src/contexts/AudioContext.tsx
+interface AudioContextType {
+  currentSlide: number;
+  setCurrentSlide: (slideIndex: number) => void;
+  playDialogueForSlide: (slideIndex: number) => void;
+  isDialoguePlaying: boolean;
+  isMusicPlaying: boolean;
+  toggleMute: () => void;
+  isMuted: boolean;
+}
+```
+
+### SlideAwareDialoguePlayer Component
+
+```tsx
+// src/components/audio/SlideAwareDialoguePlayer.tsx
+interface SlideAwareDialoguePlayerProps {
+  slideIndex?: number;
+  autoPlayOnSlideChange?: boolean;
+  // Other props from original DialoguePlayer
+}
+```
+
+### Enhanced useAudioEffects Hook
+
+```tsx
+// New functions to add to useAudioEffects
+const setBackgroundVolume = useCallback((level: number) => {
+  // Implement volume control with smooth transitions
+});
+
+// Return the new function in the interface
+return {
+  // Existing functions...
+  setBackgroundVolume,
+};
+```
+
+### Dialogue File Structure
+
+```
+public/
+  sounds/
+    dialogue/
+      slide00/
+        metadata.json
+        dialogue-00.json
+        dialogue-01.json
+      slide01/
+        metadata.json
+        dialogue-00.json
+        dialogue-01.json
+      slide02/
+        metadata.json
+        dialogue-00.json
+        dialogue-01.json
+      slide03/
+        metadata.json
+        dialogue-00.json
+        dialogue-01.json
+```

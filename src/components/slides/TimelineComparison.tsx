@@ -53,7 +53,7 @@ const TimelineComparison: React.FC<TimelineComparisonProps> = ({ raceProgress })
                     transition={{ duration: 0.6 }}
                 >
                     <div className="timeline-comparison">
-                        <h2 className="timeline-title">Project Timeline Comparison</h2>
+                        <h2 className="timeline-title" style={{ fontSize: 'calc(1.5rem * var(--content-scale, 1))' }}>Project Timeline Comparison</h2>
 
                         {/* Time reduction callout - moved to top right */}
                         <motion.div

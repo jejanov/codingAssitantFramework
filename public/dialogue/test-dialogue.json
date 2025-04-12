@@ -1,0 +1,21 @@
+{
+  "title": "Voice Reuse Test",
+  "dialogue": [
+    {
+      "speaker": "Dev A",
+      "line": "This is a test of the voice reuse feature."
+    },
+    {
+      "speaker": "Dev B",
+      "line": "We want to make sure that each character uses the same voice throughout the dialogue."
+    },
+    {
+      "speaker": "Dev A",
+      "line": "I should sound the same in this line as I did in my first line."
+    },
+    {
+      "speaker": "Dev B",
+      "line": "And I should maintain my voice characteristics too."
+    }
+  ]
+}

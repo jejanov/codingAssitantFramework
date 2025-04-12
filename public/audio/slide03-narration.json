@@ -1,0 +1,26 @@
+{
+  "title": "Productivity Slide Narration",
+  "audioFiles": [
+    {
+      "index": 0,
+      "speaker": "Narrator",
+      "text": "As you can see in our racing visualization, AI-assisted development is dramatically faster.",
+      "filename": "cool-hip-hop-loop-275527.mp3",
+      "path": "audio/cool-hip-hop-loop-275527.mp3"
+    },
+    {
+      "index": 1,
+      "speaker": "Narrator",
+      "text": "Developers working with AI complete tasks 55.8% faster according to Microsoft and MIT research.",
+      "filename": "cool-hip-hop-loop-275527.mp3",
+      "path": "audio/cool-hip-hop-loop-275527.mp3"
+    },
+    {
+      "index": 2,
+      "speaker": "Narrator",
+      "text": "Most impressively, weekly tasks completed increases by 126% - more than double the output.",
+      "filename": "cool-hip-hop-loop-275527.mp3",
+      "path": "audio/cool-hip-hop-loop-275527.mp3"
+    }
+  ]
+}

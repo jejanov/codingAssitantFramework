@@ -2,7 +2,88 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Global CSS variables for responsive scaling */
+:root {
+  --content-scale: 1;
+}
+
 /* Custom base styles can go here */
 body {
   font-family: sans-serif; /* Example default font */
+}
+
+/* Custom responsive scaling utilities */
+.slide-container {
+  transform-origin: center center;
+}
+
+/* Apply scaling to all text elements in slides */
+.slide-container h1 {
+  font-size: calc(2.25rem * var(--content-scale));
+}
+
+.slide-container h2 {
+  font-size: calc(1.75rem * var(--content-scale));
+}
+
+.slide-container h3 {
+  font-size: calc(1.25rem * var(--content-scale));
+}
+
+.slide-container p, 
+.slide-container li,
+.slide-container span,
+.slide-container div {
+  font-size: calc(1rem * var(--content-scale));
+}
+
+/* Make sure buttons and interactive elements scale too */
+.slide-container button,
+.slide-container input,
+.slide-container select {
+  font-size: calc(1rem * var(--content-scale));
+}
+
+/* Ensure proper scaling on 4K displays */
+@media (min-width: 3000px), (min-height: 1600px) {
+  :root {
+    --content-scale: 1.5;
+  }
+}
+
+/* Better scaling on 1440p displays */
+@media (min-width: 2000px) and (max-width: 2999px),
+       (min-height: 1300px) and (max-height: 1599px) {
+  :root {
+    --content-scale: 1.2;
+  }
+}
+
+/* Slightly smaller scale on smaller displays */
+@media (max-width: 1366px), (max-height: 768px) {
+  :root {
+    --content-scale: 0.9;
+  }
+}
+
+/* Custom animations for DialoguePlayer */
+@keyframes pulse-subtle {
+  0% {
+    box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(99, 102, 241, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(99, 102, 241, 0);
+  }
+}
+
+.animate-pulse-subtle {
+  animation: pulse-subtle 2s infinite;
+}
+
+/* For DialoguePlayer scaling */
+.transform.scale-102 {
+  transform: scale(1.02);
 }

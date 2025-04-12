@@ -1,11 +1,10 @@
-import React, { useState, useEffect, useRef, useContext, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { Glass } from '../../../DESIGN_SYSTEM/components/Glass/Glass';
-import useAudioEffects from '../../hooks/useAudioEffects';
 import ProductivityMetrics from './ProductivityMetrics';
 import TimelineComparison from './TimelineComparison';
 import './Slide03.css';
-import { AudioContext } from '../../App'; // Adjust path as needed
+import { useGlobalAudio } from '../../contexts/AudioContext';
 
 /**
  * Slide03: Productivity Visualization slide as specified in slide_instructions/slide_03.md
@@ -17,18 +16,13 @@ const Slide03: React.FC = () => {
     const [animationProgress, setAnimationProgress] = useState(0);
     const videoRef = useRef<HTMLVideoElement>(null);
 
-    // Get audio effects from context
-    const audioEffects = useContext(AudioContext);
+    // Get global audio context
+    const { isDialoguePlaying } = useGlobalAudio();
 
-    // Animate metrics appearance
+    // Animate metrics appearance - separated from audio effect
     useEffect(() => {
         // Start with a delay
         const startDelay = setTimeout(() => {
-            // Play ambient sound
-            if (audioEffects) {
-                audioEffects.playBackgroundAmbience();
-            }
-
             // Animation start time reference
             let startTime: number | null = null;
             let animationFrameId: number;
@@ -65,11 +59,8 @@ const Slide03: React.FC = () => {
         // Cleanup on unmount
         return () => {
             clearTimeout(startDelay);
-            if (audioEffects) {
-                audioEffects.stopBackgroundAmbience();
-            }
         };
-    }, [audioEffects]);
+    }, []);
 
     // Memoize the mouse handler to prevent unnecessary re-renders
     const handleMouseMove = useCallback((e: React.MouseEvent) => {
@@ -77,7 +68,7 @@ const Slide03: React.FC = () => {
     }, []);
 
     return (
-        <div 
+        <div
             className="slide03-container"
             onMouseMove={handleMouseMove}
             onMouseEnter={handleMouseMove}
@@ -141,6 +132,8 @@ const Slide03: React.FC = () => {
                     Sources: Microsoft/MIT (Peng et al., 2023), Microsoft/MIT/Wharton field research (Zhao et al., 2024), McKinsey Digital (2023)
                 </motion.div>
             </div>
+
+            {/* Note: The DialoguePlayer has been removed as it's now handled by the global SlideAwareDialoguePlayer */}
         </div>
     );
 };

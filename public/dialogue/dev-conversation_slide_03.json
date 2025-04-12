@@ -1,0 +1,97 @@
+{
+  "title": "AI Coding Assistant Conversation",
+  "dialogue": [
+    {
+      "speaker": "Dev A",
+      "line": "Hey there Brandon, what are you working on?"
+    },
+    {
+      "speaker": "Dev B",
+      "line": "I'm working on the next big thing for Regis... a revolutionary 12-month development roadmap."
+    },
+    {
+      "speaker": "Dev A",
+      "line": "Cool! How far along are you?"
+    },
+    {
+      "speaker": "Dev B",
+      "line": "Well, I started about... 20 minutes ago?"
+    },
+    {
+      "speaker": "Dev A",
+      "line": "You're kidding, right? That would normally take weeks!"
+    },
+    {
+      "speaker": "Dev B",
+      "line": "Nope. I've got an AI copilot now. It's like having a senior developer who never needs coffee breaks sitting next to me."
+    },
+    {
+      "speaker": "Dev A",
+      "line": "So you're just... what? Supervising the AI while it codes?"
+    },
+    {
+      "speaker": "Dev B",
+      "line": "More like collaborating. I tell it what I need, it handles the tedious parts, and I focus on the architecture and creative stuff. Look at this - it's like having superpowers."
+    },
+    {
+      "speaker": "Dev A",
+      "line": "That's... actually pretty impressive. So what happens to our jobs when AI writes all the code?"
+    },
+    {
+      "speaker": "Dev B",
+      "line": "That's like asking what happened to architects when we invented power tools. We build bigger, better things! We just don't waste time hammering every nail manually anymore."
+    },
+    {
+      "speaker": "Dev A",
+      "line": "So instead of typing out another FOR loop, you're thinking about solving actual problems?"
+    },
+    {
+      "speaker": "Dev B",
+      "line": "Exactly! Less typing, more thinking. By next year, I'll barely touch the keyboard."
+    },
+    {
+      "speaker": "Dev A",
+      "line": "Sounds like science fiction."
+    },
+    {
+      "speaker": "Dev B",
+      "line": "Nope, it's just the new reality. Look at these stats - today AI writes about 65% of new code. By mid-2025, it'll be 90%..."
+    },
+    {
+      "speaker": "Dev A",
+      "line": "And let me guess, by 2026..."
+    },
+    {
+      "speaker": "Dev B",
+      "line": "100%! Then we'll all just be prompt engineers with computer science degrees."
+    },
+    {
+      "speaker": "Dev A",
+      "line": "So what happens when the AI makes a mistake?"
+    },
+    {
+      "speaker": "Dev B",
+      "line": "Same thing that happens when I make one - we fix it. But get this - it makes 50% fewer bugs than I do."
+    },
+    {
+      "speaker": "Dev A",
+      "line": "That's a low bar, Brandon."
+    },
+    {
+      "speaker": "Dev B",
+      "line": "Very funny. But seriously, we're building the future here. AI writes the code..."
+    },
+    {
+      "speaker": "Dev A",
+      "line": "...and we engineer the future."
+    },
+    {
+      "speaker": "Dev B",
+      "line": "Exactly. Now help me refactor this notification system. The AI's waiting for my instructions."
+    },
+    {
+      "speaker": "Dev A",
+      "line": "Yes, your AI-ness."
+    }
+  ]
+}

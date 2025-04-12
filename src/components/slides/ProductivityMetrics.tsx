@@ -72,7 +72,7 @@ const ProductivityMetrics: React.FC<ProductivityMetricsProps> = ({ raceProgress 
 
     return (
         <Glass hierarchy="container" level="secondary" className="productivity-metrics">
-            <h2 className="metrics-title">Productivity Metrics</h2>
+            <h2 className="metrics-title" style={{ fontSize: 'calc(1.5rem * var(--content-scale, 1))' }}>Productivity Metrics</h2>
 
             <div className="metrics-grid">
                 <AnimatePresence>
