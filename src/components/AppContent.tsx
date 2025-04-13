@@ -4,6 +4,7 @@ import Slide00 from './slides/Slide00';
 import Slide01 from './slides/Slide01';
 import Slide02 from './slides/Slide02';
 import Slide03 from './slides/Slide03';
+import Slide04Refactored from './slides/Slide04Refactored';
 import SlideAwareDialoguePlayer from './audio/SlideAwareDialoguePlayer';
 import { useEffect, useRef } from 'react';
 
@@ -86,6 +87,8 @@ const AppContent = observer(() => {
                 return <Slide02 key="slide-2" />;
             case 3:
                 return <Slide03 key="slide-3" />;
+            case 4:
+                return <Slide04Refactored key="slide-4" />;
             default:
                 return <div className="p-10 text-center">Slide {slideStore.currentSlide} not found</div>;
         }

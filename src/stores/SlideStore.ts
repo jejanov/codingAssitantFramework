@@ -3,7 +3,7 @@ import { RootStore } from './RootStore';
 
 export class SlideStore {
     currentSlide = 0;
-    totalSlides = 3; // Update with actual count
+    totalSlides = 4; // Updated to include Slide04
     slideChangeReason = 'other'; // 'next', 'prev', 'direct', 'other'
     isFullscreen = false;
     showControls = false;

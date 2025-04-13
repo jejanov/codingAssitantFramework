@@ -1,7 +1,8 @@
 {
-  "title": "Slide 04: The New Frontier - From Coders to Architects",
+  "title": "Slide 04: The Tipping Point - Beyond Models to Agentic Systems",
   "dialogue": [
     {
+      "index": 0,
       "speaker": "Dev A",
       "line": "So beyond the stats and speed, what does this actually mean for us as developers day-to-day?",
       "emotion": "genuinely curious, leaning forward, professionally engaged",
@@ -9,106 +10,121 @@
       "trailingSilence": 0.6
     },
     {
+      "index": 1,
       "speaker": "Dev B",
-      "line": "That's the best part! We get to be architects instead of keyboard monkeys. All that boilerplate code, repetitive patterns, documentation...AI handles it.",
+      "line": "That's the best part! We get to spend more time on the creative, complex challenges. All that boilerplate code, repetitive patterns, documentation, test writting...AI handles it.",
       "emotion": "enthusiastically relieved, gesturing broadly",
       "speed": 1.15,
       "trailingSilence": 0.4
     },
     {
+      "index": 2,
       "speaker": "Dev A",
-      "line": "Architects? That sounds a bit grandiose. We still need to understand the code, right?",
-      "emotion": "skeptically intrigued, slightly furrowed brow",
-      "speed": 0.9,
-      "trailingSilence": 0.5
-    },
-    {
-      "speaker": "Dev B",
-      "line": "Of course! But instead of spending 80% of our time writing boilerplate and 20% solving interesting problems, it flips. We focus on the creative, complex challenges.",
-      "emotion": "confidently explaining, professionally passionate",
-      "speed": 1.1,
-      "trailingSilence": 0.3
-    },
-    {
-      "speaker": "Dev A",
-      "line": "Wait, so we're not getting replaced? I keep hearing about how AI is coming for everyone's jobs...",
-      "emotion": "cautiously relieved, slightly hesitant",
-      "speed": 0.9,
-      "trailingSilence": 0.7
-    },
-    {
-      "speaker": "Dev B",
-      "line": "Quite the opposite! Our jobs get way more interesting. We become product-focused problem solvers who happen to use code as our medium.",
-      "emotion": "reassuringly confident, leaning in slightly",
-      "speed": 1.05,
-      "trailingSilence": 0.4
-    },
-    {
-      "speaker": "Dev A",
-      "line": "So you're saying instead of wrestling with TypeScript errors, we could be designing better simulation experiences for Regis customers?",
-      "emotion": "increasingly interested, thoughtfully considering",
-      "speed": 1.0,
-      "trailingSilence": 0.5
-    },
-    {
-      "speaker": "Dev B",
-      "line": "Exactly! Think about those complex simulations we build. AI lets us iterate on the experience and logic instead of getting bogged down in implementation details.",
-      "emotion": "excitedly confirming, gesturing toward imaginary screen",
-      "speed": 1.15,
-      "trailingSilence": 0.3
-    },
-    {
-      "speaker": "Dev A",
-      "line": "But why now? I mean, these tools have been around for a bit already...",
+      "line": "But why now? I mean, AI coding tools have been around for a bit already...",
       "emotion": "curiously puzzled, head slightly tilted",
       "speed": 0.9,
       "trailingSilence": 0.6
     },
     {
+      "index": 3,
       "speaker": "Dev B",
-      "line": "Because we're at the tipping point! The latest models actually understand context, can debug their own mistakes, and have enough knowledge to be truly useful collaborators.",
+      "line": "Because we're at a tipping point! There are two massive driving forces converging right now that change everything.",
       "emotion": "urgently excited, leaning forward intensely",
+      "speed": 1.15,
+      "trailingSilence": 0.4
+    },
+    {
+      "index": 4,
+      "speaker": "Dev A",
+      "line": "What forces?",
+      "emotion": "genuinely interested, eyebrows raised slightly",
+      "speed": 0.9,
+      "trailingSilence": 0.5
+    },
+    {
+      "index": 5,
+      "speaker": "Dev B",
+      "line": "First, the models themselves. They're finally good enough with massive context windows—they can actually understand entire codebases, not just snippets.",
+      "emotion": "professorial but enthusiastic, gesturing with precision",
+      "speed": 1.1,
+      "trailingSilence": 0.3
+    },
+    {
+      "index": 6,
+      "speaker": "Dev A",
+      "line": "Ok, that's just better LLMs though. What's the second force?",
+      "emotion": "following along, analytically engaged",
+      "speed": 0.95,
+      "trailingSilence": 0.6
+    },
+    {
+      "index": 7,
+      "speaker": "Dev B",
+      "line": "The agentic systems built around them! Tools like Cursor aren't just dumb LLM wrappers—they're complex systems that manage context, use specialized task agents, and interact with your entire development environment.",
+      "emotion": "excitedly educating, hands animating concepts",
       "speed": 1.2,
       "trailingSilence": 0.4
     },
     {
+      "index": 8,
       "speaker": "Dev A",
-      "line": "And you really think this will help deliver more value to Regis customers faster?",
-      "emotion": "seriously considering, professionally focused",
+      "line": "What's the difference between just using an LLM and these 'agentic systems'?",
+      "emotion": "seriously curious, making air quotes, leaning in",
       "speed": 0.95,
       "trailingSilence": 0.5
     },
     {
+      "index": 9,
       "speaker": "Dev B",
-      "line": "Without a doubt. Imagine bringing every product idea to life in half the time. Those simulation concepts we've had on the backlog for months? We could actually build them now.",
+      "line": "Massive difference! An LLM alone just generates text. But tools like Cursor use multiple agents that can read your codebase, run commands, fix linting errors, and adapt to your coding style—all while keeping you in control.",
+      "emotion": "passionately explaining, gesturing to show hierarchy",
+      "speed": 1.15,
+      "trailingSilence": 0.3
+    },
+    {
+      "index": 10,
+      "speaker": "Dev A",
+      "line": "So it's not just about completing my code, but understanding my whole project and helping manage all the development tasks?",
+      "emotion": "beginning to understand, eyes widening slightly",
+      "speed": 1.0,
+      "trailingSilence": 0.4
+    },
+    {
+      "index": 11,
+      "speaker": "Dev B",
+      "line": "Exactly! These tools use 'tool calling'—the main AI delegates to specialized sub-models that handle specific tasks like file management or error correction. It's a whole ecosystem, not just a single AI.",
+      "emotion": "precisely confirming, making connecting gestures",
+      "speed": 1.1,
+      "trailingSilence": 0.3
+    },
+    {
+      "index": 12,
+      "speaker": "Dev A",
+      "line": "And this actually helps deliver more value to Regis customers faster?",
+      "emotion": "connecting dots, professionally focused",
+      "speed": 0.95,
+      "trailingSilence": 0.5
+    },
+    {
+      "index": 13,
+      "speaker": "Dev B",
+      "line": "Without a doubt. Those complex simulations we build? We can focus on perfecting the experience and logic instead of fighting with TypeScript errors or MobX state management.",
       "emotion": "confidently visionary, hands spreading wide",
       "speed": 1.1,
       "trailingSilence": 0.3
     },
     {
+      "index": 14,
       "speaker": "Dev A",
-      "line": "I have to admit, being able to focus on the challenging parts of our simulations rather than fighting with MobX state management sounds pretty appealing.",
-      "emotion": "gradually convinced, slightly smiling",
-      "speed": 1.0,
-      "trailingSilence": 0.4
-    },
-    {
-      "speaker": "Dev B",
-      "line": "And that's just development. It streamlines everything—planning, testing, documentation. The whole process gets this productivity boost.",
-      "emotion": "enthusiastically explaining, hands animating points",
-      "speed": 1.15,
-      "trailingSilence": 0.3
-    },
-    {
-      "speaker": "Dev A",
-      "line": "So it's kind of like... we're finally getting to be the developers we always wanted to be when we started coding?",
+      "line": "So it's kind of like... we're finally getting to be the developers we always wanted to be when we started coding? Focusing on the creative parts?",
       "emotion": "thoughtfully optimistic, reflectively hopeful",
       "speed": 0.9,
       "trailingSilence": 0.7
     },
     {
+      "index": 15,
       "speaker": "Dev B",
-      "line": "You nailed it. It's like having a junior dev who works at superhuman speed, never complains, and lets us focus on the architectural and creative challenges we love.",
+      "line": "You nailed it. It's not about AI replacing us—it's about elevating us. We become product-focused architects who happen to use code as our medium, with an AI team handling the tedious parts.",
       "emotion": "warmly affirming, genuinely excited about future",
       "speed": 1.05,
       "trailingSilence": 0.4

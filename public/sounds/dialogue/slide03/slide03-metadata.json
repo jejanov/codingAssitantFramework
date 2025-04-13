@@ -14,7 +14,7 @@
     {
       "index": 1,
       "speaker": "Dev B",
-      "text": "What do you think I'm doing, I'm watching the Syntax Speedway: Keyboard Warriors Edition...and working on a presentation.",
+      "text": "What do you think I am doing, I'm watching the Syntax Speedway: Keyboard Warriors Edition...and working on a presentation.",
       "emotion": "playfully sarcastic, slightly boastful",
       "speed": 1.1,
       "trailingSilence": 0.4,
@@ -203,8 +203,8 @@
     }
   ],
   "voices": {
-    "Dev A": "163d50ef-f0cf-411c-9543-eda58046303f",
-    "Dev B": "c0e88ad7-5b25-40f7-aca6-3714ae6ee91d"
+    "Dev A": "ef36cfd7-4ad3-4eda-9f4c-15213fd23c70",
+    "Dev B": "08991c20-df91-435d-907f-27f69a9a7d9d"
   },
   "slideNumber": "slide03"
 }

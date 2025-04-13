@@ -1,0 +1,190 @@
+{
+  "title": "Slide 04: The Tipping Point - Beyond Models to Agentic Systems",
+  "audioFiles": [
+    {
+      "index": 0,
+      "speaker": "Dev A",
+      "text": "So beyond the stats and speed, what does this actually mean for us as developers day-to-day?",
+      "emotion": "genuinely curious, leaning forward, professionally engaged",
+      "speed": 0.95,
+      "trailingSilence": 0.6,
+      "filename": "slide04-00.json",
+      "path": "public/sounds/dialogue/slide04/slide04-00.json"
+    },
+    {
+      "index": 1,
+      "speaker": "Dev B",
+      "text": "That's the best part! We get to be architects instead of keyboard monkeys. All that boilerplate code, repetitive patterns, documentation...AI handles it.",
+      "emotion": "enthusiastically relieved, gesturing broadly",
+      "speed": 1.15,
+      "trailingSilence": 0.4,
+      "filename": "slide04-01.json",
+      "path": "public/sounds/dialogue/slide04/slide04-01.json"
+    },
+    {
+      "index": 2,
+      "speaker": "Dev A",
+      "text": "Architects? That sounds a bit grandiose. We still need to understand the code, right?",
+      "emotion": "skeptically intrigued, slightly furrowed brow",
+      "speed": 0.9,
+      "trailingSilence": 0.5,
+      "filename": "slide04-02.json",
+      "path": "public/sounds/dialogue/slide04/slide04-02.json"
+    },
+    {
+      "index": 3,
+      "speaker": "Dev B",
+      "text": "Of course! But instead of spending 80% of our time writing boilerplate and 20% solving interesting problems, it flips. We focus on the creative, complex challenges.",
+      "emotion": "confidently explaining, professionally passionate",
+      "speed": 1.1,
+      "trailingSilence": 0.3,
+      "filename": "slide04-03.json",
+      "path": "public/sounds/dialogue/slide04/slide04-03.json"
+    },
+    {
+      "index": 4,
+      "speaker": "Dev A",
+      "text": "But why now? I mean, AI coding tools have been around for a bit already...",
+      "emotion": "curiously puzzled, head slightly tilted",
+      "speed": 0.9,
+      "trailingSilence": 0.6,
+      "filename": "slide04-04.json",
+      "path": "public/sounds/dialogue/slide04/slide04-04.json"
+    },
+    {
+      "index": 5,
+      "speaker": "Dev B",
+      "text": "Because we're at a tipping point! There are two massive driving forces converging right now that change everything.",
+      "emotion": "urgently excited, leaning forward intensely",
+      "speed": 1.15,
+      "trailingSilence": 0.4,
+      "filename": "slide04-05.json",
+      "path": "public/sounds/dialogue/slide04/slide04-05.json"
+    },
+    {
+      "index": 6,
+      "speaker": "Dev A",
+      "text": "What forces?",
+      "emotion": "genuinely interested, eyebrows raised slightly",
+      "speed": 0.9,
+      "trailingSilence": 0.5,
+      "filename": "slide04-06.json",
+      "path": "public/sounds/dialogue/slide04/slide04-06.json"
+    },
+    {
+      "index": 7,
+      "speaker": "Dev B",
+      "text": "First, the models themselves. They're finally good enough with massive context windows—they can actually understand entire codebases, not just snippets.",
+      "emotion": "professorial but enthusiastic, gesturing with precision",
+      "speed": 1.1,
+      "trailingSilence": 0.3,
+      "filename": "slide04-07.json",
+      "path": "public/sounds/dialogue/slide04/slide04-07.json"
+    },
+    {
+      "index": 8,
+      "speaker": "Dev A",
+      "text": "Ok, that's just better LLMs though. What's the second force?",
+      "emotion": "following along, analytically engaged",
+      "speed": 0.95,
+      "trailingSilence": 0.6,
+      "filename": "slide04-08.json",
+      "path": "public/sounds/dialogue/slide04/slide04-08.json"
+    },
+    {
+      "index": 9,
+      "speaker": "Dev B",
+      "text": "The agentic systems built around them! Tools like Cursor aren't just dumb LLM wrappers—they're complex systems that manage context, use specialized task agents, and interact with your entire development environment.",
+      "emotion": "excitedly educating, hands animating concepts",
+      "speed": 1.2,
+      "trailingSilence": 0.4,
+      "filename": "slide04-09.json",
+      "path": "public/sounds/dialogue/slide04/slide04-09.json"
+    },
+    {
+      "index": 10,
+      "speaker": "Dev A",
+      "text": "What's the difference between just using an LLM and these 'agentic systems'?",
+      "emotion": "seriously curious, making air quotes, leaning in",
+      "speed": 0.95,
+      "trailingSilence": 0.5,
+      "filename": "slide04-10.json",
+      "path": "public/sounds/dialogue/slide04/slide04-10.json"
+    },
+    {
+      "index": 11,
+      "speaker": "Dev B",
+      "text": "Massive difference! An LLM alone just generates text. But tools like Cursor use multiple agents that can read your codebase, run commands, fix linting errors, and adapt to your coding style—all while keeping you in control.",
+      "emotion": "passionately explaining, gesturing to show hierarchy",
+      "speed": 1.15,
+      "trailingSilence": 0.3,
+      "filename": "slide04-11.json",
+      "path": "public/sounds/dialogue/slide04/slide04-11.json"
+    },
+    {
+      "index": 12,
+      "speaker": "Dev A",
+      "text": "So it's not just about completing my code, but understanding my whole project and helping manage all the development tasks?",
+      "emotion": "beginning to understand, eyes widening slightly",
+      "speed": 1,
+      "trailingSilence": 0.4,
+      "filename": "slide04-12.json",
+      "path": "public/sounds/dialogue/slide04/slide04-12.json"
+    },
+    {
+      "index": 13,
+      "speaker": "Dev B",
+      "text": "Exactly! These tools use 'tool calling'—the main AI delegates to specialized sub-models that handle specific tasks like file management or error correction. It's a whole ecosystem, not just a single AI.",
+      "emotion": "precisely confirming, making connecting gestures",
+      "speed": 1.1,
+      "trailingSilence": 0.3,
+      "filename": "slide04-13.json",
+      "path": "public/sounds/dialogue/slide04/slide04-13.json"
+    },
+    {
+      "index": 14,
+      "speaker": "Dev A",
+      "text": "And this actually helps deliver more value to Regis customers faster?",
+      "emotion": "connecting dots, professionally focused",
+      "speed": 0.95,
+      "trailingSilence": 0.5,
+      "filename": "slide04-14.json",
+      "path": "public/sounds/dialogue/slide04/slide04-14.json"
+    },
+    {
+      "index": 15,
+      "speaker": "Dev B",
+      "text": "Without a doubt. Those complex simulations we build? We can focus on perfecting the experience and logic instead of fighting with TypeScript errors or MobX state management.",
+      "emotion": "confidently visionary, hands spreading wide",
+      "speed": 1.1,
+      "trailingSilence": 0.3,
+      "filename": "slide04-15.json",
+      "path": "public/sounds/dialogue/slide04/slide04-15.json"
+    },
+    {
+      "index": 16,
+      "speaker": "Dev A",
+      "text": "So it's kind of like... we're finally getting to be the developers we always wanted to be when we started coding? Focusing on the creative parts?",
+      "emotion": "thoughtfully optimistic, reflectively hopeful",
+      "speed": 0.9,
+      "trailingSilence": 0.7,
+      "filename": "slide04-16.json",
+      "path": "public/sounds/dialogue/slide04/slide04-16.json"
+    },
+    {
+      "index": 17,
+      "speaker": "Dev B",
+      "text": "You nailed it. It's not about AI replacing us—it's about elevating us. We become product-focused architects who happen to use code as our medium, with an AI team handling the tedious parts.",
+      "emotion": "warmly affirming, genuinely excited about future",
+      "speed": 1.05,
+      "trailingSilence": 0.4,
+      "filename": "slide04-17.json",
+      "path": "public/sounds/dialogue/slide04/slide04-17.json"
+    }
+  ],
+  "voices": {
+    "Dev A": "6e92e066-0055-4b4e-9227-dcc2d17cb38e",
+    "Dev B": "39627624-d606-4ee4-a227-d96919826cec"
+  },
+  "slideNumber": "slide04"
+}

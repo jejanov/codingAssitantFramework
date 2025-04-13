@@ -5,9 +5,57 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>AI Coding Workshop</title>
+    
+    <!-- Preload web-safe fonts to ensure availability before JavaScript -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Arial&family=Helvetica&family=Verdana&family=Courier+New&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Arial&family=Helvetica&family=Verdana&family=Courier+New&display=swap">
+    
+    <!-- Inline font loading and locking to prevent FOUT -->
+    <style>
+      /* Font loading and locking */
+      html {
+        /* Set fonts immediately to prevent layout shifts */
+        font-family: Arial, Helvetica, sans-serif;
+      }
+      
+      /* Font loading detection */
+      body::before {
+        content: '';
+        font-family: Arial, Helvetica, sans-serif;
+        visibility: hidden;
+        position: absolute;
+        height: 0;
+      }
+      
+      /* Force font loading */
+      .font-preload {
+        position: absolute;
+        visibility: hidden;
+        height: 0;
+        width: 0;
+        overflow: hidden;
+      }
+    </style>
+    <!-- Hidden elements to force font loading -->
+    <div class="font-preload" aria-hidden="true">
+      <span style="font-family: Arial, Helvetica, sans-serif;">A</span>
+      <span style="font-family: 'Courier New', monospace;">A</span>
+      <span style="font-family: Verdana, sans-serif;">A</span>
+    </div>
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+    
+    <!-- Font loading script -->
+    <script>
+      // Force immediate font loading
+      document.fonts && document.fonts.ready.then(function() {
+        console.log("All fonts are loaded and ready!");
+        // Add a class to indicate fonts are ready
+        document.documentElement.classList.add('fonts-loaded');
+      });
+    </script>
   </body>
 </html>
