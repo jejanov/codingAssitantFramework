@@ -99,8 +99,7 @@ const AppContent = observer(() => {
             ref={fullscreenContainerRef}
             data-fullscreen-container="true"
             className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 text-white flex flex-col"
-            onMouseMove={slideStore.currentSlide !== 1 && slideStore.currentSlide !== 3 ?
-                () => slideStore.showControlsTemporarily() : undefined}
+            onMouseMove={() => slideStore.showControlsTemporarily()}
         >
             {/* Header/Title bar - hide on Slide 0 or in fullscreen */}
             {slideStore.currentSlide > 0 && !slideStore.isFullscreen && (
@@ -172,9 +171,9 @@ const AppContent = observer(() => {
                     }}
                 />
 
-                {/* Corner controls */}
-                {slideStore.isFullscreen && slideStore.showControls && (
-                    <div className="absolute top-4 right-4 flex gap-2 transition-opacity duration-300 opacity-70 hover:opacity-100">
+                {/* Corner controls - RENDER UNLESS ON SLIDE 0 */}
+                {slideStore.currentSlide > 0 && slideStore.showControls && (
+                    <div className="absolute top-4 right-4 flex gap-2 transition-opacity duration-300 opacity-70 hover:opacity-100 z-50">
                         <button
                             onClick={slideStore.previousSlide}
                             disabled={slideStore.isFirstSlide}
@@ -201,9 +200,9 @@ const AppContent = observer(() => {
                         <button
                             onClick={slideStore.toggleFullscreen}
                             className="p-2 bg-gray-800 bg-opacity-70 backdrop-blur-sm rounded-full hover:bg-opacity-90 transition-all"
-                            title="Exit fullscreen"
+                            title={slideStore.isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
                         >
-                            Exit
+                            {slideStore.isFullscreen ? "Exit FS" : "Fullscreen"}
                         </button>
                     </div>
                 )}
@@ -214,32 +213,6 @@ const AppContent = observer(() => {
                 <div className="fixed bottom-4 right-4 bg-gray-800 p-4 rounded-lg border border-gray-700 shadow-lg z-50">
                     <h3 className="text-lg font-bold mb-2">Debug Panel</h3>
                     {/* Debug content */}
-                </div>
-            )}
-
-            {/* Navigation controls - hide on Slide 0 or in fullscreen */}
-            {slideStore.currentSlide > 0 && !slideStore.isFullscreen && (
-                <div className="flex justify-center py-4 gap-4">
-                    <button
-                        className="px-4 py-2 bg-blue-600 rounded-md disabled:opacity-50"
-                        onClick={slideStore.previousSlide}
-                        disabled={slideStore.isFirstSlide}
-                    >
-                        Previous
-                    </button>
-                    <button
-                        className="px-4 py-2 bg-blue-600 rounded-md disabled:opacity-50"
-                        onClick={slideStore.nextSlide}
-                        disabled={slideStore.isLastSlide}
-                    >
-                        Next
-                    </button>
-                    <button
-                        className="px-4 py-2 bg-blue-600 rounded-md"
-                        onClick={slideStore.toggleFullscreen}
-                    >
-                        Fullscreen
-                    </button>
                 </div>
             )}
 

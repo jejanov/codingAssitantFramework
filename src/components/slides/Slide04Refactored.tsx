@@ -1,11 +1,13 @@
-import React, { useEffect, useRef, useState, useLayoutEffect } from 'react';
+import React, { useEffect, useRef, useState, useLayoutEffect, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAudioStore, useSlideStore, useDialogueStore } from '@/stores/StoreContext';
 import { observer } from 'mobx-react-lite';
 import './Slide04.css';
 import { createPortal } from 'react-dom';
-import MermaidChartRefactored from '../ui/MermaidChartRefactored';
-
+import ReactFlowChart from '../ui/ReactFlowChart';
+import { Node, Edge, Position, useNodesState, useEdgesState, ReactFlowProvider, useReactFlow, getNodesBounds, getViewportForBounds, useNodesInitialized } from 'reactflow';
+import * as dagre from 'dagre';
+import TitledGroupNode from '../ui/TitledGroupNode';
 
 /**
  * Standalone Debug Panel Component
@@ -22,6 +24,9 @@ interface DebugPanelProps {
     jumpToDialogueIndex: (index: number) => void;
     setDirectView: (view: 'initial' | 'context' | 'agentic' | 'integration' | 'complete') => void;
     resetToNormalMode: () => void;
+    isLayoutEditable: boolean;
+    toggleLayoutEditable: () => void;
+    handleSaveLayout: () => void;
 }
 
 const StandaloneDebugPanel: React.FC<DebugPanelProps> = ({
@@ -34,7 +39,10 @@ const StandaloneDebugPanel: React.FC<DebugPanelProps> = ({
     isRendering,
     jumpToDialogueIndex,
     setDirectView,
-    resetToNormalMode
+    resetToNormalMode,
+    isLayoutEditable,
+    toggleLayoutEditable,
+    handleSaveLayout,
 }) => {
     if (!showDebugPanel) return null;
 
@@ -116,6 +124,26 @@ const StandaloneDebugPanel: React.FC<DebugPanelProps> = ({
                         </>
                     )}
 
+                    <hr className="debug-divider" />
+
+                    <label className="debug-checkbox-label">
+                        <input
+                            type="checkbox"
+                            checked={isLayoutEditable}
+                            onChange={toggleLayoutEditable}
+                        />
+                        <span>Layout Edit Mode {isLayoutEditable ? '(Active)' : '(Off)'}</span>
+                    </label>
+
+                    {isLayoutEditable && (
+                        <button
+                            onClick={handleSaveLayout}
+                            className="debug-save-button"
+                        >
+                            Save Current Layout (to Console)
+                        </button>
+                    )}
+
                     <div className="debug-footer">
                         Press Shift+D or Alt+D to toggle debug panel
                     </div>
@@ -144,6 +172,540 @@ const StandaloneDebugButton: React.FC<DebugButtonProps> = ({ showDebugPanel, set
     );
 };
 
+// Define the structure for the new layout data
+interface ReactFlowLayout {
+    nodes: Node[];
+    edges: Edge[];
+}
+
+// --- Store complete React Flow layouts here --- 
+const reactFlowLayouts: Record<string, ReactFlowLayout> = {
+    initial: {
+        "nodes": [
+            {
+                "id": "group-gJlywf",
+                "type": "group",
+                "position": {
+                    "x": 115.25,
+                    "y": 228.5
+                },
+                "data": {
+                    "label": "Tools"
+                },
+                "style": {
+                    "width": 600,
+                    "height": 363,
+                    "borderRadius": "8px"
+                }
+            },
+            {
+                "id": "group-18s_M9",
+                "type": "group",
+                "position": {
+                    "x": -300.86553599233656,
+                    "y": 167.6536828422877
+                },
+                "data": {
+                    "label": "Chat"
+                },
+                "style": {
+                    "width": 160,
+                    "height": 198,
+                    "borderRadius": "8px"
+                }
+            },
+            {
+                "id": "yfpEzhhLDZxZm_zqNlqer",
+                "type": "default",
+                "position": {
+                    "x": -309.6036244150963,
+                    "y": 97.89738600108313
+                },
+                "data": {
+                    "label": "LLM Model"
+                },
+                "style": {
+                    "fontSize": "6px",
+                    "width": "100px",
+                    "height": "30px"
+                },
+                "extent": "parent"
+            },
+            {
+                "id": "FoIrvVAdYSeVQJR_v_wRT",
+                "type": "default",
+                "position": {
+                    "x": -310.52138379576655,
+                    "y": 216.860781127496
+                },
+                "data": {
+                    "label": "Prompt"
+                },
+                "style": {
+                    "fontSize": "6px",
+                    "width": "100px",
+                    "height": "30px"
+                },
+                "extent": "parent"
+            },
+            {
+                "id": "Qyl3dAvBTyEBmT2r_BsIH",
+                "type": "default",
+                "position": {
+                    "x": 142.8312715762001,
+                    "y": 97.68556408298167
+                },
+                "data": {
+                    "label": "Tool Calling Orchestrator"
+                },
+                "style": {
+                    "fontSize": "6px",
+                    "width": "186px",
+                    "height": "45px"
+                },
+                "extent": "parent"
+            },
+            {
+                "id": "2kraheRPE_jTZOjpo765q",
+                "type": "default",
+                "position": {
+                    "x": -85.87762439586291,
+                    "y": 204.07218171475398
+                },
+                "data": {
+                    "label": "Code Generation"
+                },
+                "style": {
+                    "fontSize": "6px",
+                    "width": "134px",
+                    "height": "45px"
+                },
+                "extent": "parent"
+            },
+            {
+                "id": "cxC5nvIj1j8ZUhUwMi4Eu",
+                "type": "default",
+                "position": {
+                    "x": -82.8721938346298,
+                    "y": 331.8163336950588
+                },
+                "data": {
+                    "label": "File System"
+                },
+                "style": {
+                    "fontSize": "6px",
+                    "width": "100px",
+                    "height": "45px"
+                },
+                "extent": "parent"
+            },
+            {
+                "id": "oEXz6aJnqgDKLg9O7RFTN",
+                "type": "default",
+                "position": {
+                    "x": 75.64712148547596,
+                    "y": 200.49241568355808
+                },
+                "data": {
+                    "label": "Testing Agent"
+                },
+                "style": {
+                    "fontSize": "6px",
+                    "width": "114px",
+                    "height": "45px"
+                },
+                "extent": "parent"
+            },
+            {
+                "id": "D2ox3QNFKZ4dVv5vyxqdE",
+                "type": "default",
+                "position": {
+                    "x": 335.3092885524642,
+                    "y": 203.06315084259842
+                },
+                "data": {
+                    "label": "Code Search"
+                },
+                "style": {
+                    "fontSize": "6px",
+                    "width": "108px",
+                    "height": "45px"
+                },
+                "extent": "parent"
+            },
+            {
+                "id": "so6b-GCd3i6sKrY6HIm_j",
+                "type": "default",
+                "position": {
+                    "x": 208.38445893935102,
+                    "y": 202.28229869915606
+                },
+                "data": {
+                    "label": "Debugging"
+                },
+                "style": {
+                    "fontSize": "6px",
+                    "width": "100px",
+                    "height": "45px"
+                },
+                "extent": "parent"
+            },
+            {
+                "id": "2mcrPBTg6b8M1EPu6hGKG",
+                "type": "default",
+                "position": {
+                    "x": 136.35723846987815,
+                    "y": 329.798271950748
+                },
+                "data": {
+                    "label": "Command Execution"
+                },
+                "style": {
+                    "fontSize": "6px",
+                    "width": "158px",
+                    "height": "45px"
+                },
+                "extent": "parent"
+            },
+            {
+                "id": "yz_RjK-pmCQxT6R-wNbRY",
+                "type": "default",
+                "position": {
+                    "x": 332.97129520298995,
+                    "y": 326.03596293658177
+                },
+                "data": {
+                    "label": "Code Indexing"
+                },
+                "style": {
+                    "fontSize": "6px",
+                    "width": "118px",
+                    "height": "45px"
+                },
+                "extent": "parent"
+            }
+        ],
+        "edges": [
+            {
+                "source": "oEXz6aJnqgDKLg9O7RFTN",
+                "target": "2mcrPBTg6b8M1EPu6hGKG",
+                "id": "reactflow__edge-oEXz6aJnqgDKLg9O7RFTN-2mcrPBTg6b8M1EPu6hGKG"
+            },
+            {
+                "source": "so6b-GCd3i6sKrY6HIm_j",
+                "target": "2mcrPBTg6b8M1EPu6hGKG",
+                "id": "reactflow__edge-so6b-GCd3i6sKrY6HIm_j-2mcrPBTg6b8M1EPu6hGKG"
+            },
+            {
+                "source": "2kraheRPE_jTZOjpo765q",
+                "target": "cxC5nvIj1j8ZUhUwMi4Eu",
+                "id": "reactflow__edge-2kraheRPE_jTZOjpo765q-cxC5nvIj1j8ZUhUwMi4Eu"
+            },
+            {
+                "source": "D2ox3QNFKZ4dVv5vyxqdE",
+                "target": "yz_RjK-pmCQxT6R-wNbRY",
+                "id": "reactflow__edge-D2ox3QNFKZ4dVv5vyxqdE-yz_RjK-pmCQxT6R-wNbRY"
+            },
+            {
+                "source": "Qyl3dAvBTyEBmT2r_BsIH",
+                "target": "D2ox3QNFKZ4dVv5vyxqdE",
+                "id": "reactflow__edge-Qyl3dAvBTyEBmT2r_BsIH-D2ox3QNFKZ4dVv5vyxqdE"
+            },
+            {
+                "source": "Qyl3dAvBTyEBmT2r_BsIH",
+                "target": "so6b-GCd3i6sKrY6HIm_j",
+                "id": "reactflow__edge-Qyl3dAvBTyEBmT2r_BsIH-so6b-GCd3i6sKrY6HIm_j"
+            },
+            {
+                "source": "Qyl3dAvBTyEBmT2r_BsIH",
+                "target": "oEXz6aJnqgDKLg9O7RFTN",
+                "id": "reactflow__edge-Qyl3dAvBTyEBmT2r_BsIH-oEXz6aJnqgDKLg9O7RFTN"
+            },
+            {
+                "source": "Qyl3dAvBTyEBmT2r_BsIH",
+                "target": "2kraheRPE_jTZOjpo765q",
+                "id": "reactflow__edge-Qyl3dAvBTyEBmT2r_BsIH-2kraheRPE_jTZOjpo765q"
+            },
+            {
+                "source": "yfpEzhhLDZxZm_zqNlqer",
+                "target": "FoIrvVAdYSeVQJR_v_wRT",
+                "id": "reactflow__edge-yfpEzhhLDZxZm_zqNlqer-FoIrvVAdYSeVQJR_v_wRT"
+            },
+            {
+                "source": "yfpEzhhLDZxZm_zqNlqer",
+                "target": "Qyl3dAvBTyEBmT2r_BsIH",
+                "id": "reactflow__edge-yfpEzhhLDZxZm_zqNlqer-Qyl3dAvBTyEBmT2r_BsIH"
+            }
+        ]
+    },
+    agentic: {
+        "nodes": [
+            {
+                "id": "group-gJlywf",
+                "type": "group",
+                "position": {
+                    "x": 115.25,
+                    "y": 228.5
+                },
+                "data": {
+                    "label": "Tools"
+                },
+                "style": {
+                    "width": 600,
+                    "height": 363,
+                    "borderRadius": "8px"
+                }
+            },
+            {
+                "id": "group-18s_M9",
+                "type": "group",
+                "position": {
+                    "x": -300.86553599233656,
+                    "y": 167.6536828422877
+                },
+                "data": {
+                    "label": "Chat"
+                },
+                "style": {
+                    "width": 160,
+                    "height": 198,
+                    "borderRadius": "8px"
+                }
+            },
+            {
+                "id": "yfpEzhhLDZxZm_zqNlqer",
+                "type": "default",
+                "position": {
+                    "x": -309.6036244150963,
+                    "y": 97.89738600108313
+                },
+                "data": {
+                    "label": "LLM Model"
+                },
+                "style": {
+                    "fontSize": "6px",
+                    "width": "100px",
+                    "height": "30px"
+                },
+                "extent": "parent"
+            },
+            {
+                "id": "FoIrvVAdYSeVQJR_v_wRT",
+                "type": "default",
+                "position": {
+                    "x": -310.52138379576655,
+                    "y": 216.860781127496
+                },
+                "data": {
+                    "label": "Prompt"
+                },
+                "style": {
+                    "fontSize": "6px",
+                    "width": "100px",
+                    "height": "30px"
+                },
+                "extent": "parent"
+            },
+            {
+                "id": "Qyl3dAvBTyEBmT2r_BsIH",
+                "type": "default",
+                "position": {
+                    "x": 142.8312715762001,
+                    "y": 97.68556408298167
+                },
+                "data": {
+                    "label": "Tool Calling Orchestrator"
+                },
+                "style": {
+                    "fontSize": "6px",
+                    "width": "186px",
+                    "height": "45px"
+                },
+                "extent": "parent"
+            },
+            {
+                "id": "2kraheRPE_jTZOjpo765q",
+                "type": "default",
+                "position": {
+                    "x": -85.87762439586291,
+                    "y": 204.07218171475398
+                },
+                "data": {
+                    "label": "Code Generation"
+                },
+                "style": {
+                    "fontSize": "6px",
+                    "width": "134px",
+                    "height": "45px"
+                },
+                "extent": "parent"
+            },
+            {
+                "id": "cxC5nvIj1j8ZUhUwMi4Eu",
+                "type": "default",
+                "position": {
+                    "x": -82.8721938346298,
+                    "y": 331.8163336950588
+                },
+                "data": {
+                    "label": "File System"
+                },
+                "style": {
+                    "fontSize": "6px",
+                    "width": "100px",
+                    "height": "45px"
+                },
+                "extent": "parent"
+            },
+            {
+                "id": "oEXz6aJnqgDKLg9O7RFTN",
+                "type": "default",
+                "position": {
+                    "x": 75.64712148547596,
+                    "y": 200.49241568355808
+                },
+                "data": {
+                    "label": "Testing Agent"
+                },
+                "style": {
+                    "fontSize": "6px",
+                    "width": "114px",
+                    "height": "45px"
+                },
+                "extent": "parent"
+            },
+            {
+                "id": "D2ox3QNFKZ4dVv5vyxqdE",
+                "type": "default",
+                "position": {
+                    "x": 335.3092885524642,
+                    "y": 203.06315084259842
+                },
+                "data": {
+                    "label": "Code Search"
+                },
+                "style": {
+                    "fontSize": "6px",
+                    "width": "108px",
+                    "height": "45px"
+                },
+                "extent": "parent"
+            },
+            {
+                "id": "so6b-GCd3i6sKrY6HIm_j",
+                "type": "default",
+                "position": {
+                    "x": 208.38445893935102,
+                    "y": 202.28229869915606
+                },
+                "data": {
+                    "label": "Debugging"
+                },
+                "style": {
+                    "fontSize": "6px",
+                    "width": "100px",
+                    "height": "45px"
+                },
+                "extent": "parent"
+            },
+            {
+                "id": "2mcrPBTg6b8M1EPu6hGKG",
+                "type": "default",
+                "position": {
+                    "x": 136.35723846987815,
+                    "y": 329.798271950748
+                },
+                "data": {
+                    "label": "Command Execution"
+                },
+                "style": {
+                    "fontSize": "6px",
+                    "width": "158px",
+                    "height": "45px"
+                },
+                "extent": "parent"
+            },
+            {
+                "id": "yz_RjK-pmCQxT6R-wNbRY",
+                "type": "default",
+                "position": {
+                    "x": 332.97129520298995,
+                    "y": 326.03596293658177
+                },
+                "data": {
+                    "label": "Code Indexing"
+                },
+                "style": {
+                    "fontSize": "6px",
+                    "width": "118px",
+                    "height": "45px"
+                },
+                "extent": "parent"
+            }
+        ],
+        "edges": [
+            {
+                "source": "oEXz6aJnqgDKLg9O7RFTN",
+                "target": "2mcrPBTg6b8M1EPu6hGKG",
+                "id": "reactflow__edge-oEXz6aJnqgDKLg9O7RFTN-2mcrPBTg6b8M1EPu6hGKG"
+            },
+            {
+                "source": "so6b-GCd3i6sKrY6HIm_j",
+                "target": "2mcrPBTg6b8M1EPu6hGKG",
+                "id": "reactflow__edge-so6b-GCd3i6sKrY6HIm_j-2mcrPBTg6b8M1EPu6hGKG"
+            },
+            {
+                "source": "2kraheRPE_jTZOjpo765q",
+                "target": "cxC5nvIj1j8ZUhUwMi4Eu",
+                "id": "reactflow__edge-2kraheRPE_jTZOjpo765q-cxC5nvIj1j8ZUhUwMi4Eu"
+            },
+            {
+                "source": "D2ox3QNFKZ4dVv5vyxqdE",
+                "target": "yz_RjK-pmCQxT6R-wNbRY",
+                "id": "reactflow__edge-D2ox3QNFKZ4dVv5vyxqdE-yz_RjK-pmCQxT6R-wNbRY"
+            },
+            {
+                "source": "Qyl3dAvBTyEBmT2r_BsIH",
+                "target": "D2ox3QNFKZ4dVv5vyxqdE",
+                "id": "reactflow__edge-Qyl3dAvBTyEBmT2r_BsIH-D2ox3QNFKZ4dVv5vyxqdE"
+            },
+            {
+                "source": "Qyl3dAvBTyEBmT2r_BsIH",
+                "target": "so6b-GCd3i6sKrY6HIm_j",
+                "id": "reactflow__edge-Qyl3dAvBTyEBmT2r_BsIH-so6b-GCd3i6sKrY6HIm_j"
+            },
+            {
+                "source": "Qyl3dAvBTyEBmT2r_BsIH",
+                "target": "oEXz6aJnqgDKLg9O7RFTN",
+                "id": "reactflow__edge-Qyl3dAvBTyEBmT2r_BsIH-oEXz6aJnqgDKLg9O7RFTN"
+            },
+            {
+                "source": "Qyl3dAvBTyEBmT2r_BsIH",
+                "target": "2kraheRPE_jTZOjpo765q",
+                "id": "reactflow__edge-Qyl3dAvBTyEBmT2r_BsIH-2kraheRPE_jTZOjpo765q"
+            },
+            {
+                "source": "yfpEzhhLDZxZm_zqNlqer",
+                "target": "FoIrvVAdYSeVQJR_v_wRT",
+                "id": "reactflow__edge-yfpEzhhLDZxZm_zqNlqer-FoIrvVAdYSeVQJR_v_wRT"
+            },
+            {
+                "source": "yfpEzhhLDZxZm_zqNlqer",
+                "target": "Qyl3dAvBTyEBmT2r_BsIH",
+                "id": "reactflow__edge-yfpEzhhLDZxZm_zqNlqer-Qyl3dAvBTyEBmT2r_BsIH"
+            }
+        ]
+    },
+    context: { nodes: [], edges: [] },
+    integration: { nodes: [], edges: [] },
+    complete: { nodes: [], edges: [] },
+};
+
+// Define the custom node types mapping OUTSIDE the component
+const nodeTypes = {
+    group: TitledGroupNode,
+};
+
 /**
  * Slide04Refactored: The Tipping Point - Beyond Models to Agentic Systems
  * 
@@ -153,7 +715,7 @@ const StandaloneDebugButton: React.FC<DebugButtonProps> = ({ showDebugPanel, set
  * 
  * This is a refactored version using the improved MermaidChart component.
  */
-const Slide04Refactored: React.FC = observer(() => {
+const Slide04Inner: React.FC = observer(() => {
     // Get MobX stores
     const audioStore = useAudioStore();
     const slideStore = useSlideStore();
@@ -162,13 +724,23 @@ const Slide04Refactored: React.FC = observer(() => {
     // Local state
     const [activeView, setActiveView] = useState<'initial' | 'context' | 'agentic' | 'integration' | 'complete'>('initial');
     const [showDebugPanel, setShowDebugPanel] = useState<boolean>(false);
-    const [debugDialogueIndex, setDebugDialogueIndex] = useState<number>(0);
     const [isDebugging, setIsDebugging] = useState<boolean>(false);
+    const [debugDialogueIndex, setDebugDialogueIndex] = useState<number>(0);
     const [isRendering, setIsRendering] = useState<boolean>(false);
     const [debugInitialized, setDebugInitialized] = useState<boolean>(false);
+    const [isLayoutEditable, setIsLayoutEditable] = useState<boolean>(false);
+    const [initialNodes, setInitialNodes] = useState<Node[]>([]);
+    const [initialEdges, setInitialEdges] = useState<Edge[]>([]);
+    const [nodesForFlow, setNodesForFlow, onNodesChangeHandler] = useNodesState([]);
+    const [edgesForFlow, setEdgesForFlow, onEdgesChangeHandler] = useEdgesState([]);
 
     // Reference for debug panel
     const debugPanelRef = useRef<HTMLDivElement>(null);
+
+    // Get ReactFlow instance and container ref
+    const reactFlowWrapperRef = useRef<HTMLDivElement>(null);
+    const rfInstance = useReactFlow();
+    const nodesInitialized = useNodesInitialized();
 
     // Compute dialogue index from DialogueStore or debug overrides
     // Note: We're not using this variable directly in the useEffect to ensure reactivity
@@ -179,176 +751,41 @@ const Slide04Refactored: React.FC = observer(() => {
         console.log(`Dialogue store updated - currentLineIndex: ${dialogueStore.currentLineIndex}, isPlaying: ${dialogueStore.isPlaying}`);
     }, [dialogueStore.currentLineIndex, dialogueStore.isPlaying]);
 
+    // Load layout DIRECTLY and ONLY from reactFlowLayouts
+    useEffect(() => {
+        const viewKey = activeView as keyof typeof reactFlowLayouts;
+        const layout = reactFlowLayouts[viewKey];
+        let nodesToUse: Node[] = [];
+        let edgesToUse: Edge[] = [];
 
-    // Define diagram definitions for each stage (unchanged)
-    const diagrams = {
-        initial: `
-            graph TD
-                BaseLLM[Base Model]
+        if (layout?.nodes && layout?.edges) {
+            console.log(`Using FIXED layout for view: ${activeView}`);
+            // Make copies to avoid potential state mutation issues
+            nodesToUse = layout.nodes.map(n => ({ ...n }));
+            edgesToUse = layout.edges.map(e => ({ ...e }));
+        } else {
+            console.warn(`No predefined layout found for view: ${activeView}. Displaying empty.`);
+        }
 
-            BaseLLM
-                classDef llm fill:#2196F3,stroke:#2196F3,color:white,stroke-width:1px,rx:8,ry:8
+        // Set the state directly from the loaded layout
+        setInitialNodes(nodesToUse);
+        setInitialEdges(edgesToUse);
+        setNodesForFlow(nodesToUse);
+        setEdgesForFlow(edgesToUse);
+        setIsLayoutEditable(false);
 
-            class BaseLLM llm
-        `,
+    }, [activeView, setNodesForFlow, setEdgesForFlow]); // Dependencies are just view and setters
 
-        context: `
-            graph TD
-                BaseLLM[Base LLM]
-                ContextWindow[Context Window]
-                PromptEng[Prompt Engineering]
-                
-                BaseLLM --- ContextWindow
-                BaseLLM --- PromptEng
-                
-                classDef llm fill:#9C27B0,stroke:#9C27B0,color:white,stroke-width:1px,rx:8,ry:8
-                classDef agent fill:#9C27B0,stroke:#9C27B0,color:white,stroke-width:1px,rx:8,ry:8
-                classDef integration fill:#4CAF50,stroke:#4CAF50,color:white,stroke-width:1px,rx:8,ry:8
-                classDef interface fill:#FF9800,stroke:#FF9800,color:white,stroke-width:1px,rx:8,ry:8
-                
-                class BaseLLM,ContextWindow,PromptEng llm
-        `,
-
-        agentic: `
-            graph TD
-                subgraph LLM [Foundation Layer]
-                    BaseLLM[Base LLM]
-                    ContextWindow[Context Window]
-                    PromptEng[Prompt Engineering]
-                end
-                
-                subgraph Agents [Agentic Layer]
-                    ToolCalling[Tool Calling<br>Orchestrator]
-                    CodeGen[Code Generation]
-                    CodeSearch[Code Search]
-                    Testing[Testing Agent]
-                    Debugging[Debugging Agent]
-                end
-                
-                BaseLLM --- ContextWindow
-                BaseLLM --- PromptEng
-                BaseLLM ==> ToolCalling
-                ToolCalling ==> CodeGen
-                ToolCalling ==> CodeSearch
-                ToolCalling ==> Testing
-                ToolCalling ==> Debugging
-                
-                classDef llm fill:#2196F3,stroke:#2196F3,color:white,stroke-width:1px,rx:8,ry:8
-                classDef agent fill:#9C27B0,stroke:#9C27B0,color:white,stroke-width:1px,rx:8,ry:8
-                classDef integration fill:#4CAF50,stroke:#4CAF50,color:white,stroke-width:1px,rx:8,ry:8
-                classDef interface fill:#FF9800,stroke:#FF9800,color:white,stroke-width:1px,rx:8,ry:8
-                
-                class BaseLLM,ContextWindow,PromptEng llm
-                class ToolCalling,CodeGen,CodeSearch,Testing,Debugging agent
-                class LLM llm
-                class Agents agent
-        `,
-
-        integration: `
-            graph TD
-                subgraph LLM [Foundation Layer]
-                    BaseLLM[Base LLM]
-                    ContextWindow[Context Window]
-                    PromptEng[Prompt Engineering]
-                end
-                
-                subgraph Agents [Agentic Layer]
-                    ToolCalling[Tool Calling<br>Orchestrator]
-                    CodeGen[Code Generation]
-                    CodeSearch[Code Search]
-                    Testing[Testing Agent]
-                    Debugging[Debugging Agent]
-                end
-                
-                subgraph Integration [Environment Integration]
-                    FileSystem[File System]
-                    CommandExec[Command Execution]
-                    CodeIndex[Code Indexing]
-                end
-                
-                BaseLLM --- ContextWindow
-                BaseLLM --- PromptEng
-                BaseLLM ==> ToolCalling
-                ToolCalling ==> CodeGen
-                ToolCalling ==> CodeSearch
-                ToolCalling ==> Testing
-                ToolCalling ==> Debugging
-                CodeGen ==> FileSystem
-                CodeSearch ==> CodeIndex
-                Testing ==> CommandExec
-                Debugging ==> CommandExec
-                
-                classDef llm fill:#2196F3,stroke:#2196F3,color:white,stroke-width:1px,rx:8,ry:8
-                classDef agent fill:#9C27B0,stroke:#9C27B0,color:white,stroke-width:1px,rx:8,ry:8
-                classDef integration fill:#4CAF50,stroke:#4CAF50,color:white,stroke-width:1px,rx:8,ry:8
-                classDef interface fill:#FF9800,stroke:#FF9800,color:white,stroke-width:1px,rx:8,ry:8
-                
-                class BaseLLM,ContextWindow,PromptEng llm
-                class ToolCalling,CodeGen,CodeSearch,Testing,Debugging agent
-                class FileSystem,CommandExec,CodeIndex integration
-                class LLM llm
-                class Agents agent
-                class Integration integration
-        `,
-
-        complete: `
-            graph TD
-                subgraph LLM [Foundation Layer]
-                    BaseLLM[Base LLM]
-                    ContextWindow[Context Window]
-                    PromptEng[Prompt Engineering]
-                end
-                
-                subgraph Agents [Agentic Layer]
-                    ToolCalling[Tool Calling<br>Orchestrator]
-                    CodeGen[Code Generation]
-                    CodeSearch[Code Search]
-                    Testing[Testing Agent]
-                    Debugging[Debugging Agent]
-                end
-                
-                subgraph Integration [Environment Integration]
-                    FileSystem[File System]
-                    CommandExec[Command Execution]
-                    CodeIndex[Code Indexing]
-                end
-                
-                subgraph Interface [Developer Interface]
-                    NLUI[Natural Language UI]
-                    CodeSuggest[Code Suggestions]
-                    CommandPalette[Command Palette]
-                end
-                
-                NLUI ==> BaseLLM
-                BaseLLM ==> CodeSuggest
-                CommandPalette ==> BaseLLM
-                BaseLLM --- ContextWindow
-                BaseLLM --- PromptEng
-                BaseLLM ==> ToolCalling
-                ToolCalling ==> CodeGen
-                ToolCalling ==> CodeSearch
-                ToolCalling ==> Testing
-                ToolCalling ==> Debugging
-                CodeGen ==> FileSystem
-                CodeSearch ==> CodeIndex
-                Testing ==> CommandExec
-                Debugging ==> CommandExec
-                
-                classDef llm fill:#2196F3,stroke:#2196F3,color:white,stroke-width:1px,rx:8,ry:8
-                classDef agent fill:#9C27B0,stroke:#9C27B0,color:white,stroke-width:1px,rx:8,ry:8
-                classDef integration fill:#4CAF50,stroke:#4CAF50,color:white,stroke-width:1px,rx:8,ry:8
-                classDef interface fill:#FF9800,stroke:#FF9800,color:white,stroke-width:1px,rx:8,ry:8
-                
-                class BaseLLM,ContextWindow,PromptEng llm
-                class ToolCalling,CodeGen,CodeSearch,Testing,Debugging agent
-                class FileSystem,CommandExec,CodeIndex integration
-                class NLUI,CodeSuggest,CommandPalette interface
-                class LLM llm
-                class Agents agent
-                class Integration integration
-                class Interface interface
-        `
-    };
+    // Programmatic fitting useEffect
+    useEffect(() => {
+        if (nodesInitialized && !isLayoutEditable && !!reactFlowWrapperRef.current && initialNodes.length > 0) {
+            const viewport = getViewportForBounds(reactFlowWrapperRef.current, getNodesBounds(initialNodes));
+            rfInstance.setViewport(viewport, { duration: 300 });
+            console.log('[FitEffect] setViewport called.');
+        } else {
+            console.log('[FitEffect] Conditions not met or in editable mode, skipping auto-fit.', { nodesInitialized, isLayoutEditable, hasWrapper: !!reactFlowWrapperRef.current, nodeCount: initialNodes.length });
+        }
+    }, [nodesInitialized, initialNodes, rfInstance, isLayoutEditable, slideStore.isFullscreen]);
 
     // Initialize background audio and keyboard controls
     useEffect(() => {
@@ -374,14 +811,7 @@ const Slide04Refactored: React.FC = observer(() => {
 
     // Determine which architectural view to display based on dialogue index
     useEffect(() => {
-        // Don't update while rendering to prevent flashing
-        if (isRendering) return;
-
-        // Get the raw dialogue index directly from the store to ensure we're using the latest value
         const currentDialogueIndex = isDebugging ? debugDialogueIndex : dialogueStore.currentLineIndex;
-
-        console.log(`Current dialogue index: ${currentDialogueIndex}, activeView: ${activeView}`);
-
         let newView: 'initial' | 'context' | 'agentic' | 'integration' | 'complete';
 
         // Map dialogue indices to architectural stages
@@ -397,17 +827,93 @@ const Slide04Refactored: React.FC = observer(() => {
             newView = 'complete';
         }
 
-        console.log(`Determined view based on index ${currentDialogueIndex}: ${newView}`);
-
         // Only update if the view has changed
         if (newView !== activeView) {
             console.log(`Updating view from ${activeView} to ${newView}`);
             setActiveView(newView);
-            setIsRendering(true);
-            // Add a small delay to show rendering state
-            setTimeout(() => setIsRendering(false), 300);
+            setIsLayoutEditable(false);
         }
-    }, [dialogueStore.currentLineIndex, debugDialogueIndex, isDebugging, activeView, isRendering]);
+    }, [dialogueStore.currentLineIndex, debugDialogueIndex, isDebugging, activeView]);
+
+    // Toggle debug mode
+    const toggleDebugMode = () => {
+        const newIsDebugging = !isDebugging;
+        setIsDebugging(newIsDebugging);
+        if (newIsDebugging) {
+            setDebugDialogueIndex(dialogueStore.currentLineIndex);
+        }
+    };
+
+    // Navigate to a specific dialogue index
+    const jumpToDialogueIndex = (index: number) => {
+        setDebugDialogueIndex(index);
+    };
+
+    // Directly set view (bypass dialogue index)
+    const setDirectView = (view: 'initial' | 'context' | 'agentic' | 'integration' | 'complete') => {
+        setActiveView(view);
+        setIsLayoutEditable(false);
+    };
+
+    // Reset to normal mode (follow actual dialogue)
+    const resetToNormalMode = () => {
+        setIsDebugging(false);
+        setIsLayoutEditable(false);
+    };
+
+    // Toggle layout edit mode
+    const toggleLayoutEditable = useCallback(() => {
+        setIsLayoutEditable(prev => {
+            const turningOn = !prev;
+            if (turningOn) {
+                setNodesForFlow(initialNodes);
+                setEdgesForFlow(initialEdges);
+            }
+            return turningOn;
+        });
+    }, [initialNodes, initialEdges, setNodesForFlow, setEdgesForFlow]);
+
+    // Save current layout to console
+    const handleSaveLayout = useCallback(async () => {
+        // Prepare the data in the desired format
+        const layoutData: ReactFlowLayout = {
+            nodes: nodesForFlow.map(node => {
+                // Clean up runtime properties before saving
+                const {
+                    selected, dragging, positionAbsolute,
+                    // Also remove width/height if they are not part of the node's style
+                    // (Keep if style.width/height is used for sizing)
+                    width, height,
+                    ...rest
+                } = node;
+                // Ensure parentId is used instead of parentNode if needed by future versions
+                const finalNode = { ...rest, parentId: node.parentNode };
+                delete (finalNode as any).parentNode; // Remove old property
+                return finalNode as Node; // Type assertion might be needed depending on strictness
+            }),
+            edges: edgesForFlow.map(edge => {
+                // Clean up runtime properties from edges
+                const { selected, ...rest } = edge;
+                return rest;
+            })
+        };
+
+        const layoutJson = JSON.stringify(layoutData, null, 2);
+
+        console.log("--- SAVED LAYOUT DATA (Copy JSON below) ---");
+        console.log(`--- View: ${activeView} ---`);
+        console.log(layoutJson);
+        console.log("--- END SAVED LAYOUT DATA ---");
+
+        // Attempt to copy to clipboard
+        try {
+            await navigator.clipboard.writeText(layoutJson);
+            alert(`Layout for view '${activeView}' saved to console AND copied to clipboard.`);
+        } catch (err) {
+            console.error('Failed to copy layout to clipboard:', err);
+            alert(`Layout for view '${activeView}' saved to console. (Clipboard copy failed)`);
+        }
+    }, [nodesForFlow, edgesForFlow, activeView]); // Add edgesForFlow dependency
 
     // Get stage description based on active view
     const getStageDescription = () => {
@@ -450,40 +956,21 @@ const Slide04Refactored: React.FC = observer(() => {
         e.stopPropagation();
     };
 
-    // Toggle debug mode
-    const toggleDebugMode = () => {
-        const newIsDebugging = !isDebugging;
-        setIsDebugging(newIsDebugging);
-        if (newIsDebugging) {
-            setDebugDialogueIndex(dialogueStore.currentLineIndex);
-        }
-    };
-
-    // Navigate to a specific dialogue index
-    const jumpToDialogueIndex = (index: number) => {
-        if (isRendering) return; // Prevent changes during rendering
-        setDebugDialogueIndex(index);
-    };
-
-    // Directly set view (bypass dialogue index)
-    const setDirectView = (view: 'initial' | 'context' | 'agentic' | 'integration' | 'complete') => {
-        if (isRendering) return; // Prevent changes during rendering
-        setActiveView(view);
-    };
-
-    // Reset to normal mode (follow actual dialogue)
-    const resetToNormalMode = () => {
-        setIsDebugging(false);
-    };
-
     return (
         <div
             className="slide04-container"
-            onMouseMove={handleMouseMove}
-            onMouseEnter={handleMouseMove}
-            onMouseOver={handleMouseMove}
         >
-            {/* Gradient background */}
+            {/* Background Video */}
+            <video
+                className="slide04-background-video"
+                src="/images/DevRaceWinner.mp4" // Use path consistent with Slide 3
+                autoPlay
+                loop
+                muted
+                playsInline // Important for mobile
+            />
+
+            {/* Gradient background (Keep or remove depending on desired effect) */}
             <div className="gradient-background"></div>
 
             {/* Content container */}
@@ -492,28 +979,22 @@ const Slide04Refactored: React.FC = observer(() => {
                     The Tipping Point: Beyond Models to Agentic Systems
                 </h1>
 
-                {/* Direct MermaidChart integration - no intermediate container */}
-                <MermaidChartRefactored
-                    definition={diagrams[activeView]}
-                    className={`slide04-mermaid-chart ${activeView}`}
-                    debug={isDebugging}
-                    style={{
-                        overflow: 'visible',
-                        maxHeight: 'none'
-                    }}
-                // style={{
-                //     flex: '1 1 auto',
-                //     width: '100%',
-                //     position: 'relative',
-                //     zIndex: 6,
-                //     margin: '0.5rem 0'
-                // }}
-                />
-                {isRendering && (
-                    <div className="rendering-overlay">
-                        <span>Rendering...</span>
-                    </div>
-                )}
+                {/* Use ReactFlowChart with nodes/edges from Dagre layout */}
+                <div className="slide04-chart-wrapper" ref={reactFlowWrapperRef}>
+                    <ReactFlowChart
+                        key={`${activeView}-${isLayoutEditable}`}
+                        nodes={nodesForFlow}
+                        edges={edgesForFlow}
+                        onNodesChange={onNodesChangeHandler}
+                        onEdgesChange={onEdgesChangeHandler}
+                        isEditable={isLayoutEditable}
+                        nodeTypes={nodeTypes}
+                        className={`slide04-reactflow-chart ${activeView}`}
+                        showControls={true}
+                        showMiniMap={false}
+                        style={{ height: '100%', width: '100%' }}
+                    />
+                </div>
 
                 {/* Architecture info panel */}
                 <div className="architecture-info">
@@ -542,7 +1023,7 @@ const Slide04Refactored: React.FC = observer(() => {
                 </div>
             </div>
 
-            {/* Debug components rendered through portals */}
+            {/* Debug components */}
             <StandaloneDebugPanel
                 showDebugPanel={showDebugPanel}
                 setShowDebugPanel={setShowDebugPanel}
@@ -554,6 +1035,9 @@ const Slide04Refactored: React.FC = observer(() => {
                 jumpToDialogueIndex={jumpToDialogueIndex}
                 setDirectView={setDirectView}
                 resetToNormalMode={resetToNormalMode}
+                isLayoutEditable={isLayoutEditable}
+                toggleLayoutEditable={toggleLayoutEditable}
+                handleSaveLayout={handleSaveLayout}
             />
             <StandaloneDebugButton
                 showDebugPanel={showDebugPanel}
@@ -562,5 +1046,12 @@ const Slide04Refactored: React.FC = observer(() => {
         </div>
     );
 });
+
+// Wrap Slide04Inner with ReactFlowProvider as hooks are used inside it
+const Slide04Refactored: React.FC = () => (
+    <ReactFlowProvider>
+        <Slide04Inner />
+    </ReactFlowProvider>
+);
 
 export default Slide04Refactored;
